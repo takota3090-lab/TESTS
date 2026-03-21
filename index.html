@@ -233,6 +233,31 @@
       text-align: center;
       padding: 2rem;
     }
+    .join-input-area {
+      margin: 1rem 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+    .join-input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid rgba(198, 93, 59, 0.3);
+      border-radius: 50px;
+      font-size: 1rem;
+      text-align: center;
+      font-family: monospace;
+      font-size: 1.2rem;
+    }
+    .join-button {
+      background: #C65D3B;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 50px;
+      font-weight: bold;
+      cursor: pointer;
+    }
     @media (max-width: 640px) {
       .current-word { font-size: 1.3rem; }
       .action-buttons { grid-template-columns: 1fr; }
@@ -262,7 +287,6 @@
             <li><i class="fas fa-plus-circle"></i> اضغط "إنشاء غرفة جديدة"</li>
             <li><i class="fas fa-copy"></i> انسخ رمز الغرفة وشاركه مع الأصدقاء</li>
             <li><i class="fas fa-gamepad"></i> أنت تتحكم بالمؤقت والتخطي والتسجيل</li>
-            <li><i class="fas fa-sync-alt"></i> الجميع يرى نفس الشاشة بشكل متزامن</li>
           </ul>
         </div>
         
@@ -271,16 +295,17 @@
           <ul>
             <li><i class="fas fa-key"></i> اضغط "انضمام إلى غرفة"</li>
             <li><i class="fas fa-qrcode"></i> أدخل رمز الغرفة الذي أرسله المضيف</li>
-            <li><i class="fas fa-eye"></i> شاهد الكلمة والمؤقت بشكل متزامن مع الجميع</li>
-            <li><i class="fas fa-mobile-alt"></i> يمكن لعدد غير محدود من الأصدقاء الانضمام</li>
+            <li><i class="fas fa-eye"></i> شاهد الكلمة والمؤقت بشكل متزامن</li>
           </ul>
+        </div>
+        
+        <div class="join-input-area">
+          <input type="text" id="quickJoinCode" class="join-input" placeholder="أدخل رمز الغرفة هنا">
+          <button class="join-button" id="quickJoinBtn"><i class="fas fa-sign-in-alt"></i> انضمام إلى الغرفة</button>
         </div>
         
         <button class="btn-primary" id="createRoomBtn" style="background: #2D6A4F; width: 100%; margin: 0.5rem 0;">
           <i class="fas fa-plus-circle"></i> إنشاء غرفة جديدة
-        </button>
-        <button class="btn-primary" id="joinRoomBtn" style="background: #C65D3B; width: 100%; margin: 0.5rem 0;">
-          <i class="fas fa-sign-in-alt"></i> انضمام إلى غرفة
         </button>
       </div>
     </div>
@@ -315,7 +340,7 @@
 <script type="module">
   // Import Firebase SDK
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-  import { getDatabase, ref, set, onValue, update } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
+  import { getDatabase, ref, set, onValue, update, get } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
   
   // Your web app's Firebase configuration
   const firebaseConfig = {
@@ -350,10 +375,10 @@
   
   // Categories
   const categories = {
-    "أفعال": ["يرقص العرضة", "يغني", "يطبخ منسف", "يشرب قهوة", "يركب جمل", "يلعب كرة قدم", "يؤذن", "يلقي شعر", "يرسم", "يضحك", "يبكي", "ينام", "يأكل تمر", "يركض", "يقفز", "يسبح", "يقرأ", "يكتب", "يقود سيارة", "يصلح كمبيوتر", "يغسل يديه", "يصفق", "يصفير", "يتصل بالهاتف", "يرمي سهم", "يقطع خشب", "يخبز خبز"],
-    "حيوانات": ["جمل", "صقر", "حصان عربي", "غزال", "نمر", "ذئب", "ثعلب", "وعل", "نعامة", "قط", "كلب", "نسر", "فهد", "أرنب", "حمام", "أسد", "فيل", "زرافة", "دلفين", "سلحفاة", "ثعبان", "عقرب", "نحلة", "فراشة", "بطريق", "دب", "قرد"],
-    "أمثال شعبية": ["اطلع من جلدك", "اللي ما يعرف الصقر يشويه", "الجار قبل الدار", "الصبر مفتاح الفرج", "العين بصيرة واليد قصيرة", "القناعة كنز لا يفنى", "الكذب ملح الرجال", "باب النجار مخلع", "حبل الكذب قصير", "عصفور في اليد ولا عشرة على الشجرة", "على قدر لحافك مد رجليك", "من طلب العلا سهر الليالي", "الرفيق قبل الطريق", "دايم السيف ينعل", "ساكت واجد ناطق"],
-    "أشياء": ["تلفون", "سيارة", "طائرة", "ساعة", "نظارة", "كتاب", "قلم", "مقص", "مفتاح", "باب", "كرسي", "طاولة", "سرير", "ثلاجة", "غسالة", "حقيبة", "مظلة", "مرآة", "مشط", "خاتم", "سوار", "محفظة", "مصباح", "مروحة", "تلفزيون", "حاسوب", "كاميرا"]
+    "أفعال": ["يرقص العرضة", "يغني", "يطبخ منسف", "يشرب قهوة", "يركب جمل", "يلعب كرة قدم", "يؤذن", "يلقي شعر", "يرسم", "يضحك", "يبكي", "ينام", "يأكل تمر", "يركض", "يقفز", "يسبح", "يقرأ", "يكتب", "يقود سيارة", "يصلح كمبيوتر", "يغسل يديه", "يصفق", "يصفير"],
+    "حيوانات": ["جمل", "صقر", "حصان عربي", "غزال", "نمر", "ذئب", "ثعلب", "وعل", "نعامة", "قط", "كلب", "نسر", "فهد", "أرنب", "حمام", "أسد", "فيل", "زرافة", "دلفين", "سلحفاة"],
+    "أمثال شعبية": ["اطلع من جلدك", "اللي ما يعرف الصقر يشويه", "الجار قبل الدار", "الصبر مفتاح الفرج", "العين بصيرة واليد قصيرة", "القناعة كنز لا يفنى", "الكذب ملح الرجال", "باب النجار مخلع", "حبل الكذب قصير", "عصفور في اليد ولا عشرة على الشجرة"],
+    "أشياء": ["تلفون", "سيارة", "طائرة", "ساعة", "نظارة", "كتاب", "قلم", "مقص", "مفتاح", "باب", "كرسي", "طاولة", "سرير", "ثلاجة", "غسالة", "حقيبة", "مظلة", "مرآة", "مشط", "خاتم"]
   };
   
   function getRandomWord() {
@@ -369,57 +394,90 @@
   
   currentUserId = generateUserId();
   
+  // Show loading message
+  function showLoading(message = "جاري الاتصال...") {
+    const container = document.getElementById('gameContent');
+    if (container && !roomId) {
+      container.innerHTML = `
+        <div class="loading">
+          <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: #C65D3B;"></i>
+          <p style="margin-top: 1rem;">${message}</p>
+        </div>
+      `;
+    }
+  }
+  
   // Create new room
-  window.createRoom = function() {
-    roomId = Math.random().toString(36).substring(2, 8).toUpperCase();
-    isHost = true;
-    
-    const initialWord = getRandomWord();
-    const gameData = {
-      word: initialWord.word,
-      category: initialWord.category,
-      timeLeft: 60,
-      timerRunning: false,
-      roundCount: 0,
-      gameActive: true,
-      gameWinner: null,
-      hostId: currentUserId,
-      createdAt: Date.now()
-    };
-    
-    const initialTeams = [
-      { id: 1, name: "الفريق الأحمر", score: 0 },
-      { id: 2, name: "الفريق الأزرق", score: 0 }
-    ];
-    
-    set(ref(database, 'rooms/' + roomId + '/game'), gameData);
-    set(ref(database, 'rooms/' + roomId + '/teams'), initialTeams);
-    set(ref(database, 'rooms/' + roomId + '/host'), currentUserId);
-    
-    localStorage.setItem('myRoom', roomId);
-    listenToRoom(roomId);
-    
-    alert('✅ تم إنشاء الغرفة بنجاح!\n\nرمز الغرفة: ' + roomId + '\n\nشارك هذا الرمز مع أصدقائك ليدخلوا كمتفرجين');
-    switchToTab('game');
+  window.createRoom = async function() {
+    try {
+      showLoading("جاري إنشاء الغرفة...");
+      roomId = Math.random().toString(36).substring(2, 8).toUpperCase();
+      isHost = true;
+      
+      const initialWord = getRandomWord();
+      const gameData = {
+        word: initialWord.word,
+        category: initialWord.category,
+        timeLeft: 60,
+        timerRunning: false,
+        roundCount: 0,
+        gameActive: true,
+        gameWinner: null,
+        hostId: currentUserId,
+        createdAt: Date.now()
+      };
+      
+      const initialTeams = [
+        { id: 1, name: "الفريق الأحمر", score: 0 },
+        { id: 2, name: "الفريق الأزرق", score: 0 }
+      ];
+      
+      await set(ref(database, 'rooms/' + roomId + '/game'), gameData);
+      await set(ref(database, 'rooms/' + roomId + '/teams'), initialTeams);
+      await set(ref(database, 'rooms/' + roomId + '/host'), currentUserId);
+      
+      localStorage.setItem('myRoom', roomId);
+      localStorage.setItem('isHost', 'true');
+      listenToRoom(roomId);
+      
+      alert('✅ تم إنشاء الغرفة بنجاح!\n\nرمز الغرفة: ' + roomId + '\n\nشارك هذا الرمز مع أصدقائك');
+      switchToTab('game');
+    } catch (error) {
+      console.error("Error creating room:", error);
+      alert('❌ حدث خطأ في إنشاء الغرفة. تأكد من اتصال الإنترنت.');
+    }
   };
   
   // Join existing room
-  window.joinRoom = function() {
-    const code = prompt("🔑 أدخل رمز الغرفة:", "");
-    if (code && code.trim()) {
-      const roomCode = code.trim().toUpperCase();
+  window.joinRoom = async function(code) {
+    const roomCode = (code || prompt("🔑 أدخل رمز الغرفة:", "")).trim().toUpperCase();
+    if (!roomCode) return;
+    
+    showLoading(`جاري البحث عن الغرفة ${roomCode}...`);
+    
+    try {
       const roomRef = ref(database, 'rooms/' + roomCode);
-      onValue(roomRef, (snapshot) => {
-        if (snapshot.exists()) {
-          roomId = roomCode;
-          isHost = false;
-          localStorage.setItem('joinedRoom', roomId);
-          listenToRoom(roomId);
-          switchToTab('game');
-        } else {
-          alert('❌ غرفة غير موجودة! تأكد من الرقم وأعد المحاولة.');
-        }
-      }, { onlyOnce: true });
+      const snapshot = await get(roomRef);
+      
+      if (snapshot.exists()) {
+        roomId = roomCode;
+        isHost = false;
+        localStorage.setItem('joinedRoom', roomId);
+        localStorage.removeItem('isHost');
+        listenToRoom(roomId);
+        switchToTab('game');
+        alert('✅ تم الانضمام إلى الغرفة بنجاح!');
+      } else {
+        alert('❌ غرفة غير موجودة! تأكد من الرقم وأعد المحاولة.');
+        showLoading("لم يتم العثور على الغرفة");
+        setTimeout(() => {
+          if (!roomId) switchToTab('home');
+        }, 1500);
+      }
+    } catch (error) {
+      console.error("Error joining room:", error);
+      alert('❌ حدث خطأ في الاتصال. تأكد من اتصال الإنترنت.');
+      showLoading("خطأ في الاتصال");
     }
   };
   
@@ -446,7 +504,7 @@
           if (timerInterval) clearInterval(timerInterval);
           timerInterval = setInterval(() => {
             const currentGameRef = ref(database, 'rooms/' + roomId + '/game');
-            onValue(currentGameRef, (snap) => {
+            get(currentGameRef).then((snap) => {
               const current = snap.val();
               if (current && current.timerRunning && current.timeLeft > 0 && current.gameActive && !current.gameWinner) {
                 const newTime = current.timeLeft - 1;
@@ -458,7 +516,7 @@
               } else {
                 clearInterval(timerInterval);
               }
-            }, { onlyOnce: true });
+            });
           }, 1000);
         } else if (timerInterval && !timerRunning) {
           clearInterval(timerInterval);
@@ -479,10 +537,10 @@
     
     // Check if user is host
     const hostRef = ref(database, 'rooms/' + roomId + '/host');
-    onValue(hostRef, (snapshot) => {
+    get(hostRef).then((snapshot) => {
       isHost = (snapshot.val() === currentUserId);
       updateGameUI();
-    }, { onlyOnce: true });
+    });
   }
   
   // Update game data
@@ -694,12 +752,12 @@
     modal.innerHTML = `
       <div style="background: white; border-radius: 24px; padding: 1.5rem; width: 80%; max-width: 300px; text-align: center;">
         <h3 style="margin-bottom: 1rem; color: #C65D3B;"><i class="fas fa-trophy"></i> اختر الفريق الفائز</h3>
-        ${teams.map(team => `<div style="padding: 12px; margin: 5px 0; background: #f5f5f5; border-radius: 12px; cursor: pointer; font-weight: bold; transition: all 0.2s;" onmouseover="this.style.background='#e0e0e0'" onmouseout="this.style.background='#f5f5f5'" onclick="window.selectTeam(${team.id})">${team.name}</div>`).join('')}
+        ${teams.map(team => `<div style="padding: 12px; margin: 5px 0; background: #f5f5f5; border-radius: 12px; cursor: pointer; font-weight: bold;" onclick="window.selectTeamAndClose(${team.id})">${team.name}</div>`).join('')}
         <button onclick="closeModal()" style="margin-top: 1rem; padding: 8px 16px; background: #ddd; border: none; border-radius: 20px; cursor: pointer;">إلغاء</button>
       </div>
     `;
     document.body.appendChild(modal);
-    window.selectTeam = (teamId) => {
+    window.selectTeamAndClose = (teamId) => {
       addPointsToTeam(teamId);
       modal.remove();
     };
@@ -715,13 +773,13 @@
         <h3 style="margin-bottom: 1rem; color: #C65D3B;"><i class="fas fa-layer-group"></i> اختر الفئة</h3>
         ${catNames.map(cat => {
           let icon = cat === 'أفعال' ? '🏃' : cat === 'حيوانات' ? '🐪' : cat === 'أمثال شعبية' ? '📜' : '📱';
-          return `<div style="padding: 10px; margin: 5px 0; background: #f5f5f5; border-radius: 12px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#e0e0e0'" onmouseout="this.style.background='#f5f5f5'" onclick="window.selectCategory('${cat}')">${icon} ${cat}</div>`;
+          return `<div style="padding: 10px; margin: 5px 0; background: #f5f5f5; border-radius: 12px; cursor: pointer;" onclick="window.selectCategoryAndClose('${cat}')">${icon} ${cat}</div>`;
         }).join('')}
         <button onclick="closeCategoryModal()" style="margin-top: 1rem; padding: 8px 16px; background: #ddd; border: none; border-radius: 20px; cursor: pointer;">إلغاء</button>
       </div>
     `;
     document.body.appendChild(modal);
-    window.selectCategory = (category) => {
+    window.selectCategoryAndClose = (category) => {
       setCategory(category);
       modal.remove();
     };
@@ -746,8 +804,10 @@
   function switchToTab(tabId) {
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
     document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active-pane'));
-    document.querySelector(`.tab-btn[data-tab="${tabId}"]`).classList.add('active');
-    document.getElementById(`${tabId}Tab`).classList.add('active-pane');
+    const targetBtn = Array.from(document.querySelectorAll('.tab-btn')).find(btn => btn.dataset.tab === tabId);
+    if (targetBtn) targetBtn.classList.add('active');
+    const targetPane = document.getElementById(`${tabId}Tab`);
+    if (targetPane) targetPane.classList.add('active-pane');
     if (tabId === 'teams') renderTeamList();
   }
   
@@ -757,11 +817,26 @@
   });
   
   document.getElementById('createRoomBtn')?.addEventListener('click', window.createRoom);
-  document.getElementById('joinRoomBtn')?.addEventListener('click', window.joinRoom);
+  document.getElementById('quickJoinBtn')?.addEventListener('click', () => {
+    const codeInput = document.getElementById('quickJoinCode');
+    const code = codeInput.value.trim();
+    if (code) {
+      window.joinRoom(code);
+      codeInput.value = '';
+    } else {
+      alert('الرجاء إدخال رمز الغرفة');
+    }
+  });
   document.getElementById('addTeamBtn')?.addEventListener('click', window.addTeam);
   
   document.getElementById('teamName')?.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') window.addTeam();
+  });
+  
+  document.getElementById('quickJoinCode')?.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      document.getElementById('quickJoinBtn').click();
+    }
   });
   
   // Check if user is returning to a room
