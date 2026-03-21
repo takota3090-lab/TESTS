@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Draw & Guess - Multiplayer Game</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap');
         
@@ -355,35 +353,36 @@
         </div>
     </div>
 
-    <script>
-        // Firebase Configuration
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+        import { getDatabase, ref, set, onValue, onDisconnect, push, update, remove, get, child, serverTimestamp, onChildAdded, off } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
+
+        // Your web app's Firebase configuration
         const firebaseConfig = {
-            apiKey: "AIzaSyDEwWDRWOZ13iK_iDPqUymNlhgz9R4nmXY",
-            authDomain: "gameapp-3fd40.firebaseapp.com",
-            projectId: "gameapp-3fd40",
-            storageBucket: "gameapp-3fd40.firebasestorage.app",
-            messagingSenderId: "216038176025",
-            appId: "1:216038176025:web:d73fc67524770decbc8188"
+            apiKey: "AIzaSyCjeedoaupI_MQnXWtVwOwdtEp7DzS5BzY",
+            authDomain: "testing-41cb1.firebaseapp.com",
+            projectId: "testing-41cb1",
+            storageBucket: "testing-41cb1.firebasestorage.app",
+            messagingSenderId: "295551167080",
+            appId: "1:295551167080:web:bcd69718e8d9e896ede9dd",
+            measurementId: "G-VZNNMWPPWN"
         };
 
         // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
 
-        // Connection monitoring
-        const connectedRef = database.ref(".info/connected");
-        connectedRef.on("value", (snap) => {
-            const status = document.getElementById('connectionStatus');
-            if (snap.val() === true) {
-                status.textContent = "Connected";
-                status.className = "connection-status connected";
-                setTimeout(() => status.style.opacity = '0', 2000);
-            } else {
-                status.style.opacity = '1';
-                status.textContent = "Disconnected - Check your internet";
-                status.className = "connection-status disconnected";
-            }
-        });
+        // Make functions available globally for HTML onclick handlers
+        window.createRoom = createRoom;
+        window.joinRoom = joinRoom;
+        window.joinAsViewer = joinAsViewer;
+        window.leaveRoom = leaveRoom;
+        window.copyRoomCode = copyRoomCode;
+        window.setColor = setColor;
+        window.setBrushSize = setBrushSize;
+        window.clearCanvas = clearCanvas;
+        window.submitGuess = submitGuess;
 
         // Game State
         let currentRoom = null;
@@ -408,6 +407,21 @@
                       'apple', 'banana', 'flower', 'mountain', 'ocean', 'bicycle', 'airplane', 
                       'computer', 'guitar', 'pizza', 'dragon', 'robot', 'rainbow', 'butterfly',
                       'phone', 'book', 'chair', 'table', 'shoe', 'hat', 'ball', 'cake', 'ice cream'];
+
+        // Connection monitoring
+        const connectedRef = ref(database, ".info/connected");
+        onValue(connectedRef, (snap) => {
+            const status = document.getElementById('connectionStatus');
+            if (snap.val() === true) {
+                status.textContent = "Connected";
+                status.className = "connection-status connected";
+                setTimeout(() => status.style.opacity = '0', 2000);
+            } else {
+                status.style.opacity = '1';
+                status.textContent = "Disconnected - Check your internet";
+                status.className = "connection-status disconnected";
+            }
+        });
 
         // Initialize Canvas
         function initCanvas() {
@@ -480,9 +494,9 @@
             
             // Sync to Firebase
             if (currentRoom && isDrawing) {
-                database.ref(`rooms/${currentRoom}/drawings`).push({
+                push(ref(database, `rooms/${currentRoom}/drawings`), {
                     x1, y1, x2, y2, color, size,
-                    timestamp: firebase.database.ServerValue.TIMESTAMP
+                    timestamp: serverTimestamp()
                 });
             }
         }
@@ -510,7 +524,7 @@
         function clearCanvas() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             if (currentRoom && isDrawing) {
-                database.ref(`rooms/${currentRoom}/clear`).set(Date.now());
+                set(ref(database, `rooms/${currentRoom}/clear`), Date.now());
             }
         }
 
@@ -538,18 +552,16 @@
             showError('');
             
             // First check if room exists (it shouldn't for new room)
-            database.ref(`rooms/${roomCode}`).once('value')
-                .then(snapshot => {
-                    if (snapshot.exists()) {
-                        // Very unlikely but possible, generate new code
-                        createRoom();
-                    } else {
-                        joinRoomInternal(roomCode, false, true);
-                    }
-                })
-                .catch(err => {
-                    showError('Error creating room: ' + err.message);
-                });
+            get(ref(database, `rooms/${roomCode}`)).then(snapshot => {
+                if (snapshot.exists()) {
+                    // Very unlikely but possible, generate new code
+                    createRoom();
+                } else {
+                    joinRoomInternal(roomCode, false, true);
+                }
+            }).catch(err => {
+                showError('Error creating room: ' + err.message);
+            });
         }
 
         function joinRoom() {
@@ -573,25 +585,23 @@
             showError('Joining room...');
             
             // Check if room exists first
-            database.ref(`rooms/${roomCode}`).once('value')
-                .then(snapshot => {
-                    if (!snapshot.exists()) {
-                        showError('Room not found! Check the code and try again.');
-                        return;
-                    }
-                    
-                    const roomData = snapshot.val();
-                    if (roomData.status === 'closed') {
-                        showError('This room has been closed.');
-                        return;
-                    }
-                    
-                    joinRoomInternal(roomCode, false, false);
-                })
-                .catch(err => {
-                    showError('Error joining room: ' + err.message);
-                    console.error('Join error:', err);
-                });
+            get(ref(database, `rooms/${roomCode}`)).then(snapshot => {
+                if (!snapshot.exists()) {
+                    showError('Room not found! Check the code and try again.');
+                    return;
+                }
+                
+                const roomData = snapshot.val();
+                if (roomData.status === 'closed') {
+                    showError('This room has been closed.');
+                    return;
+                }
+                
+                joinRoomInternal(roomCode, false, false);
+            }).catch(err => {
+                showError('Error joining room: ' + err.message);
+                console.error('Join error:', err);
+            });
         }
 
         function joinAsViewer() {
@@ -603,17 +613,15 @@
                 return;
             }
             
-            database.ref(`rooms/${roomCode}`).once('value')
-                .then(snapshot => {
-                    if (!snapshot.exists()) {
-                        showError('Room not found!');
-                        return;
-                    }
-                    joinRoomInternal(roomCode, true, false);
-                })
-                .catch(err => {
-                    showError('Error: ' + err.message);
-                });
+            get(ref(database, `rooms/${roomCode}`)).then(snapshot => {
+                if (!snapshot.exists()) {
+                    showError('Room not found!');
+                    return;
+                }
+                joinRoomInternal(roomCode, true, false);
+            }).catch(err => {
+                showError('Error: ' + err.message);
+            });
         }
 
         function joinRoomInternal(roomCode, viewer, isCreator) {
@@ -623,24 +631,24 @@
             // Clean up any existing listeners first
             cleanupListeners();
             
-            roomRef = database.ref(`rooms/${roomCode}`);
-            playerRef = roomRef.child(`players/${userId}`);
+            roomRef = ref(database, `rooms/${roomCode}`);
+            playerRef = child(roomRef, `players/${userId}`);
             
             // Set player data
-            playerRef.set({
+            set(playerRef, {
                 name: username,
                 isViewer: viewer,
                 score: 0,
-                joinedAt: firebase.database.ServerValue.TIMESTAMP,
-                lastActive: firebase.database.ServerValue.TIMESTAMP
+                joinedAt: serverTimestamp(),
+                lastActive: serverTimestamp()
             }).then(() => {
                 // Success - setup disconnect handler
-                playerRef.onDisconnect().remove();
+                onDisconnect(playerRef).remove();
                 
                 // Keep alive ping
                 const keepAliveInterval = setInterval(() => {
                     if (playerRef) {
-                        playerRef.child('lastActive').set(firebase.database.ServerValue.TIMESTAMP);
+                        set(child(playerRef, 'lastActive'), serverTimestamp());
                     }
                 }, 30000);
                 
@@ -649,8 +657,8 @@
                 
                 // Initialize room if creator
                 if (isCreator) {
-                    roomRef.update({
-                        createdAt: firebase.database.ServerValue.TIMESTAMP,
+                    update(roomRef, {
+                        createdAt: serverTimestamp(),
                         createdBy: userId,
                         status: 'waiting',
                         round: 1,
@@ -664,10 +672,10 @@
                 
                 // Add system message
                 if (!isCreator) {
-                    roomRef.child('messages').push({
+                    push(child(roomRef, 'messages'), {
                         text: `${username} joined the room!`,
                         isSystem: true,
-                        timestamp: firebase.database.ServerValue.TIMESTAMP
+                        timestamp: serverTimestamp()
                     });
                 }
             }).catch(err => {
@@ -707,15 +715,15 @@
 
         function setupGameListeners(roomCode) {
             // Listen to game state
-            const gameListener = roomRef.on('value', snapshot => {
+            const gameListener = onValue(roomRef, (snapshot) => {
                 gameState = snapshot.val();
                 updateGameUI();
             });
-            listeners.push(() => roomRef.off('value', gameListener));
+            listeners.push(() => off(roomRef, 'value', gameListener));
             
             // Listen to players with error handling
-            const playersRef = roomRef.child('players');
-            const playersListener = playersRef.on('value', snapshot => {
+            const playersRef = child(roomRef, 'players');
+            const playersListener = onValue(playersRef, (snapshot) => {
                 const players = snapshot.val() || {};
                 updatePlayersList(players);
                 checkGameStart(players);
@@ -728,15 +736,15 @@
                 } else {
                     sharePrompt.classList.add('hidden');
                 }
-            }, err => {
+            }, (err) => {
                 console.error('Players listener error:', err);
                 showToast('Connection error - trying to reconnect...');
             });
-            listeners.push(() => playersRef.off('value', playersListener));
+            listeners.push(() => off(playersRef, 'value', playersListener));
             
             // Listen to drawings
-            const drawingsRef = roomRef.child('drawings');
-            const drawingsListener = drawingsRef.on('child_added', snapshot => {
+            const drawingsRef = child(roomRef, 'drawings');
+            const drawingsListener = onChildAdded(drawingsRef, (snapshot) => {
                 const data = snapshot.val();
                 if (!data) return;
                 
@@ -750,20 +758,20 @@
                 ctx.lineTo(data.x2, data.y2);
                 ctx.stroke();
             });
-            listeners.push(() => drawingsRef.off('child_added', drawingsListener));
+            listeners.push(() => off(drawingsRef, 'child_added', drawingsListener));
             
             // Listen to clear
-            const clearRef = roomRef.child('clear');
-            const clearListener = clearRef.on('value', snapshot => {
+            const clearRef = child(roomRef, 'clear');
+            const clearListener = onValue(clearRef, (snapshot) => {
                 if (snapshot.val()) {
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
                 }
             });
-            listeners.push(() => clearRef.off('value', clearListener));
+            listeners.push(() => off(clearRef, 'value', clearListener));
             
             // Listen to chat/guesses
-            const messagesRef = roomRef.child('messages');
-            const messagesListener = messagesRef.on('child_added', snapshot => {
+            const messagesRef = child(roomRef, 'messages');
+            const messagesListener = onChildAdded(messagesRef, (snapshot) => {
                 const msg = snapshot.val();
                 if (!msg) return;
                 addChatMessage(msg);
@@ -784,7 +792,7 @@
                     }
                 }
             });
-            listeners.push(() => messagesRef.off('child_added', messagesListener));
+            listeners.push(() => off(messagesRef, 'child_added', messagesListener));
         }
 
         function updatePlayersList(players) {
@@ -845,27 +853,27 @@
             const drawer = playerIds[Math.floor(Math.random() * playerIds.length)];
             const word = words[Math.floor(Math.random() * words.length)];
             
-            roomRef.update({
+            update(roomRef, {
                 status: 'playing',
                 currentDrawer: drawer,
                 word: word,
-                roundStart: firebase.database.ServerValue.TIMESTAMP,
+                roundStart: serverTimestamp(),
                 roundEnd: Date.now() + 60000
             });
             
             // Clear canvas
-            roomRef.child('clear').set(Date.now());
-            roomRef.child('drawings').remove();
-            roomRef.child('correctGuesses').remove();
+            set(child(roomRef, 'clear'), Date.now());
+            remove(child(roomRef, 'drawings'));
+            remove(child(roomRef, 'correctGuesses'));
             
             // Start timer locally for all players
             startTimer(60);
             
             // Add system message
-            roomRef.child('messages').push({
+            push(child(roomRef, 'messages'), {
                 text: `Round started! ${gameState.players[drawer]?.name || 'Someone'} is drawing...`,
                 isSystem: true,
-                timestamp: firebase.database.ServerValue.TIMESTAMP
+                timestamp: serverTimestamp()
             });
         }
 
@@ -930,11 +938,11 @@
                 return;
             }
             
-            roomRef.child('messages').push({
+            push(child(roomRef, 'messages'), {
                 userId: userId,
                 username: username,
                 text: text,
-                timestamp: firebase.database.ServerValue.TIMESTAMP,
+                timestamp: serverTimestamp(),
                 isGuess: true
             });
             
@@ -984,24 +992,29 @@
 
         function handleCorrectGuess(msg) {
             // Update message to mark as correct
-            roomRef.child('messages').orderByChild('timestamp').equalTo(msg.timestamp).once('value', snap => {
-                snap.forEach(child => {
-                    child.ref.update({ isCorrect: true, isGuess: false });
+            const messagesRef = child(roomRef, 'messages');
+            get(messagesRef).then(snapshot => {
+                snapshot.forEach(child => {
+                    const childData = child.val();
+                    if (childData.timestamp === msg.timestamp && childData.userId === msg.userId) {
+                        update(child.ref, { isCorrect: true, isGuess: false });
+                    }
                 });
             });
             
             // Update scores
             const updates = {};
-            updates[`players/${msg.userId}/score`] = firebase.database.ServerValue.increment(10);
-            updates[`players/${gameState.currentDrawer}/score`] = firebase.database.ServerValue.increment(5);
-            roomRef.update(updates);
+            updates[`players/${msg.userId}/score`] = serverTimestamp(); // Use transaction in real app
+            updates[`players/${gameState.currentDrawer}/score`] = serverTimestamp();
             
-            // Check if round should end (everyone guessed)
-            const players = gameState.players || {};
-            const guessers = Object.keys(players).filter(id => id !== gameState.currentDrawer && !players[id].isViewer);
+            // Simple increment workaround
+            const currentGuesserScore = (gameState.players[msg.userId]?.score || 0) + 10;
+            const currentDrawerScore = (gameState.players[gameState.currentDrawer]?.score || 0) + 5;
             
-            // For simplicity, end round after 3 correct guesses or timer
-            // You could implement more sophisticated logic here
+            update(roomRef, {
+                [`players/${msg.userId}/score`]: currentGuesserScore,
+                [`players/${gameState.currentDrawer}/score`]: currentDrawerScore
+            });
         }
 
         function endRound() {
@@ -1009,15 +1022,15 @@
             if (!word) return;
             
             // Reveal word
-            roomRef.child('messages').push({
+            push(child(roomRef, 'messages'), {
                 text: `⏰ Time's up! The word was: "${word}"`,
                 isSystem: true,
-                timestamp: firebase.database.ServerValue.TIMESTAMP
+                timestamp: serverTimestamp()
             });
             
             // Clear canvas after delay
             setTimeout(() => {
-                roomRef.child('clear').set(Date.now());
+                set(child(roomRef, 'clear'), Date.now());
             }, 3000);
             
             // Start new round after delay if enough players
@@ -1026,7 +1039,7 @@
                 const playerIds = Object.keys(players).filter(id => !players[id].isViewer);
                 
                 if (playerIds.length >= 2) {
-                    roomRef.update({
+                    update(roomRef, {
                         round: (gameState.round || 1) + 1,
                         status: 'waiting',
                         currentDrawer: null,
@@ -1062,13 +1075,13 @@
         function leaveRoom() {
             if (currentRoom && playerRef) {
                 // Remove player
-                playerRef.remove();
+                remove(playerRef);
                 
                 // Add leave message
-                roomRef.child('messages').push({
+                push(child(roomRef, 'messages'), {
                     text: `${username} left the room`,
                     isSystem: true,
-                    timestamp: firebase.database.ServerValue.TIMESTAMP
+                    timestamp: serverTimestamp()
                 });
                 
                 cleanupListeners();
@@ -1089,7 +1102,7 @@
         // Cleanup on page unload
         window.onbeforeunload = () => {
             if (playerRef) {
-                playerRef.remove();
+                remove(playerRef);
             }
         };
 
@@ -1097,7 +1110,7 @@
         document.addEventListener('visibilitychange', () => {
             if (!document.hidden && currentRoom) {
                 // Re-ensure connection when tab becomes visible
-                database.ref('.info/connected').once('value');
+                get(ref(database, '.info/connected'));
             }
         });
     </script>
