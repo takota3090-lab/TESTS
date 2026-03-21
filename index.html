@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>لعبة التمثيل - دعوة الأصدقاء | تصميم سعود</title>
+  <title>لعبة التمثيل - استضافة مباشرة | تصميم سعود</title>
   
   <!-- Premium Arabic Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
@@ -109,13 +109,13 @@
       display: block;
     }
 
-    #homeTab, #inviteTab { overflow: hidden; }
+    #homeTab, #hostTab, #inviteTab { overflow: hidden; }
     .tab-pane::-webkit-scrollbar { width: 4px; }
     .tab-pane::-webkit-scrollbar-track { background: rgba(198, 93, 59, 0.1); }
     .tab-pane::-webkit-scrollbar-thumb { background: var(--terracotta); border-radius: 2px; }
 
     /* Home Tab Styles */
-    .home-container, .invite-container {
+    .home-container, .host-container, .invite-container {
       max-width: 600px;
       margin: 0 auto;
       width: 100%;
@@ -126,7 +126,7 @@
       padding: 0.5rem;
     }
 
-    .hero-card, .invite-card {
+    .hero-card, .host-card, .invite-card {
       background: var(--card-bg);
       border-radius: 24px;
       padding: 1.2rem;
@@ -220,7 +220,7 @@
     }
     .rule-list li i { color: var(--terracotta); width: 16px; font-size: 0.7rem; margin-top: 2px; }
 
-    .play-button-home {
+    .play-button-home, .start-host-btn {
       background: var(--gradient-terracotta);
       border: none;
       padding: 10px 28px;
@@ -237,155 +237,96 @@
       box-shadow: var(--shadow-terracotta);
     }
 
-    /* Invite Tab Styles */
-    .invite-header {
-      text-align: center;
-      margin-bottom: 1rem;
+    /* Host Mode Styles */
+    .host-controls {
+      margin-top: 1rem;
     }
-    .invite-header i {
-      font-size: 2.5rem;
-      color: var(--whatsapp);
-      margin-bottom: 0.5rem;
-    }
-    .invite-header h2 {
-      color: var(--burgundy);
-      font-size: 1.3rem;
-    }
-    .invite-header p {
-      color: var(--text-secondary);
-      font-size: 0.8rem;
-      margin-top: 0.3rem;
-    }
-
-    .contact-list {
-      max-height: 300px;
-      overflow-y: auto;
-      margin: 1rem 0;
+    .room-info {
+      background: rgba(198, 93, 59, 0.1);
       border-radius: 16px;
-      border: 1px solid rgba(198, 93, 59, 0.15);
+      padding: 1rem;
+      margin: 1rem 0;
+      text-align: center;
     }
-
-    .contact-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.8rem 1rem;
-      border-bottom: 1px solid rgba(198, 93, 59, 0.1);
-      transition: all 0.2s;
+    .room-code {
+      font-size: 2rem;
+      font-weight: 800;
+      font-family: monospace;
+      color: var(--terracotta);
+      letter-spacing: 2px;
+      background: white;
+      padding: 8px;
+      border-radius: 12px;
+      display: inline-block;
+      margin: 0.5rem 0;
     }
-    .contact-item:last-child {
-      border-bottom: none;
-    }
-    .contact-item:hover {
-      background: rgba(198, 93, 59, 0.05);
-    }
-    .contact-info {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex: 1;
-    }
-    .contact-avatar {
-      width: 40px;
-      height: 40px;
-      background: rgba(37, 211, 102, 0.1);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--whatsapp);
-      font-size: 1.2rem;
-    }
-    .contact-details {
-      flex: 1;
-    }
-    .contact-name {
-      font-weight: 700;
-      color: var(--text-primary);
-      font-size: 0.9rem;
-    }
-    .contact-number {
-      font-size: 0.7rem;
-      color: var(--text-secondary);
-      direction: ltr;
-      text-align: left;
-    }
-    .invite-btn {
-      background: var(--whatsapp);
+    .copy-btn {
+      background: var(--burgundy);
       border: none;
-      padding: 6px 14px;
+      padding: 4px 12px;
       border-radius: 20px;
       color: white;
-      font-weight: 600;
+      cursor: pointer;
       font-size: 0.7rem;
-      cursor: pointer;
+      margin-right: 8px;
+    }
+    .viewers-list {
+      max-height: 150px;
+      overflow-y: auto;
+      margin: 0.5rem 0;
+      padding: 0.5rem;
+      background: rgba(0,0,0,0.02);
+      border-radius: 12px;
+    }
+    .viewer-item {
       display: flex;
       align-items: center;
-      gap: 5px;
-      transition: all 0.2s;
-    }
-    .invite-btn:hover {
-      background: var(--whatsapp-dark);
-      transform: scale(1.02);
-    }
-    .invite-all-btn {
-      background: var(--gradient-terracotta);
-      width: 100%;
-      padding: 10px;
-      border-radius: 50px;
-      border: none;
-      color: white;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       gap: 8px;
-      margin-top: 0.5rem;
-      transition: all 0.2s;
+      padding: 4px 8px;
+      font-size: 0.8rem;
+      border-bottom: 1px solid rgba(198,93,59,0.1);
     }
-    .invite-all-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-terracotta);
+    .status-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 600;
     }
-    .add-contact-form {
-      display: flex;
-      gap: 8px;
-      margin-top: 1rem;
-      padding: 0.8rem;
-      background: rgba(198, 93, 59, 0.05);
-      border-radius: 16px;
-    }
-    .add-contact-input {
-      flex: 1;
-      padding: 8px 14px;
-      border-radius: 50px;
-      border: 1px solid rgba(198, 93, 59, 0.2);
-      font-family: 'Tajawal', sans-serif;
-      direction: ltr;
-    }
-    .add-contact-input::placeholder {
-      direction: rtl;
-    }
-    .add-contact-btn {
+    .status-host {
       background: var(--terracotta);
-      border: none;
-      padding: 8px 18px;
-      border-radius: 50px;
       color: white;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 5px;
     }
-    .empty-contacts {
-      text-align: center;
-      padding: 2rem;
-      color: var(--text-secondary);
+    .status-viewer {
+      background: rgba(198,93,59,0.2);
+      color: var(--terracotta-dark);
     }
 
-    /* Game Tab Styles (keeping existing) */
+    /* Game Viewer Mode */
+    .viewer-mode {
+      position: relative;
+    }
+    .viewer-banner {
+      background: linear-gradient(135deg, var(--burgundy), var(--terracotta));
+      color: white;
+      text-align: center;
+      padding: 6px;
+      font-size: 0.7rem;
+      border-radius: 12px;
+      margin-bottom: 0.5rem;
+    }
+    .viewer-word {
+      font-size: 2rem;
+      font-weight: 800;
+      font-family: 'Amiri', serif;
+      color: var(--burgundy-dark);
+      text-align: center;
+      padding: 1rem;
+      background: rgba(198,93,59,0.05);
+      border-radius: 16px;
+    }
+
+    /* Game Tab Styles */
     .game-container {
       max-width: 600px;
       margin: 0 auto;
@@ -491,7 +432,6 @@
       background: var(--success);
       border-color: var(--success);
       color: white;
-      grid-column: span 2;
     }
     .btn-skip { background: var(--danger); border-color: var(--danger); color: white; }
     .btn-primary { background: var(--terracotta); border-color: var(--terracotta); color: white; }
@@ -499,16 +439,11 @@
       background: var(--gradient-gold);
       border-color: var(--gold);
       color: var(--burgundy-dark);
-      grid-column: span 2;
     }
     .btn-category {
       background: var(--burgundy);
       border-color: var(--burgundy);
       color: white;
-    }
-    .btn-category:hover {
-      background: var(--burgundy-dark);
-      transform: translateY(-2px);
     }
 
     .stats-row {
@@ -635,11 +570,6 @@
       font-weight: 600;
       transition: all 0.2s;
     }
-    .team-option:hover, .category-option:hover {
-      background: rgba(198, 93, 59, 0.1);
-      border-color: var(--terracotta);
-      transform: scale(1.02);
-    }
     .sound-toggle-inline {
       position: fixed;
       bottom: 15px;
@@ -679,12 +609,9 @@
     @media (max-width: 640px) {
       .current-word { font-size: 1.5rem; }
       .action-buttons { grid-template-columns: 1fr; }
-      .btn-success, .btn-new-game { grid-column: span 1; }
       .timer-number { font-size: 2rem; }
       .tab-navigation { gap: 0.2rem; }
       .tab-btn { padding: 4px 12px; font-size: 0.7rem; }
-      .contact-item { flex-direction: column; gap: 8px; align-items: stretch; }
-      .invite-btn { justify-content: center; }
     }
   </style>
 </head>
@@ -692,6 +619,7 @@
 <div class="app-container">
   <div class="tab-navigation">
     <button class="tab-btn active" data-tab="home"><i class="fas fa-home"></i> الرئيسية</button>
+    <button class="tab-btn" data-tab="host"><i class="fas fa-chalkboard-user"></i> استضافة</button>
     <button class="tab-btn" data-tab="game"><i class="fas fa-mask"></i> اللعبة</button>
     <button class="tab-btn" data-tab="teams"><i class="fas fa-users"></i> الفرق</button>
     <button class="tab-btn" data-tab="invite"><i class="fab fa-whatsapp"></i> دعوة</button>
@@ -713,16 +641,21 @@
           <div class="game-description">
             <h3><i class="fas fa-info-circle"></i> طريقة اللعب</h3>
             <ul class="rule-list">
-              <li><i class="fas fa-theater-masks"></i> لاعب يمثل <strong>بدون كلام</strong> والباقي يخمنون</li>
-              <li><i class="fas fa-hourglass-start"></i> اضغط <strong>"بدء المؤقت"</strong> للعد التنازلي</li>
-              <li><i class="fas fa-layer-group"></i> اضغط <strong>"اختر الفئة"</strong> لتغيير نوع الكلمات</li>
-              <li><i class="fas fa-trophy"></i> <strong>"تم التخمين"</strong> ← اختر الفريق الفائز + نقطة</li>
-              <li><i class="fas fa-forward"></i> <strong>"تخطي"</strong> لكلمة جديدة</li>
-              <li><i class="fas fa-flag-checkered"></i> أول فريق يصل <strong>10 نقاط</strong> هو البطل!</li>
-              <li><i class="fab fa-whatsapp"></i> استخدم <strong>الدعوة</strong> لدعوة أصدقائك عبر واتساب</li>
+              <li><i class="fas fa-chalkboard-user"></i> <strong>وضع الاستضافة:</strong> أنشئ غرفة وشارك الرابط مع الأصدقاء</li>
+              <li><i class="fas fa-eye"></i> <strong>المشاهدون:</strong> يدخلون كمشاهدين ويرون نفس الكلمة والمؤقت</li>
+              <li><i class="fas fa-hourglass-start"></i> <strong>المضيف:</strong> يتحكم ببدء المؤقت والتخطي والتخمين</li>
+              <li><i class="fas fa-trophy"></i> أول فريق يصل <strong>10 نقاط</strong> هو البطل!</li>
             </ul>
           </div>
-          <button class="play-button-home" id="playNowBtn"><i class="fas fa-play"></i> ابدأ اللعب</button>
+          <button class="play-button-home" id="hostModeBtn"><i class="fas fa-chalkboard-user"></i> ابدأ استضافة</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="tab-pane" id="hostTab">
+      <div class="host-container">
+        <div class="host-card" id="hostContent">
+          <!-- Dynamic content for host mode -->
         </div>
       </div>
     </div>
@@ -730,7 +663,7 @@
     <div class="tab-pane" id="gameTab">
       <div class="game-container">
         <div class="game-card">
-          <div class="game-header"><h2><i class="fas fa-theater-masks"></i> حان وقت التمثيل</h2></div>
+          <div class="game-header"><h2><i class="fas fa-theater-masks"></i> <span id="gameModeTitle">حان وقت التمثيل</span></h2></div>
           <div class="game-body" id="gameDynamicContent"></div>
         </div>
       </div>
@@ -753,18 +686,20 @@
           <div class="invite-header">
             <i class="fab fa-whatsapp"></i>
             <h2>دعوة الأصدقاء</h2>
-            <p>أرسل دعوة للعب عبر واتساب</p>
+            <p>أرسل رابط الغرفة لدعوة الأصدقاء كمشاهدين</p>
           </div>
-          
+          <div id="inviteRoomInfo" class="room-info" style="display: none;">
+            <div>🔑 رمز الغرفة:</div>
+            <div class="room-code" id="inviteRoomCode">---</div>
+            <button id="copyInviteLinkBtn" class="copy-btn"><i class="fas fa-copy"></i> نسخ الرابط</button>
+          </div>
           <div id="contactsList" class="contact-list"></div>
-          
           <div class="add-contact-form">
             <input type="text" id="contactNameInput" class="add-contact-input" placeholder="الاسم (اختياري)">
             <input type="tel" id="contactNumberInput" class="add-contact-input" placeholder="رقم الجوال (مثال: 9665xxxxxxxx)">
             <button id="addContactBtn" class="add-contact-btn"><i class="fas fa-plus"></i> إضافة</button>
           </div>
-          
-          <button id="inviteAllBtn" class="invite-all-btn">
+          <button id="inviteAllBtn" class="invite-all-btn" style="background: var(--gradient-terracotta); width: 100%; padding: 10px; border-radius: 50px; margin-top: 0.5rem;">
             <i class="fab fa-whatsapp"></i> دعوة الجميع عبر واتساب
           </button>
         </div>
@@ -775,7 +710,7 @@
 <div class="sound-toggle-inline" id="soundToggle"><i class="fas fa-volume-mute"></i> الصوت</div>
 
 <script>
-  // ==================== SOUND SYSTEM (same as before) ====================
+  // ==================== SOUND SYSTEM ====================
   let soundEnabled = false;
   let audioContext = null;
   function initAudio() { 
@@ -826,138 +761,296 @@
     }
   });
 
-  // ==================== WHATSAPP INVITE SYSTEM ====================
-  let contacts = [];
+  // ==================== HOST/VIEWER SYSTEM ====================
+  let isHost = false;
+  let roomId = null;
+  let viewers = [];
+  let gameState = {
+    currentWord: "",
+    currentCategory: "أفعال",
+    timeLeft: 60,
+    timerRunning: false,
+    roundCount: 0,
+    gameActive: true,
+    gameWinner: null
+  };
   
-  function loadContacts() {
-    const saved = localStorage.getItem('whatsapp_contacts');
-    if(saved) {
-      contacts = JSON.parse(saved);
-    } else {
-      // Default contacts
-      contacts = [
-        { id: 1, name: "أحمد", number: "9665XXXXXXXX" },
-        { id: 2, name: "محمد", number: "9665XXXXXXXX" },
-        { id: 3, name: "سارة", number: "9665XXXXXXXX" }
-      ];
-    }
-    renderContacts();
+  // Generate random room ID
+  function generateRoomId() {
+    return Math.random().toString(36).substring(2, 8).toUpperCase();
   }
   
-  function saveContacts() {
-    localStorage.setItem('whatsapp_contacts', JSON.stringify(contacts));
+  // Start hosting
+  function startHosting() {
+    isHost = true;
+    roomId = generateRoomId();
+    localStorage.setItem('host_room_id', roomId);
+    localStorage.setItem('is_host', 'true');
+    
+    // Initialize game state for host
+    currentWordObj = getRandomWord();
+    gameState.currentWord = currentWordObj.word;
+    gameState.currentCategory = currentWordObj.category;
+    
+    renderHostUI();
+    switchToTab('host');
+    updateInviteRoomInfo();
+    play('click');
   }
   
-  function addContact(name, number) {
-    if(!number.trim()) {
-      alert('الرجاء إدخال رقم الجوال');
-      return false;
-    }
-    // Clean number - remove spaces and non-digits
-    let cleanNumber = number.replace(/[^\d]/g, '');
-    if(cleanNumber.length < 9) {
-      alert('الرجاء إدخال رقم صحيح (يجب أن يكون 9 أرقام على الأقل)');
-      return false;
-    }
-    // Add Saudi code if not present
-    if(!cleanNumber.startsWith('966') && cleanNumber.length === 9) {
-      cleanNumber = '966' + cleanNumber;
+  // Join as viewer
+  function joinAsViewer(enteredRoomId) {
+    if(!enteredRoomId) {
+      enteredRoomId = prompt("🔑 أدخل رمز الغرفة:", localStorage.getItem('host_room_id') || "");
+      if(!enteredRoomId) return false;
     }
     
-    contacts.push({
-      id: Date.now(),
-      name: name.trim() || `صديق ${contacts.length + 1}`,
-      number: cleanNumber
-    });
-    saveContacts();
-    renderContacts();
+    // In this simplified version, viewers can see the same game state via localStorage sync
+    // In a real implementation, you'd use WebSockets. Here we simulate with localStorage events.
+    roomId = enteredRoomId.toUpperCase();
+    isHost = false;
+    localStorage.setItem('viewer_room_id', roomId);
+    localStorage.setItem('is_viewer', 'true');
+    
+    // Load game state from host if available
+    loadGameStateFromStorage();
+    
+    switchToTab('game');
+    document.getElementById('gameModeTitle').innerHTML = '<i class="fas fa-eye"></i> وضع المشاهد';
+    renderViewerMode();
     play('click');
     return true;
   }
   
-  function deleteContact(contactId) {
-    if(confirm('هل تريد حذف هذا الاتصال؟')) {
-      contacts = contacts.filter(c => c.id !== contactId);
-      saveContacts();
-      renderContacts();
-      play('click');
+  function loadGameStateFromStorage() {
+    const savedState = localStorage.getItem(`game_state_${roomId}`);
+    if(savedState) {
+      const state = JSON.parse(savedState);
+      currentWordObj = { word: state.currentWord, category: state.currentCategory };
+      timeLeft = state.timeLeft;
+      timerRunning = state.timerRunning;
+      roundCount = state.roundCount;
+      gameActive = state.gameActive;
+      gameWinner = state.gameWinner;
+      currentCategory = state.currentCategory;
     }
   }
   
-  function sendWhatsAppInvite(number, name) {
-    const gameLink = window.location.href;
-    const message = `🎭 *لعبة التمثيل* 🎭\n\nمرحباً ${name || 'صديقي'}!\n\nتمت دعوتك للعب لعبة التمثيل الممتعة مع الأصدقاء!\n\n🎮 *طريقة اللعب:*\n• لاعب يمثل بدون كلام والباقي يخمنون\n• 4 فئات: أفعال، حيوانات، أمثال، أشياء\n• أول فريق يصل 10 نقاط يفوز\n\n🎯 *رابط اللعبة:*\n${gameLink}\n\nانقر الرابط للانضمام إلينا!\n\nننتظرك! 🎉`;
+  function saveGameState() {
+    if(isHost && roomId) {
+      const state = {
+        currentWord: currentWordObj.word,
+        currentCategory: currentWordObj.category,
+        timeLeft: timeLeft,
+        timerRunning: timerRunning,
+        roundCount: roundCount,
+        gameActive: gameActive,
+        gameWinner: gameWinner
+      };
+      localStorage.setItem(`game_state_${roomId}`, JSON.stringify(state));
+    }
+  }
+  
+  function renderHostUI() {
+    const container = document.getElementById('hostContent');
+    if(!container) return;
     
-    const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/${number}?text=${encodedMessage}`;
-    window.open(whatsappUrl, '_blank');
+    container.innerHTML = `
+      <div style="text-align: center;">
+        <i class="fas fa-chalkboard-user" style="font-size: 2rem; color: var(--terracotta);"></i>
+        <h2 style="margin: 0.5rem 0;">وضع الاستضافة</h2>
+        <p style="color: var(--text-secondary);">أنت المضيف - يمكنك التحكم باللعبة</p>
+      </div>
+      
+      <div class="room-info">
+        <div>🔑 رمز الغرفة</div>
+        <div class="room-code" id="hostRoomCode">${roomId}</div>
+        <button id="copyHostLinkBtn" class="copy-btn"><i class="fas fa-copy"></i> نسخ رابط الدعوة</button>
+      </div>
+      
+      <div class="viewers-list" id="viewersList">
+        <div style="text-align: center; padding: 0.5rem; color: var(--text-secondary);">
+          <i class="fas fa-users"></i> المشاهدون سيظهرون هنا
+        </div>
+      </div>
+      
+      <div class="host-controls">
+        <div class="word-card" style="margin: 0.5rem 0;">
+          <div class="current-word">${escapeHtml(currentWordObj.word)}</div>
+          <div class="category-tag">📂 ${currentWordObj.category}</div>
+        </div>
+        
+        <div class="timer-area">
+          <div class="timer-circle">
+            <div class="timer-number">${timeLeft}</div>
+            <div class="timer-label">ثانية</div>
+          </div>
+        </div>
+        
+        <div class="action-buttons" style="grid-template-columns: 1fr 1fr;">
+          <button class="btn-action btn-primary" id="hostStartTimer"><i class="fas fa-hourglass-start"></i> بدء المؤقت</button>
+          <button class="btn-action btn-category" id="hostChooseCategory"><i class="fas fa-layer-group"></i> الفئة</button>
+          <button class="btn-action btn-skip" id="hostSkip"><i class="fas fa-forward"></i> تخطي</button>
+          <button class="btn-action btn-success" id="hostGuess"><i class="fas fa-check-circle"></i> تم التخمين!</button>
+        </div>
+        
+        <div class="stats-row">
+          <div class="stat-item"><i class="fas fa-redo-alt"></i> <span class="stat-value" id="hostRounds">${roundCount}</span> <span>جولة</span></div>
+          <div class="stat-item"><i class="fas fa-flag-checkered"></i> <span>الهدف: 10 نقاط</span></div>
+        </div>
+      </div>
+    `;
+    
+    // Attach event listeners
+    document.getElementById('hostStartTimer')?.addEventListener('click', () => {
+      if(!timerRunning && timeLeft > 0 && gameActive && !gameWinner) {
+        startTimer();
+        saveGameState();
+      }
+    });
+    document.getElementById('hostChooseCategory')?.addEventListener('click', () => showCategorySelectionModal());
+    document.getElementById('hostSkip')?.addEventListener('click', () => {
+      skipWord();
+      saveGameState();
+    });
+    document.getElementById('hostGuess')?.addEventListener('click', () => {
+      guessedCorrect();
+      saveGameState();
+    });
+    document.getElementById('copyHostLinkBtn')?.addEventListener('click', () => copyInviteLink());
+  }
+  
+  function renderViewerMode() {
+    const container = document.getElementById('gameDynamicContent');
+    if(!container) return;
+    
+    const victoryMessageHTML = gameWinner ? 
+      `<div class="victory-message">
+        <i class="fas fa-trophy"></i> 🏆 الفائز: ${escapeHtml(teams.find(t=>t.id===gameWinner)?.name || '')} 🏆 <i class="fas fa-trophy"></i>
+      </div>` : '';
+    
+    container.innerHTML = `
+      <div class="viewer-banner">
+        <i class="fas fa-eye"></i> أنت في وضع المشاهد - تشاهد اللعبة مباشرة
+      </div>
+      ${victoryMessageHTML}
+      <div class="word-card">
+        <div class="current-word" id="viewerWord">${escapeHtml(currentWordObj?.word || '---')}</div>
+        <div class="category-tag" id="viewerCategory">📂 ${currentWordObj?.category || '---'}</div>
+      </div>
+      <div class="timer-area">
+        <div class="timer-circle">
+          <div class="timer-number" id="viewerTimer">${timeLeft}</div>
+          <div class="timer-label">ثانية</div>
+        </div>
+      </div>
+      <div class="stats-row">
+        <div class="stat-item"><i class="fas fa-redo-alt"></i> <span class="stat-value" id="viewerRounds">${roundCount}</span> <span>جولة</span></div>
+        <div class="stat-item"><i class="fas fa-flag-checkered"></i> <span>الهدف: 10 نقاط</span></div>
+      </div>
+      <div style="text-align: center; margin-top: 1rem; color: var(--text-secondary); font-size: 0.7rem;">
+        <i class="fas fa-info-circle"></i> أنت تشاهد اللعبة. المضيف هو من يتحكم بالتحديثات.
+      </div>
+    `;
+  }
+  
+  function updateViewerDisplay() {
+    const wordEl = document.getElementById('viewerWord');
+    const catEl = document.getElementById('viewerCategory');
+    const timerEl = document.getElementById('viewerTimer');
+    const roundsEl = document.getElementById('viewerRounds');
+    
+    if(wordEl) wordEl.innerText = currentWordObj?.word || '---';
+    if(catEl) catEl.innerText = `📂 ${currentWordObj?.category || '---'}`;
+    if(timerEl) timerEl.innerText = timeLeft;
+    if(roundsEl) roundsEl.innerText = roundCount;
+  }
+  
+  function copyInviteLink() {
+    const link = window.location.href.split('?')[0] + `?room=${roomId}`;
+    navigator.clipboard.writeText(link);
+    alert('✅ تم نسخ رابط الغرفة!\nأرسله لأصدقائك ليدخلوا كمشاهدين.');
     play('click');
   }
   
-  function sendInviteToAll() {
-    if(contacts.length === 0) {
-      alert('لا توجد جهات اتصال للدعوة. أضف جهات اتصال أولاً.');
-      return;
-    }
-    if(confirm(`هل تريد إرسال دعوة إلى ${contacts.length} شخص عبر واتساب؟\nسيتم فتح نافذة لكل شخص بشكل منفصل.`)) {
-      contacts.forEach(contact => {
-        setTimeout(() => {
-          sendWhatsAppInvite(contact.number, contact.name);
-        }, 500);
-      });
+  function updateInviteRoomInfo() {
+    const inviteInfo = document.getElementById('inviteRoomInfo');
+    const inviteCode = document.getElementById('inviteRoomCode');
+    if(inviteInfo && inviteCode && roomId) {
+      inviteInfo.style.display = 'block';
+      inviteCode.innerText = roomId;
     }
   }
   
-  function renderContacts() {
-    const container = document.getElementById('contactsList');
-    if(!container) return;
-    
-    if(contacts.length === 0) {
-      container.innerHTML = `
-        <div class="empty-contacts">
-          <i class="fas fa-address-book" style="font-size: 2rem; color: rgba(198,93,59,0.3);"></i>
-          <p style="margin-top: 0.5rem;">لا توجد جهات اتصال</p>
-          <p style="font-size: 0.7rem;">أضف جهات اتصال لإرسال الدعوات</p>
-        </div>
-      `;
-      return;
+  // Sync game state for viewers (periodic check)
+  function syncGameState() {
+    if(!isHost && roomId) {
+      const savedState = localStorage.getItem(`game_state_${roomId}`);
+      if(savedState) {
+        const state = JSON.parse(savedState);
+        let needsUpdate = false;
+        
+        if(currentWordObj?.word !== state.currentWord) {
+          currentWordObj = { word: state.currentWord, category: state.currentCategory };
+          needsUpdate = true;
+        }
+        if(timeLeft !== state.timeLeft) {
+          timeLeft = state.timeLeft;
+          needsUpdate = true;
+        }
+        if(roundCount !== state.roundCount) {
+          roundCount = state.roundCount;
+          needsUpdate = true;
+        }
+        if(gameWinner !== state.gameWinner) {
+          gameWinner = state.gameWinner;
+          needsUpdate = true;
+        }
+        
+        if(needsUpdate) {
+          updateViewerDisplay();
+          if(gameWinner) renderViewerMode();
+        }
+      }
     }
-    
-    container.innerHTML = contacts.map(contact => `
-      <div class="contact-item">
-        <div class="contact-info">
-          <div class="contact-avatar">
-            <i class="fas fa-user-circle"></i>
-          </div>
-          <div class="contact-details">
-            <div class="contact-name">${escapeHtml(contact.name)}</div>
-            <div class="contact-number">${contact.number}</div>
-          </div>
-        </div>
-        <div style="display: flex; gap: 6px;">
-          <button class="invite-btn" onclick="window.sendInviteToContact(${contact.id})">
-            <i class="fab fa-whatsapp"></i> دعوة
-          </button>
-          <button class="team-btn delete" onclick="window.deleteContact(${contact.id})" style="background: rgba(184, 59, 59, 0.1);">
-            <i class="fas fa-trash"></i>
-          </button>
-        </div>
-      </div>
-    `).join('');
   }
   
-  window.sendInviteToContact = (contactId) => {
-    const contact = contacts.find(c => c.id === contactId);
-    if(contact) {
-      sendWhatsAppInvite(contact.number, contact.name);
+  // Check URL for room parameter
+  function checkRoomFromURL() {
+    const params = new URLSearchParams(window.location.search);
+    const roomParam = params.get('room');
+    if(roomParam && !localStorage.getItem('is_host')) {
+      joinAsViewer(roomParam);
     }
-  };
+  }
   
-  window.deleteContact = (contactId) => {
-    deleteContact(contactId);
-  };
+  // Override timer functions to save state
+  const originalStartTimer = startTimer;
+  const originalSkipWord = skipWord;
+  const originalGuessedCorrect = guessedCorrect;
   
-  // ==================== GAME DATA (simplified for space) ====================
+  // Modify timer and game functions to save state
+  function startTimerWithSave() {
+    originalStartTimer();
+    if(isHost) saveGameState();
+  }
+  
+  function skipWordWithSave() {
+    originalSkipWord();
+    if(isHost) saveGameState();
+  }
+  
+  function guessedCorrectWithSave() {
+    originalGuessedCorrect();
+    if(isHost) saveGameState();
+  }
+  
+  // Override
+  window.startTimer = startTimerWithSave;
+  window.skipWord = skipWordWithSave;
+  window.guessedCorrect = guessedCorrectWithSave;
+  
+  // ==================== GAME DATA ====================
   const gameCategories = {
     "أفعال": ["يرقص العرضة","يغني","يطبخ منسف","يشرب قهوة","يركب جمل","يلعب كرة قدم","يؤذن","يلقي شعر","يرسم","يضحك","يبكي","ينام","يأكل تمر"],
     "حيوانات": ["جمل","صقر","حصان عربي","غزال","نمر","ذئب","ثعلب","وعل","نعامة","قط","كلب","نسر","فهد"],
@@ -987,10 +1080,10 @@
     return getRandomWordFromCategory(currentCategory);
   }
 
-  // ==================== TEAMS ====================
+  // ==================== TEAMS (same as before) ====================
   let teams = [];
   function loadTeams() {
-    const saved = localStorage.getItem('charades_teams_v8');
+    const saved = localStorage.getItem('charades_teams_v9');
     if(saved) {
       teams = JSON.parse(saved);
     } else {
@@ -1001,7 +1094,7 @@
     }
     renderTeamList();
   }
-  function saveTeams() { localStorage.setItem('charades_teams_v8', JSON.stringify(teams)); }
+  function saveTeams() { localStorage.setItem('charades_teams_v9', JSON.stringify(teams)); }
   function addTeam(name) {
     if(!name.trim()) return;
     teams.push({ id: Date.now(), name: name.trim(), score: 0 });
@@ -1042,6 +1135,7 @@
       updateTimerUI();
       refreshWordUI();
       renderGameUI();
+      if(isHost) saveGameState();
       play('click');
       alert('✨ تم بدء لعبة جديدة! جميع الفرق تبدأ من الصفر. ✨');
     }
@@ -1091,6 +1185,7 @@
         play('winner');
         alert(`🏆 مبروك! الفريق ${team.name} وصل إلى 10 نقاط وفاز باللعبة! 🏆\n\nاضغط على "لعبة جديدة" لبدء جولة جديدة.`);
         renderGameUI();
+        if(isHost) saveGameState();
       }
     }
   };
@@ -1100,7 +1195,7 @@
     return str.replace(/[&<>]/g, m => m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); 
   }
 
-  // ==================== GAME STATE ====================
+  // ==================== GAME STATE VARIABLES ====================
   let currentWordObj = null;
   let timerInterval = null;
   let timeLeft = 60;
@@ -1117,8 +1212,6 @@
     } 
     timerRunning = false; 
     timesUpPlayed=false; 
-    const circle = document.querySelector('.timer-circle');
-    if(circle) circle.classList.remove('active');
   }
   
   function startTimer() {
@@ -1134,8 +1227,6 @@
     stopTimer();
     timerRunning = true;
     timesUpPlayed = false;
-    const circle = document.querySelector('.timer-circle');
-    if(circle) circle.classList.add('active');
     play('start');
     
     timerInterval = setInterval(() => {
@@ -1146,28 +1237,27 @@
           timesUpPlayed=true; 
         }
         updateTimerUI();
-        const timerEl = document.getElementById('gameTimerNumber');
-        if(timerEl) { 
-          timerEl.classList.add('times-up'); 
-          setTimeout(()=>timerEl.classList.remove('times-up'),1000);
-        }
       } else {
         timeLeft--;
         updateTimerUI();
-        const timerEl = document.getElementById('gameTimerNumber');
         if(timeLeft <=5 && timeLeft>0) { 
           play('tick'); 
-          if(timerEl) timerEl.classList.add('warning');
-        } else { 
-          if(timerEl && timeLeft>5) timerEl.classList.remove('warning');
         }
       }
+      if(isHost) saveGameState();
     }, 1000);
   }
   
   function updateTimerUI() { 
-    const el = document.getElementById('gameTimerNumber'); 
-    if(el) el.innerText = timeLeft; 
+    const els = document.querySelectorAll('#gameTimerNumber, #hostRounds, #viewerTimer');
+    els.forEach(el => {
+      if(el && el.id === 'gameTimerNumber') el.innerText = timeLeft;
+      if(el && el.id === 'viewerTimer') el.innerText = timeLeft;
+    });
+    if(isHost) {
+      const hostTimer = document.querySelector('#hostContent .timer-number');
+      if(hostTimer) hostTimer.innerText = timeLeft;
+    }
   }
   
   function refreshWordUI() {
@@ -1180,13 +1270,27 @@
         wordEl.style.opacity='1'; 
       },150); 
     }
-    if(catEl) catEl.innerHTML = `📂 ${currentWordObj.category} <span class="current-category-badge"><i class="fas fa-check"></i> الفئة الحالية</span>`;
+    if(catEl) catEl.innerHTML = `📂 ${currentWordObj.category}`;
+    
+    if(isHost) {
+      const hostWord = document.querySelector('#hostContent .current-word');
+      const hostCat = document.querySelector('#hostContent .category-tag');
+      if(hostWord) hostWord.innerText = currentWordObj.word;
+      if(hostCat) hostCat.innerHTML = `📂 ${currentWordObj.category}`;
+    }
+    
+    if(!isHost && roomId) {
+      updateViewerDisplay();
+    }
+    
     if(gameActive && !gameWinner) play('newWord');
   }
   
   function updateRoundUI() { 
-    const el = document.getElementById('gameRounds'); 
-    if(el) el.innerText = roundCount; 
+    const els = document.querySelectorAll('#gameRounds, #hostRounds, #viewerRounds');
+    els.forEach(el => {
+      if(el) el.innerText = roundCount;
+    });
   }
 
   function showTeamSelectionModal(onSelect) {
@@ -1236,6 +1340,7 @@
           play('winner');
           alert(`🏆 مبروك! الفريق ${selectedTeam.name} وصل إلى 10 نقاط وفاز باللعبة! 🏆\n\nاضغط على "لعبة جديدة" لبدء جولة جديدة.`);
           renderGameUI();
+          if(isHost) saveGameState();
           return;
         }
       }
@@ -1248,8 +1353,7 @@
         refreshWordUI();
         timerRunning = false;
         gameActive = true;
-        const timerEl = document.getElementById('gameTimerNumber');
-        if(timerEl) timerEl.classList.remove('warning');
+        if(isHost) saveGameState();
       }
     });
   }
@@ -1268,8 +1372,7 @@
     timerRunning = false;
     timeLeft = 60;
     updateTimerUI();
-    const timerEl = document.getElementById('gameTimerNumber');
-    if(timerEl) timerEl.classList.remove('warning');
+    if(isHost) saveGameState();
   }
 
   function showCategorySelectionModal() {
@@ -1282,7 +1385,7 @@
     const categories = Object.keys(gameCategories);
     modal.innerHTML = `<div class="modal-content">
       <h3><i class="fas fa-layer-group"></i> اختر الفئة</h3>
-      <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.5rem;">الفئة الحالية: <strong style="color: var(--terracotta);">${currentCategory}</strong></div>
+      <div style="font-size: 0.8rem; margin-bottom: 0.5rem;">الفئة الحالية: <strong style="color: var(--terracotta);">${currentCategory}</strong></div>
       ${categories.map(cat => {
         let icon = '';
         if(cat === 'أفعال') icon = '🏃';
@@ -1303,6 +1406,7 @@
           currentWordObj = getRandomWord();
           refreshWordUI();
           play('click');
+          if(isHost) saveGameState();
         }
         modal.remove();
       });
@@ -1319,7 +1423,7 @@
     
     const html = `
       ${victoryMessageHTML}
-      <div class="word-card"><div class="current-word" id="gameCurrentWord">${escapeHtml(currentWordObj.word)}</div><div class="category-tag" id="gameCategory">📂 ${currentWordObj.category} <span class="current-category-badge"><i class="fas fa-check"></i> الفئة الحالية</span></div></div>
+      <div class="word-card"><div class="current-word" id="gameCurrentWord">${escapeHtml(currentWordObj.word)}</div><div class="category-tag" id="gameCategory">📂 ${currentWordObj.category}</div></div>
       <div class="timer-area"><div class="timer-circle"><div class="timer-number" id="gameTimerNumber">${timeLeft}</div><div class="timer-label">ثانية</div></div></div>
       <div class="action-buttons">
         <button class="btn-action btn-primary" id="startTimerBtn"><i class="fas fa-hourglass-start"></i> بدء المؤقت</button>
@@ -1332,24 +1436,51 @@
       <div class="stats-row"><div class="stat-item"><i class="fas fa-redo-alt"></i> <span class="stat-value" id="gameRounds">${roundCount}</span> <span>جولة</span></div><div class="stat-item"><i class="fas fa-flag-checkered"></i> <span>الهدف: 10 نقاط</span></div></div>
     `;
     const container = document.getElementById('gameDynamicContent');
-    if(container) container.innerHTML = html;
+    if(container && !isHost) {
+      container.innerHTML = html;
+    } else if(container && isHost) {
+      // For host, use the host UI instead
+      renderHostUI();
+      return;
+    }
     
-    document.getElementById('startTimerBtn')?.addEventListener('click', () => { 
-      if(!timerRunning && timeLeft>0 && gameActive && !gameWinner) { 
-        startTimer(); 
+    if(!isHost) {
+      document.getElementById('startTimerBtn')?.addEventListener('click', () => { 
+        alert('⚠️ أنت في وضع المشاهد. المضيف هو من يتحكم باللعبة.');
+      });
+      document.getElementById('chooseCategoryBtn')?.addEventListener('click', () => { 
+        alert('⚠️ أنت في وضع المشاهد. المضيف هو من يختار الفئة.');
+      });
+      document.getElementById('gameSkipBtn')?.addEventListener('click', () => { 
+        alert('⚠️ أنت في وضع المشاهد. المضيف هو من يتحكم بالتخطي.');
+      });
+      document.getElementById('gameGuessBtn')?.addEventListener('click', () => { 
+        alert('⚠️ أنت في وضع المشاهد. المضيف هو من يسجل النقاط.');
+      });
+      document.getElementById('showTeamsBtn')?.addEventListener('click', () => { 
+        switchToTab('teams'); 
         play('click'); 
-      } else if(gameWinner) {
-        alert('اللعبة انتهت! اضغط على "لعبة جديدة" للبدء.');
-      }
-    });
-    document.getElementById('chooseCategoryBtn')?.addEventListener('click', () => showCategorySelectionModal());
-    document.getElementById('gameGuessBtn')?.addEventListener('click', () => guessedCorrect());
-    document.getElementById('gameSkipBtn')?.addEventListener('click', () => skipWord());
-    document.getElementById('showTeamsBtn')?.addEventListener('click', () => { 
-      switchToTab('teams'); 
-      play('click'); 
-    });
-    document.getElementById('newGameBtn')?.addEventListener('click', () => resetAllScores());
+      });
+      document.getElementById('newGameBtn')?.addEventListener('click', () => { 
+        alert('⚠️ أنت في وضع المشاهد. المضيف هو من يبدأ لعبة جديدة.');
+      });
+    } else {
+      document.getElementById('startTimerBtn')?.addEventListener('click', () => { 
+        if(!timerRunning && timeLeft>0 && gameActive && !gameWinner) { 
+          startTimer(); 
+          play('click'); 
+          if(isHost) saveGameState();
+        } 
+      });
+      document.getElementById('chooseCategoryBtn')?.addEventListener('click', () => showCategorySelectionModal());
+      document.getElementById('gameSkipBtn')?.addEventListener('click', () => { skipWord(); if(isHost) saveGameState(); });
+      document.getElementById('gameGuessBtn')?.addEventListener('click', () => { guessedCorrect(); if(isHost) saveGameState(); });
+      document.getElementById('showTeamsBtn')?.addEventListener('click', () => { 
+        switchToTab('teams'); 
+        play('click'); 
+      });
+      document.getElementById('newGameBtn')?.addEventListener('click', () => resetAllScores());
+    }
   }
 
   function initGame() {
@@ -1363,97 +1494,114 @@
     renderGameUI();
   }
 
+  // ==================== CONTACTS & INVITE ====================
+  let contacts = [];
+  function loadContacts() {
+    const saved = localStorage.getItem('whatsapp_contacts');
+    if(saved) contacts = JSON.parse(saved);
+    else contacts = [];
+    renderContacts();
+  }
+  function saveContacts() { localStorage.setItem('whatsapp_contacts', JSON.stringify(contacts)); }
+  function addContact(name, number) {
+    if(!number.trim()) { alert('الرجاء إدخال رقم الجوال'); return false; }
+    let cleanNumber = number.replace(/[^\d]/g, '');
+    if(cleanNumber.length < 9) { alert('الرجاء إدخال رقم صحيح'); return false; }
+    if(!cleanNumber.startsWith('966') && cleanNumber.length === 9) cleanNumber = '966' + cleanNumber;
+    contacts.push({ id: Date.now(), name: name.trim() || `صديق ${contacts.length + 1}`, number: cleanNumber });
+    saveContacts();
+    renderContacts();
+    play('click');
+    return true;
+  }
+  function deleteContact(contactId) {
+    if(confirm('هل تريد حذف هذا الاتصال؟')) {
+      contacts = contacts.filter(c => c.id !== contactId);
+      saveContacts();
+      renderContacts();
+      play('click');
+    }
+  }
+  function sendWhatsAppInvite(number, name) {
+    const link = window.location.href.split('?')[0] + (roomId ? `?room=${roomId}` : '');
+    const message = `🎭 *لعبة التمثيل* 🎭\n\nمرحباً ${name || 'صديقي'}!\n\nتمت دعوتك لمشاهدة واللعب في لعبة التمثيل!\n\n🎮 *رابط اللعبة:*\n${link}\n\nادخل كمشاهد وشاهد اللعبة مباشرة! 🎉`;
+    const encodedMessage = encodeURIComponent(message);
+    window.open(`https://wa.me/${number}?text=${encodedMessage}`, '_blank');
+    play('click');
+  }
+  function sendInviteToAll() {
+    if(contacts.length === 0) { alert('لا توجد جهات اتصال'); return; }
+    if(confirm(`إرسال دعوة إلى ${contacts.length} شخص؟`)) {
+      contacts.forEach(contact => setTimeout(() => sendWhatsAppInvite(contact.number, contact.name), 500));
+    }
+  }
+  function renderContacts() {
+    const container = document.getElementById('contactsList');
+    if(!container) return;
+    if(contacts.length === 0) {
+      container.innerHTML = `<div class="empty-contacts"><i class="fas fa-address-book" style="font-size: 2rem;"></i><p>لا توجد جهات اتصال</p></div>`;
+      return;
+    }
+    container.innerHTML = contacts.map(contact => `
+      <div class="contact-item">
+        <div class="contact-info">
+          <div class="contact-avatar"><i class="fas fa-user-circle"></i></div>
+          <div class="contact-details"><div class="contact-name">${escapeHtml(contact.name)}</div><div class="contact-number">${contact.number}</div></div>
+        </div>
+        <div style="display: flex; gap: 6px;">
+          <button class="invite-btn" onclick="window.sendInviteToContact(${contact.id})"><i class="fab fa-whatsapp"></i> دعوة</button>
+          <button class="team-btn delete" onclick="window.deleteContact(${contact.id})"><i class="fas fa-trash"></i></button>
+        </div>
+      </div>
+    `).join('');
+  }
+  window.sendInviteToContact = (contactId) => { const c = contacts.find(c => c.id === contactId); if(c) sendWhatsAppInvite(c.number, c.name); };
+  window.deleteContact = (contactId) => deleteContact(contactId);
+
   // ==================== TAB SWITCHING ====================
   function switchToTab(tabId) {
     document.querySelectorAll('.tab-btn').forEach(t=>t.classList.remove('active'));
     document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active-pane'));
     const targetBtn = Array.from(document.querySelectorAll('.tab-btn')).find(t => t.dataset.tab === tabId);
     if(targetBtn) targetBtn.classList.add('active');
-    const targetPane = document.getElementById(`${tabId}Tab`);
-    if(targetPane) targetPane.classList.add('active-pane');
+    document.getElementById(`${tabId}Tab`).classList.add('active-pane');
     if(tabId === 'teams') renderTeamList();
-    if(tabId === 'invite') renderContacts();
+    if(tabId === 'invite') { renderContacts(); if(roomId) updateInviteRoomInfo(); }
+    if(tabId === 'game' && !isHost) renderViewerMode();
+    if(tabId === 'host' && isHost) renderHostUI();
     play('tabSwitch');
   }
   
+  // Event listeners
   document.querySelectorAll('.tab-btn').forEach(tab => {
     tab.addEventListener('click', () => switchToTab(tab.dataset.tab));
   });
   
-  const playNowBtn = document.getElementById('playNowBtn');
-  if(playNowBtn) {
-    playNowBtn.addEventListener('click', () => { 
-      switchToTab('game'); 
-      play('click'); 
-    });
-  }
-  
-  const addTeamBtn = document.getElementById('addTeamBtn');
-  if(addTeamBtn) {
-    addTeamBtn.addEventListener('click', () => { 
-      const inp = document.getElementById('teamNameInput'); 
-      if(inp && inp.value.trim()) {
-        addTeam(inp.value.trim()); 
-        inp.value = ''; 
-      } else if(inp) {
-        inp.style.borderColor='var(--danger)'; 
-        setTimeout(()=>inp.style.borderColor='',1000);
-      }
-    });
-  }
-  
-  const goToGameBtn = document.getElementById('goToGameBtn');
-  if(goToGameBtn) {
-    goToGameBtn.addEventListener('click', () => switchToTab('game'));
-  }
+  document.getElementById('hostModeBtn')?.addEventListener('click', () => startHosting());
+  document.getElementById('addTeamBtn')?.addEventListener('click', () => { 
+    const inp = document.getElementById('teamNameInput'); 
+    if(inp && inp.value.trim()) { addTeam(inp.value.trim()); inp.value = ''; }
+  });
+  document.getElementById('goToGameBtn')?.addEventListener('click', () => switchToTab('game'));
+  document.getElementById('addContactBtn')?.addEventListener('click', () => {
+    const name = document.getElementById('contactNameInput')?.value || '';
+    const number = document.getElementById('contactNumberInput')?.value || '';
+    if(number) { addContact(name, number); if(document.getElementById('contactNameInput')) document.getElementById('contactNameInput').value = ''; if(document.getElementById('contactNumberInput')) document.getElementById('contactNumberInput').value = ''; }
+  });
+  document.getElementById('inviteAllBtn')?.addEventListener('click', () => sendInviteToAll());
+  document.getElementById('copyInviteLinkBtn')?.addEventListener('click', () => copyInviteLink());
   
   const teamNameInput = document.getElementById('teamNameInput');
-  if(teamNameInput) {
-    teamNameInput.addEventListener('keypress', (e)=> { 
-      if(e.key==='Enter') {
-        const addBtn = document.getElementById('addTeamBtn');
-        if(addBtn) addBtn.click();
-      }
-    });
-  }
+  if(teamNameInput) teamNameInput.addEventListener('keypress', (e) => { if(e.key==='Enter') document.getElementById('addTeamBtn')?.click(); });
   
-  // Invite tab buttons
-  const addContactBtn = document.getElementById('addContactBtn');
-  if(addContactBtn) {
-    addContactBtn.addEventListener('click', () => {
-      const nameInput = document.getElementById('contactNameInput');
-      const numberInput = document.getElementById('contactNumberInput');
-      if(numberInput && numberInput.value.trim()) {
-        addContact(nameInput?.value || '', numberInput.value);
-        if(nameInput) nameInput.value = '';
-        if(numberInput) numberInput.value = '';
-      } else {
-        alert('الرجاء إدخال رقم الجوال');
-        if(numberInput) numberInput.style.borderColor = 'var(--danger)';
-        setTimeout(() => { if(numberInput) numberInput.style.borderColor = ''; }, 1000);
-      }
-    });
-  }
+  // Start sync interval for viewers
+  setInterval(() => syncGameState(), 500);
   
-  const inviteAllBtn = document.getElementById('inviteAllBtn');
-  if(inviteAllBtn) {
-    inviteAllBtn.addEventListener('click', () => sendInviteToAll());
-  }
-  
-  const contactNumberInput = document.getElementById('contactNumberInput');
-  if(contactNumberInput) {
-    contactNumberInput.addEventListener('keypress', (e) => {
-      if(e.key === 'Enter') {
-        const addBtn = document.getElementById('addContactBtn');
-        if(addBtn) addBtn.click();
-      }
-    });
-  }
-
   // Initialize
   loadTeams();
   loadContacts();
   initGame();
+  checkRoomFromURL();
 </script>
 </body>
 </html>
