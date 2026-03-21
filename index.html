@@ -1,948 +1,763 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>لعبة الرسم - تخمين الصور | تصميم سعود</title>
-  
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
-    body {
-      font-family: 'Tajawal', sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
-      padding: 20px;
-    }
-    
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    
-    .join-screen, .game-screen {
-      background: white;
-      border-radius: 20px;
-      padding: 30px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-    }
-    
-    .join-screen {
-      max-width: 500px;
-      margin: 50px auto;
-      text-align: center;
-    }
-    
-    .game-screen {
-      display: none;
-    }
-    
-    h1 {
-      color: #667eea;
-      margin-bottom: 10px;
-      font-size: 2rem;
-    }
-    
-    .subtitle {
-      color: #666;
-      margin-bottom: 30px;
-    }
-    
-    input {
-      width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border: 2px solid #ddd;
-      border-radius: 10px;
-      font-size: 16px;
-      font-family: 'Tajawal', sans-serif;
-      text-align: center;
-    }
-    
-    button {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      border: none;
-      padding: 12px 30px;
-      border-radius: 10px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      margin: 10px 5px;
-      transition: transform 0.2s;
-    }
-    
-    button:hover {
-      transform: translateY(-2px);
-    }
-    
-    .game-layout {
-      display: grid;
-      grid-template-columns: 1fr 350px;
-      gap: 20px;
-    }
-    
-    .drawing-area {
-      background: white;
-      border-radius: 20px;
-      padding: 20px;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-    }
-    
-    canvas {
-      border: 3px solid #ddd;
-      border-radius: 10px;
-      cursor: crosshair;
-      background: white;
-      width: 100%;
-      height: auto;
-      touch-action: none;
-    }
-    
-    .drawing-tools {
-      margin-top: 15px;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    
-    .tool-btn {
-      background: #f0f0f0;
-      color: #333;
-      padding: 8px 15px;
-      font-size: 14px;
-    }
-    
-    .tool-btn.active {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-    }
-    
-    .color-picker {
-      width: 40px;
-      height: 40px;
-      border: 2px solid #ddd;
-      border-radius: 50%;
-      cursor: pointer;
-    }
-    
-    .chat-area {
-      background: white;
-      border-radius: 20px;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      height: 600px;
-    }
-    
-    .current-word {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      padding: 15px;
-      border-radius: 10px;
-      text-align: center;
-      margin-bottom: 15px;
-    }
-    
-    .word-display {
-      font-size: 28px;
-      font-weight: bold;
-      letter-spacing: 2px;
-    }
-    
-    .messages {
-      flex: 1;
-      overflow-y: auto;
-      margin: 15px 0;
-      padding: 10px;
-      background: #f9f9f9;
-      border-radius: 10px;
-    }
-    
-    .message {
-      padding: 8px 12px;
-      margin: 5px 0;
-      background: white;
-      border-radius: 10px;
-      animation: fadeIn 0.3s;
-    }
-    
-    .message.correct {
-      background: #d4edda;
-      color: #155724;
-      border-right: 4px solid #28a745;
-    }
-    
-    .message.system {
-      background: #e2e3e5;
-      color: #383d41;
-      text-align: center;
-      font-size: 12px;
-    }
-    
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    
-    .guess-input-area {
-      display: flex;
-      gap: 10px;
-    }
-    
-    .guess-input {
-      flex: 1;
-      text-align: right;
-    }
-    
-    .players-list {
-      margin-top: 15px;
-      padding-top: 15px;
-      border-top: 2px solid #eee;
-    }
-    
-    .players-list h4 {
-      margin-bottom: 10px;
-      color: #667eea;
-    }
-    
-    .player-item {
-      padding: 5px;
-      margin: 3px 0;
-      background: #f0f0f0;
-      border-radius: 8px;
-      display: flex;
-      justify-content: space-between;
-    }
-    
-    .player-item.host {
-      background: #ffe6b3;
-      font-weight: bold;
-    }
-    
-    .score {
-      color: #667eea;
-      font-weight: bold;
-    }
-    
-    .room-info {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      padding: 15px;
-      border-radius: 10px;
-      margin-bottom: 15px;
-      text-align: center;
-      color: white;
-    }
-    
-    .room-code-box {
-      background: white;
-      border-radius: 15px;
-      padding: 15px;
-      margin: 10px 0;
-      text-align: center;
-    }
-    
-    .room-code {
-      font-size: 48px;
-      font-weight: bold;
-      color: #667eea;
-      font-family: monospace;
-      letter-spacing: 5px;
-      background: #f8f9fa;
-      padding: 10px 20px;
-      border-radius: 10px;
-      display: inline-block;
-    }
-    
-    .timer {
-      font-size: 16px;
-      font-weight: bold;
-      margin-top: 5px;
-    }
-    
-    .loading {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      border: 3px solid #f3f3f3;
-      border-top: 3px solid #667eea;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin-right: 10px;
-    }
-    
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    
-    .success-message {
-      background: #d4edda;
-      color: #155724;
-      padding: 10px;
-      border-radius: 10px;
-      margin: 10px 0;
-    }
-    
-    @media (max-width: 768px) {
-      .game-layout {
-        grid-template-columns: 1fr;
-      }
-      .chat-area {
-        height: 400px;
-      }
-      .room-code {
-        font-size: 32px;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Draw & Guess - Multiplayer Game</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap');
+        
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        .canvas-container {
+            cursor: crosshair;
+            background: white;
+            border-radius: 15px;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .color-btn {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        
+        .color-btn:hover {
+            transform: scale(1.2);
+        }
+        
+        .color-btn.active {
+            border-color: #333;
+            transform: scale(1.1);
+        }
+        
+        .chat-message {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .pulse-ring {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255,255,255,0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(255,255,255,0); }
+            100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); }
+        }
+        
+        .brush-size {
+            transition: all 0.2s;
+        }
+        
+        .brush-size.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .player-card {
+            transition: all 0.3s;
+        }
+        
+        .player-card.drawing {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        #loginScreen, #gameScreen {
+            transition: opacity 0.5s, transform 0.5s;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        .fade-out {
+            opacity: 0;
+            transform: scale(0.9);
+            pointer-events: none;
+        }
+        
+        .word-reveal {
+            animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        @keyframes bounceIn {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+<base target="_blank">
 </head>
-<body>
-<div class="container">
-  <!-- Join Screen -->
-  <div id="joinScreen" class="join-screen">
-    <i class="fas fa-paint-brush" style="font-size: 50px; color: #667eea;"></i>
-    <h1>🎨 لعبة الرسم والتخمين</h1>
-    <p class="subtitle">ارسم وصديقك يخمن! العب مع الأصدقاء مباشرة</p>
-    
-    <input type="text" id="playerName" placeholder="اسمك" value="لاعب">
-    <input type="text" id="roomCodeInput" placeholder="رمز الغرفة (اتركه فارغاً لإنشاء غرفة جديدة)">
-    
-    <button id="createRoomBtn" style="background: #28a745; width: 100%;">✨ إنشاء غرفة جديدة</button>
-    <button id="joinRoomBtn" style="background: #667eea; width: 100%;">🔑 انضمام إلى غرفة</button>
-    
-    <div id="joinError" style="color: red; margin-top: 10px;"></div>
-  </div>
-  
-  <!-- Game Screen -->
-  <div id="gameScreen" class="game-screen">
-    <div class="room-info">
-      <div>🏠 رمز الغرفة</div>
-      <div class="room-code-box">
-        <div class="room-code" id="roomCodeDisplay"></div>
-      </div>
-      <button id="copyRoomBtn" style="background: #28a745; padding: 8px 20px; margin-top: 5px;">📋 نسخ الرمز</button>
-      <div id="playerRole" style="margin-top: 10px; font-size: 14px;"></div>
+<body class="p-4">
+    <!-- Login Screen -->
+    <div id="loginScreen" class="flex items-center justify-center min-h-screen">
+        <div class="glass-panel p-8 max-w-md w-full text-center">
+            <div class="mb-6">
+                <div class="text-6xl mb-4">🎨</div>
+                <h1 class="text-4xl font-bold text-gray-800 mb-2">Draw & Guess</h1>
+                <p class="text-gray-600">Create or join a room to start playing!</p>
+            </div>
+            
+            <div class="space-y-4">
+                <input type="text" id="usernameInput" placeholder="Enter your name" 
+                    class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:outline-none text-lg">
+                
+                <input type="text" id="roomInput" placeholder="Room code (e.g., ABC123)" 
+                    class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:outline-none text-lg uppercase">
+                
+                <div class="flex gap-3">
+                    <button onclick="createRoom()" 
+                        class="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all">
+                        Create Room
+                    </button>
+                    <button onclick="joinRoom()" 
+                        class="flex-1 bg-gradient-to-r from-blue-500 to-cyan-500 text-white py-3 rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all">
+                        Join Room
+                    </button>
+                </div>
+                
+                <button onclick="joinAsViewer()" 
+                    class="w-full bg-gray-200 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-300 transition-all">
+                    👁️ Join as Viewer Only
+                </button>
+            </div>
+            
+            <div id="loginError" class="mt-4 text-red-500 hidden"></div>
+        </div>
     </div>
-    
-    <div class="game-layout">
-      <!-- Drawing Area -->
-      <div class="drawing-area">
-        <canvas id="drawCanvas" width="800" height="500" style="width:100%; height:auto; max-width:800px; aspect-ratio:800/500"></canvas>
-        
-        <div class="drawing-tools">
-          <button class="tool-btn active" id="penBtn"><i class="fas fa-pen"></i> قلم</button>
-          <button class="tool-btn" id="eraserBtn"><i class="fas fa-eraser"></i> ممحاة</button>
-          <button class="tool-btn" id="clearBtn"><i class="fas fa-trash"></i> مسح الكل</button>
-          <input type="color" id="colorPicker" value="#000000" class="color-picker">
-          <input type="range" id="brushSize" min="2" max="20" value="5" style="width: 100px;">
-        </div>
-      </div>
-      
-      <!-- Chat Area -->
-      <div class="chat-area">
-        <div class="current-word">
-          <h3>🎯 الكلمة الحالية</h3>
-          <div class="word-display" id="currentWordDisplay">???</div>
-          <div class="timer" id="timerDisplay">⏸️ في انتظار البدء</div>
-        </div>
-        
-        <div class="messages" id="messages">
-          <div class="message system">✨ مرحباً! اضغط "ابدأ الجولة" لبدء الرسم</div>
-        </div>
-        
-        <div class="guess-input-area">
-          <input type="text" id="guessInput" class="guess-input" placeholder="اكتب تخمينك هنا..." disabled>
-          <button id="sendGuessBtn" disabled>💬 أرسل</button>
-        </div>
-        
-        <div class="players-list">
-          <h4><i class="fas fa-users"></i> اللاعبون (<span id="playerCount">0</span>)</h4>
-          <div id="playersList"></div>
-        </div>
-        
-        <button id="nextRoundBtn" style="background: #28a745; width: 100%; margin-top: 10px;">🎯 ابدأ الجولة</button>
-      </div>
-    </div>
-  </div>
-</div>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-  import { getDatabase, ref, set, onValue, update, push, onChildAdded, get } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
-  
-  // Firebase Config
-  const firebaseConfig = {
-    apiKey: "AIzaSyDEwWDRWOZ13iK_iDPqUymNlhgz9R4nmXY",
-    authDomain: "gameapp-3fd40.firebaseapp.com",
-    projectId: "gameapp-3fd40",
-    storageBucket: "gameapp-3fd40.firebasestorage.app",
-    messagingSenderId: "216038176025",
-    appId: "1:216038176025:web:d73fc67524770decbc8188"
-  };
-  
-  console.log("🚀 Starting application...");
-  
-  let app, db;
-  try {
-    app = initializeApp(firebaseConfig);
-    db = getDatabase(app);
-    console.log("✅ Firebase initialized!");
-  } catch (error) {
-    console.error("❌ Firebase error:", error);
-    alert("خطأ في الاتصال بقاعدة البيانات");
-  }
-  
-  // Game Words
-  const words = [
-    "قطة", "كلب", "شمس", "قمر", "سيارة", "طائرة", "بيت", "شجرة", "زهرة", "سمكة",
-    "تفاحة", "موزة", "برتقال", "فراشة", "نحلة", "أسد", "فيل", "زرافة", "بحر", "جبل",
-    "نجمة", "قلب", "سحابة", "مطر", "ساعة", "كتاب", "قلم", "كرسي", "طاولة", "هاتف"
-  ];
-  
-  let currentUser = {
-    id: null,
-    name: null,
-    roomId: null,
-    isHost: false
-  };
-  
-  let drawingEnabled = false;
-  let isDrawing = false;
-  let lastX = 0, lastY = 0;
-  let canvas, ctx;
-  let currentWord = "";
-  let roundActive = false;
-  let roundTime = 60;
-  let timerInterval = null;
-  let players = {};
-  let hostId = null;
-  
-  function initCanvas() {
-    canvas = document.getElementById('drawCanvas');
-    ctx = canvas.getContext('2d');
-    canvas.width = 800;
-    canvas.height = 500;
-    ctx.fillStyle = 'white';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-    canvas.addEventListener('mousedown', startDrawing);
-    canvas.addEventListener('mousemove', draw);
-    canvas.addEventListener('mouseup', stopDrawing);
-    canvas.addEventListener('mouseleave', stopDrawing);
-    canvas.addEventListener('touchstart', startDrawingTouch);
-    canvas.addEventListener('touchmove', drawTouch);
-    canvas.addEventListener('touchend', stopDrawing);
-    
-    console.log("✅ Canvas initialized");
-  }
-  
-  function startDrawing(e) {
-    if (!drawingEnabled) return;
-    isDrawing = true;
-    const pos = getMousePos(e);
-    lastX = pos.x;
-    lastY = pos.y;
-    ctx.beginPath();
-    ctx.moveTo(lastX, lastY);
-    ctx.lineTo(lastX, lastY);
-    ctx.stroke();
-  }
-  
-  function draw(e) {
-    if (!isDrawing || !drawingEnabled) return;
-    e.preventDefault();
-    const pos = getMousePos(e);
-    const brushSize = document.getElementById('brushSize').value;
-    ctx.lineWidth = brushSize;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    ctx.strokeStyle = document.getElementById('colorPicker').value;
-    
-    ctx.beginPath();
-    ctx.moveTo(lastX, lastY);
-    ctx.lineTo(pos.x, pos.y);
-    ctx.stroke();
-    
-    lastX = pos.x;
-    lastY = pos.y;
-    
-    if (currentUser.isHost && currentUser.roomId) {
-      const imageData = canvas.toDataURL();
-      update(ref(db, `rooms/${currentUser.roomId}/drawing`), { data: imageData });
-    }
-  }
-  
-  function startDrawingTouch(e) {
-    e.preventDefault();
-    if (!drawingEnabled) return;
-    isDrawing = true;
-    const pos = getTouchPos(e);
-    lastX = pos.x;
-    lastY = pos.y;
-    ctx.beginPath();
-    ctx.moveTo(lastX, lastY);
-    ctx.lineTo(lastX, lastY);
-    ctx.stroke();
-  }
-  
-  function drawTouch(e) {
-    e.preventDefault();
-    if (!isDrawing || !drawingEnabled) return;
-    const pos = getTouchPos(e);
-    const brushSize = document.getElementById('brushSize').value;
-    ctx.lineWidth = brushSize;
-    ctx.strokeStyle = document.getElementById('colorPicker').value;
-    
-    ctx.beginPath();
-    ctx.moveTo(lastX, lastY);
-    ctx.lineTo(pos.x, pos.y);
-    ctx.stroke();
-    
-    lastX = pos.x;
-    lastY = pos.y;
-    
-    if (currentUser.isHost && currentUser.roomId) {
-      const imageData = canvas.toDataURL();
-      update(ref(db, `rooms/${currentUser.roomId}/drawing`), { data: imageData });
-    }
-  }
-  
-  function stopDrawing() {
-    isDrawing = false;
-  }
-  
-  function getMousePos(e) {
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
-    return {
-      x: (e.clientX - rect.left) * scaleX,
-      y: (e.clientY - rect.top) * scaleY
-    };
-  }
-  
-  function getTouchPos(e) {
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
-    const touch = e.touches[0];
-    return {
-      x: (touch.clientX - rect.left) * scaleX,
-      y: (touch.clientY - rect.top) * scaleY
-    };
-  }
-  
-  function clearCanvas() {
-    ctx.fillStyle = 'white';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    if (currentUser.isHost && currentUser.roomId) {
-      const imageData = canvas.toDataURL();
-      update(ref(db, `rooms/${currentUser.roomId}/drawing`), { data: imageData });
-    }
-  }
-  
-  function loadDrawing(imageData) {
-    const img = new Image();
-    img.onload = () => {
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-    };
-    img.src = imageData;
-  }
-  
-  function getRandomWord() {
-    return words[Math.floor(Math.random() * words.length)];
-  }
-  
-  function startRound() {
-    if (!currentUser.isHost) {
-      addMessage("⚠️ فقط المضيف يمكنه بدء الجولة", 'system');
-      return;
-    }
-    
-    const newWord = getRandomWord();
-    currentWord = newWord;
-    roundActive = true;
-    roundTime = 60;
-    
-    update(ref(db, `rooms/${currentUser.roomId}/game`), {
-      currentWord: newWord,
-      roundActive: true,
-      roundTime: 60,
-      lastUpdate: Date.now()
-    });
-    
-    clearCanvas();
-    addMessage(`🎨 الجولة الجديدة!`, 'system');
-    addMessage(`🖌️ الكلمة: ${newWord}`, 'system');
-    addMessage(`⏱️ الوقت: 60 ثانية`, 'system');
-    
-    startTimer();
-  }
-  
-  function startTimer() {
-    if (timerInterval) clearInterval(timerInterval);
-    
-    timerInterval = setInterval(() => {
-      if (roundActive && roundTime > 0) {
-        roundTime--;
-        document.getElementById('timerDisplay').innerHTML = `⏱️ ${roundTime} ثانية`;
-        
-        if (currentUser.isHost) {
-          update(ref(db, `rooms/${currentUser.roomId}/game`), { roundTime: roundTime });
+    <!-- Game Screen -->
+    <div id="gameScreen" class="hidden min-h-screen">
+        <div class="max-w-7xl mx-auto">
+            <!-- Header -->
+            <div class="glass-panel p-4 mb-4 flex justify-between items-center">
+                <div class="flex items-center gap-4">
+                    <div class="text-2xl font-bold text-gray-800">Room: <span id="displayRoom" class="text-purple-600"></span></div>
+                    <div class="bg-purple-100 px-3 py-1 rounded-full text-purple-700 font-semibold" id="roundDisplay">Round 1</div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div id="timer" class="text-2xl font-bold text-red-500">60</div>
+                    <button onclick="leaveRoom()" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all">Leave</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
+                <!-- Players Panel -->
+                <div class="glass-panel p-4 lg:col-span-1">
+                    <h3 class="font-bold text-gray-700 mb-3 text-lg">👥 Players</h3>
+                    <div id="playersList" class="space-y-2 max-h-96 overflow-y-auto">
+                        <!-- Players will be inserted here -->
+                    </div>
+                    
+                    <div id="wordDisplay" class="mt-4 p-4 bg-yellow-100 rounded-xl hidden">
+                        <div class="text-sm text-yellow-700 font-semibold mb-1">Your word:</div>
+                        <div id="currentWord" class="text-2xl font-bold text-yellow-800 text-center"></div>
+                    </div>
+                    
+                    <div id="viewerBadge" class="mt-4 p-3 bg-blue-100 rounded-xl hidden text-center">
+                        <div class="text-blue-700 font-semibold">👁️ Viewer Mode</div>
+                        <div class="text-sm text-blue-600">You can only watch and chat</div>
+                    </div>
+                </div>
+
+                <!-- Canvas Area -->
+                <div class="lg:col-span-2">
+                    <div class="glass-panel p-4">
+                        <div id="drawingTools" class="mb-4 flex flex-wrap items-center gap-3 hidden">
+                            <!-- Colors -->
+                            <div class="flex gap-2">
+                                <button class="color-btn active bg-black" onclick="setColor('#000000')" data-color="#000000"></button>
+                                <button class="color-btn bg-red-500" onclick="setColor('#ef4444')" data-color="#ef4444"></button>
+                                <button class="color-btn bg-blue-500" onclick="setColor('#3b82f6')" data-color="#3b82f6"></button>
+                                <button class="color-btn bg-green-500" onclick="setColor('#22c55e')" data-color="#22c55e"></button>
+                                <button class="color-btn bg-yellow-400" onclick="setColor('#facc15')" data-color="#facc15"></button>
+                                <button class="color-btn bg-purple-500" onclick="setColor('#a855f7')" data-color="#a855f7"></button>
+                                <button class="color-btn bg-white border-2 border-gray-300" onclick="setColor('#ffffff')" data-color="#ffffff"></button>
+                            </div>
+                            
+                            <div class="w-px h-8 bg-gray-300"></div>
+                            
+                            <!-- Brush Sizes -->
+                            <div class="flex gap-2">
+                                <button class="brush-size active w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center text-xs" onclick="setBrushSize(3)">S</button>
+                                <button class="brush-size w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center text-xs" onclick="setBrushSize(8)">M</button>
+                                <button class="brush-size w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center text-xs" onclick="setBrushSize(15)">L</button>
+                            </div>
+                            
+                            <div class="w-px h-8 bg-gray-300"></div>
+                            
+                            <button onclick="clearCanvas()" class="px-4 py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-all font-semibold">
+                                Clear All
+                            </button>
+                        </div>
+                        
+                        <div class="relative">
+                            <canvas id="gameCanvas" width="600" height="450" class="canvas-container w-full border-2 border-gray-200"></canvas>
+                            <div id="waitingOverlay" class="absolute inset-0 bg-black bg-opacity-50 rounded-2xl flex items-center justify-center hidden">
+                                <div class="text-white text-center">
+                                    <div class="text-2xl mb-2">Waiting for players...</div>
+                                    <div class="text-lg opacity-80">Need at least 2 players to start</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="turnIndicator" class="mt-4 text-center hidden">
+                            <div class="text-lg text-gray-600"><span id="currentDrawer" class="font-bold text-purple-600"></span> is drawing...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat Panel -->
+                <div class="glass-panel p-4 lg:col-span-1 flex flex-col h-96 lg:h-auto">
+                    <h3 class="font-bold text-gray-700 mb-3 text-lg">💬 Chat & Guesses</h3>
+                    <div id="chatMessages" class="flex-1 overflow-y-auto space-y-2 mb-3 max-h-80 lg:max-h-none bg-gray-50 rounded-xl p-3">
+                        <div class="text-gray-400 text-sm text-center">Start guessing!</div>
+                    </div>
+                    <div class="flex gap-2">
+                        <input type="text" id="guessInput" placeholder="Type your guess..." 
+                            class="flex-1 px-3 py-2 rounded-lg border-2 border-gray-200 focus:border-purple-500 focus:outline-none"
+                            onkeypress="if(event.key==='Enter') submitGuess()">
+                        <button onclick="submitGuess()" 
+                            class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition-all font-semibold">
+                            Send
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDEwWDRWOZ13iK_iDPqUymNlhgz9R4nmXY",
+            authDomain: "gameapp-3fd40.firebaseapp.com",
+            projectId: "gameapp-3fd40",
+            storageBucket: "gameapp-3fd40.firebasestorage.app",
+            messagingSenderId: "216038176025",
+            appId: "1:216038176025:web:d73fc67524770decbc8188"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Game State
+        let currentRoom = null;
+        let username = null;
+        let isViewer = false;
+        let isDrawing = false;
+        let currentColor = '#000000';
+        let currentBrushSize = 3;
+        let canvas, ctx;
+        let isMouseDown = false;
+        let lastX = 0;
+        let lastY = 0;
+        let userId = Math.random().toString(36).substr(2, 9);
+        let gameState = null;
+        let timerInterval = null;
+
+        // Word list for the game
+        const words = ['cat', 'dog', 'house', 'tree', 'car', 'sun', 'moon', 'star', 'fish', 'bird', 
+                      'apple', 'banana', 'flower', 'mountain', 'ocean', 'bicycle', 'airplane', 
+                      'computer', 'guitar', 'pizza', 'dragon', 'robot', 'rainbow', 'butterfly'];
+
+        // Initialize Canvas
+        function initCanvas() {
+            canvas = document.getElementById('gameCanvas');
+            ctx = canvas.getContext('2d');
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            
+            // Handle resizing
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+            
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDrawing);
+            canvas.addEventListener('mouseout', stopDrawing);
+            
+            // Touch support
+            canvas.addEventListener('touchstart', handleTouch);
+            canvas.addEventListener('touchmove', handleTouch);
+            canvas.addEventListener('touchend', stopDrawing);
         }
-        
-        if (roundTime <= 0) {
-          clearInterval(timerInterval);
-          roundActive = false;
-          addMessage(`⏰ انتهى الوقت! الكلمة كانت: ${currentWord}`, 'system');
-          if (currentUser.isHost) {
-            update(ref(db, `rooms/${currentUser.roomId}/game`), { roundActive: false });
-          }
-          drawingEnabled = false;
+
+        function handleTouch(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const rect = canvas.getBoundingClientRect();
+            const x = touch.clientX - rect.left;
+            const y = touch.clientY - rect.top;
+            
+            if (e.type === 'touchstart') {
+                isMouseDown = true;
+                lastX = x;
+                lastY = y;
+            } else if (e.type === 'touchmove' && isMouseDown) {
+                drawLine(lastX, lastY, x, y, currentColor, currentBrushSize);
+                lastX = x;
+                lastY = y;
+            }
         }
-      }
-    }, 1000);
-  }
-  
-  function addMessage(text, type = 'system', playerName = '') {
-    const messagesDiv = document.getElementById('messages');
-    const messageDiv = document.createElement('div');
-    messageDiv.className = `message ${type}`;
-    
-    if (type === 'correct') {
-      messageDiv.innerHTML = `<strong>🎉 ${playerName}</strong> خمن الكلمة! +10 نقاط`;
-    } else if (type === 'normal') {
-      messageDiv.innerHTML = `<strong>${playerName}</strong>: ${text}`;
-    } else {
-      messageDiv.innerHTML = text;
-    }
-    
-    messagesDiv.appendChild(messageDiv);
-    messageDiv.scrollIntoView({ behavior: 'smooth', block: 'end' });
-    
-    while (messagesDiv.children.length > 50) {
-      messagesDiv.removeChild(messagesDiv.firstChild);
-    }
-  }
-  
-  function checkGuess(guess, playerId, playerName) {
-    if (!roundActive) return false;
-    if (guess.toLowerCase() === currentWord.toLowerCase()) {
-      addMessage(`🎉 ${playerName} خمن الكلمة! +10 نقاط`, 'correct', playerName);
-      
-      const newScore = (players[playerId]?.score || 0) + 10;
-      update(ref(db, `rooms/${currentUser.roomId}/players/${playerId}`), { score: newScore });
-      
-      roundActive = false;
-      if (timerInterval) clearInterval(timerInterval);
-      
-      if (currentUser.isHost) {
-        update(ref(db, `rooms/${currentUser.roomId}/game`), { roundActive: false });
-      }
-      
-      drawingEnabled = false;
-      return true;
-    }
-    return false;
-  }
-  
-  function listenToRoom(roomId) {
-    console.log(`🎧 Listening to room: ${roomId}`);
-    
-    const gameRef = ref(db, `rooms/${roomId}/game`);
-    onValue(gameRef, (snapshot) => {
-      const game = snapshot.val();
-      if (game) {
-        currentWord = game.currentWord;
-        roundActive = game.roundActive;
-        roundTime = game.roundTime;
-        
-        if (currentUser.isHost) {
-          document.getElementById('currentWordDisplay').innerHTML = currentWord;
-        } else {
-          document.getElementById('currentWordDisplay').innerHTML = '???';
+
+        function startDrawing(e) {
+            if (!isDrawing) return;
+            isMouseDown = true;
+            const rect = canvas.getBoundingClientRect();
+            lastX = e.clientX - rect.left;
+            lastY = e.clientY - rect.top;
         }
-        document.getElementById('timerDisplay').innerHTML = roundActive ? `⏱️ ${roundTime} ثانية` : '⏸️ في انتظار الجولة';
-        
-        if (currentUser.isHost && roundActive) {
-          drawingEnabled = true;
+
+        function draw(e) {
+            if (!isMouseDown || !isDrawing) return;
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            drawLine(lastX, lastY, x, y, currentColor, currentBrushSize);
+            
+            lastX = x;
+            lastY = y;
         }
-      }
-    });
-    
-    const drawingRef = ref(db, `rooms/${roomId}/drawing`);
-    onValue(drawingRef, (snapshot) => {
-      const drawing = snapshot.val();
-      if (drawing && drawing.data && !currentUser.isHost) {
-        loadDrawing(drawing.data);
-      }
-    });
-    
-    const playersRef = ref(db, `rooms/${roomId}/players`);
-    onValue(playersRef, (snapshot) => {
-      players = snapshot.val() || {};
-      updatePlayersList();
-    });
-    
-    const messagesRef = ref(db, `rooms/${roomId}/messages`);
-    onChildAdded(messagesRef, (snapshot) => {
-      const msg = snapshot.val();
-      if (msg && msg.playerId !== currentUser.id) {
-        if (msg.type === 'guess') {
-          addMessage(msg.text, 'normal', msg.playerName);
-        } else if (msg.type === 'correct') {
-          addMessage(`🎉 ${msg.playerName} خمن الكلمة! +10 نقاط`, 'correct');
+
+        function drawLine(x1, y1, x2, y2, color, size) {
+            ctx.strokeStyle = color;
+            ctx.lineWidth = size;
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+            
+            // Sync to Firebase
+            if (currentRoom && isDrawing) {
+                database.ref(`rooms/${currentRoom}/drawings`).push({
+                    x1, y1, x2, y2, color, size,
+                    timestamp: firebase.database.ServerValue.TIMESTAMP
+                });
+            }
         }
-      }
-    });
-  }
-  
-  function updatePlayersList() {
-    const playersDiv = document.getElementById('playersList');
-    const playerCount = Object.keys(players).length;
-    document.getElementById('playerCount').innerText = playerCount;
-    
-    playersDiv.innerHTML = Object.entries(players).map(([id, player]) => `
-      <div class="player-item ${hostId === id ? 'host' : ''}">
-        <span>${player.name} ${hostId === id ? '👑' : ''}</span>
-        <span class="score">⭐ ${player.score || 0}</span>
-      </div>
-    `).join('');
-  }
-  
-  async function createRoom() {
-    const playerName = document.getElementById('playerName').value.trim() || 'لاعب';
-    
-    currentUser.name = playerName;
-    currentUser.id = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
-    currentUser.roomId = Math.random().toString(36).substring(2, 8).toUpperCase();
-    currentUser.isHost = true;
-    hostId = currentUser.id;
-    
-    const btn = document.getElementById('createRoomBtn');
-    btn.innerHTML = '<span class="loading"></span> جاري إنشاء الغرفة...';
-    btn.disabled = true;
-    
-    try {
-      console.log(`📝 Creating room: ${currentUser.roomId}`);
-      
-      const initialWord = getRandomWord();
-      
-      const roomData = {
-        hostId: currentUser.id,
-        createdAt: Date.now(),
-        game: {
-          currentWord: initialWord,
-          roundActive: false,
-          roundTime: 60
-        },
-        players: {
-          [currentUser.id]: {
-            name: playerName,
-            score: 0,
-            joinedAt: Date.now()
-          }
-        },
-        drawing: { data: null },
-        messages: {}
-      };
-      
-      await set(ref(db, `rooms/${currentUser.roomId}`), roomData);
-      console.log("✅ Room saved!");
-      
-      // Switch to game screen
-      document.getElementById('joinScreen').style.display = 'none';
-      document.getElementById('gameScreen').style.display = 'block';
-      document.getElementById('roomCodeDisplay').innerHTML = currentUser.roomId;
-      document.getElementById('playerRole').innerHTML = '👑 أنت المضيف (الرسام)';
-      
-      initCanvas();
-      listenToRoom(currentUser.roomId);
-      
-      // Enable drawing for host
-      drawingEnabled = true;
-      
-      // Enable host controls
-      document.getElementById('nextRoundBtn').style.display = 'block';
-      document.getElementById('guessInput').disabled = true;
-      document.getElementById('sendGuessBtn').disabled = true;
-      
-      // Setup buttons
-      document.getElementById('nextRoundBtn').onclick = () => startRound();
-      document.getElementById('copyRoomBtn').onclick = () => {
-        navigator.clipboard.writeText(currentUser.roomId);
-        alert('✅ تم نسخ رمز الغرفة: ' + currentUser.roomId);
-      };
-      
-      // Setup drawing tools
-      document.getElementById('penBtn').onclick = () => {
-        drawingEnabled = true;
-        document.getElementById('penBtn').classList.add('active');
-        document.getElementById('eraserBtn').classList.remove('active');
-      };
-      document.getElementById('eraserBtn').onclick = () => {
-        drawingEnabled = true;
-        document.getElementById('eraserBtn').classList.add('active');
-        document.getElementById('penBtn').classList.remove('active');
-        document.getElementById('colorPicker').value = '#ffffff';
-      };
-      document.getElementById('clearBtn').onclick = () => {
-        if (confirm('مسح الرسمة؟')) {
-          clearCanvas();
+
+        function stopDrawing() {
+            isMouseDown = false;
         }
-      };
-      
-      addMessage(`✨ تم إنشاء الغرفة بنجاح!`, 'system');
-      addMessage(`🔑 رمز الغرفة: ${currentUser.roomId}`, 'system');
-      addMessage(`🎨 اضغط "ابدأ الجولة" لبدء الرسم`, 'system');
-      
-    } catch (error) {
-      console.error("Error:", error);
-      document.getElementById('joinError').innerHTML = '❌ خطأ في إنشاء الغرفة: ' + error.message;
-      btn.innerHTML = '✨ إنشاء غرفة جديدة';
-      btn.disabled = false;
-    }
-  }
-  
-  async function joinRoom() {
-    const playerName = document.getElementById('playerName').value.trim() || 'لاعب';
-    const roomCode = document.getElementById('roomCodeInput').value.trim().toUpperCase();
-    
-    if (!roomCode) {
-      document.getElementById('joinError').innerHTML = '❌ الرجاء إدخال رمز الغرفة';
-      return;
-    }
-    
-    currentUser.name = playerName;
-    currentUser.id = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
-    currentUser.roomId = roomCode;
-    currentUser.isHost = false;
-    
-    const btn = document.getElementById('joinRoomBtn');
-    btn.innerHTML = '<span class="loading"></span> جاري الانضمام...';
-    btn.disabled = true;
-    
-    try {
-      console.log(`🔑 Joining room: ${roomCode}`);
-      
-      const roomRef = ref(db, `rooms/${roomCode}`);
-      const snapshot = await get(roomRef);
-      
-      if (!snapshot.exists()) {
-        throw new Error("الغرفة غير موجودة");
-      }
-      
-      const roomData = snapshot.val();
-      hostId = roomData.hostId;
-      
-      await update(ref(db, `rooms/${roomCode}/players/${currentUser.id}`), {
-        name: playerName,
-        score: 0,
-        joinedAt: Date.now()
-      });
-      
-      console.log("✅ Joined room!");
-      
-      // Switch to game screen
-      document.getElementById('joinScreen').style.display = 'none';
-      document.getElementById('gameScreen').style.display = 'block';
-      document.getElementById('roomCodeDisplay').innerHTML = currentUser.roomId;
-      document.getElementById('playerRole').innerHTML = '🎨 أنت مشاهد (مخمن)';
-      
-      initCanvas();
-      listenToRoom(currentUser.roomId);
-      
-      // Disable drawing for viewers
-      drawingEnabled = false;
-      
-      // Enable guessing for viewers
-      document.getElementById('nextRoundBtn').style.display = 'block';
-      document.getElementById('guessInput').disabled = false;
-      document.getElementById('sendGuessBtn').disabled = false;
-      
-      document.getElementById('nextRoundBtn').onclick = () => {
-        addMessage('⚠️ فقط المضيف يمكنه بدء الجولة', 'system');
-      };
-      document.getElementById('copyRoomBtn').onclick = () => {
-        navigator.clipboard.writeText(currentUser.roomId);
-        alert('✅ تم نسخ رمز الغرفة: ' + currentUser.roomId);
-      };
-      document.getElementById('sendGuessBtn').onclick = sendGuess;
-      document.getElementById('guessInput').onkeypress = (e) => {
-        if (e.key === 'Enter') sendGuess();
-      };
-      
-      addMessage(`✨ انضممت إلى الغرفة بنجاح!`, 'system');
-      addMessage(`🎨 انتظر حتى يبدأ المضيف الجولة`, 'system');
-      
-    } catch (error) {
-      console.error("Error:", error);
-      document.getElementById('joinError').innerHTML = '❌ ' + error.message;
-      btn.innerHTML = '🔑 انضمام إلى غرفة';
-      btn.disabled = false;
-    }
-  }
-  
-  async function sendGuess() {
-    const guess = document.getElementById('guessInput').value.trim();
-    if (!guess) return;
-    
-    if (!roundActive) {
-      addMessage('⚠️ لا توجد جولة نشطة حالياً!', 'system');
-      document.getElementById('guessInput').value = '';
-      return;
-    }
-    
-    if (checkGuess(guess, currentUser.id, currentUser.name)) {
-      const messagesRef = ref(db, `rooms/${currentUser.roomId}/messages`);
-      push(messagesRef, {
-        playerId: currentUser.id,
-        playerName: currentUser.name,
-        text: guess,
-        type: 'correct',
-        timestamp: Date.now()
-      });
-      document.getElementById('guessInput').value = '';
-      return;
-    }
-    
-    const messagesRef = ref(db, `rooms/${currentUser.roomId}/messages`);
-    push(messagesRef, {
-      playerId: currentUser.id,
-      playerName: currentUser.name,
-      text: guess,
-      type: 'guess',
-      timestamp: Date.now()
-    });
-    
-    addMessage(guess, 'normal', currentUser.name);
-    document.getElementById('guessInput').value = '';
-  }
-  
-  // Event Listeners
-  document.getElementById('createRoomBtn').onclick = createRoom;
-  document.getElementById('joinRoomBtn').onclick = joinRoom;
-  document.getElementById('roomCodeInput').onkeypress = (e) => {
-    if (e.key === 'Enter') joinRoom();
-  };
-  document.getElementById('playerName').onkeypress = (e) => {
-    if (e.key === 'Enter') {
-      if (document.getElementById('roomCodeInput').value) {
-        joinRoom();
-      } else {
-        createRoom();
-      }
-    }
-  };
-</script>
+
+        function setColor(color) {
+            currentColor = color;
+            document.querySelectorAll('.color-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.color === color) btn.classList.add('active');
+            });
+        }
+
+        function setBrushSize(size) {
+            currentBrushSize = size;
+            document.querySelectorAll('.brush-size').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if (currentRoom && isDrawing) {
+                database.ref(`rooms/${currentRoom}/clear`).set(Date.now());
+            }
+        }
+
+        // Room Management
+        function generateRoomCode() {
+            return Math.random().toString(36).substring(2, 8).toUpperCase();
+        }
+
+        function createRoom() {
+            username = document.getElementById('usernameInput').value.trim();
+            if (!username) {
+                showError('Please enter your name');
+                return;
+            }
+            
+            const roomCode = generateRoomCode();
+            document.getElementById('roomInput').value = roomCode;
+            joinRoomInternal(roomCode, false);
+        }
+
+        function joinRoom() {
+            username = document.getElementById('usernameInput').value.trim();
+            const roomCode = document.getElementById('roomInput').value.trim().toUpperCase();
+            
+            if (!username) {
+                showError('Please enter your name');
+                return;
+            }
+            if (!roomCode) {
+                showError('Please enter a room code');
+                return;
+            }
+            
+            joinRoomInternal(roomCode, false);
+        }
+
+        function joinAsViewer() {
+            username = document.getElementById('usernameInput').value.trim() || 'Viewer';
+            const roomCode = document.getElementById('roomInput').value.trim().toUpperCase();
+            
+            if (!roomCode) {
+                showError('Please enter a room code to view');
+                return;
+            }
+            
+            joinRoomInternal(roomCode, true);
+        }
+
+        function joinRoomInternal(roomCode, viewer) {
+            isViewer = viewer;
+            currentRoom = roomCode;
+            
+            const playerRef = database.ref(`rooms/${roomCode}/players/${userId}`);
+            
+            playerRef.set({
+                name: username,
+                isViewer: viewer,
+                score: 0,
+                joinedAt: firebase.database.ServerValue.TIMESTAMP
+            });
+            
+            playerRef.onDisconnect().remove();
+            
+            // Initialize room if new
+            database.ref(`rooms/${roomCode}`).once('value', snapshot => {
+                if (!snapshot.exists()) {
+                    database.ref(`rooms/${roomCode}`).set({
+                        createdAt: firebase.database.ServerValue.TIMESTAMP,
+                        status: 'waiting',
+                        round: 1,
+                        currentDrawer: null,
+                        word: null
+                    });
+                }
+            });
+            
+            showGameScreen(roomCode);
+            setupGameListeners(roomCode);
+        }
+
+        function showGameScreen(roomCode) {
+            document.getElementById('loginScreen').classList.add('fade-out');
+            setTimeout(() => {
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('gameScreen').classList.remove('hidden');
+                document.getElementById('displayRoom').textContent = roomCode;
+                initCanvas();
+                
+                if (isViewer) {
+                    document.getElementById('viewerBadge').classList.remove('hidden');
+                }
+            }, 500);
+        }
+
+        function setupGameListeners(roomCode) {
+            // Listen to game state
+            database.ref(`rooms/${roomCode}`).on('value', snapshot => {
+                gameState = snapshot.val();
+                updateGameUI();
+            });
+            
+            // Listen to players
+            database.ref(`rooms/${roomCode}/players`).on('value', snapshot => {
+                updatePlayersList(snapshot.val());
+                checkGameStart(snapshot.val());
+            });
+            
+            // Listen to drawings
+            database.ref(`rooms/${roomCode}/drawings`).on('child_added', snapshot => {
+                const data = snapshot.val();
+                if (!isDrawing) { // Only draw if not the one drawing (to avoid double drawing)
+                    ctx.strokeStyle = data.color;
+                    ctx.lineWidth = data.size;
+                    ctx.beginPath();
+                    ctx.moveTo(data.x1, data.y1);
+                    ctx.lineTo(data.x2, data.y2);
+                    ctx.stroke();
+                }
+            });
+            
+            // Listen to clear
+            database.ref(`rooms/${roomCode}/clear`).on('value', snapshot => {
+                if (snapshot.val()) {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                }
+            });
+            
+            // Listen to chat/guesses
+            database.ref(`rooms/${roomCode}/messages`).on('child_added', snapshot => {
+                const msg = snapshot.val();
+                addChatMessage(msg);
+                
+                // Check if correct guess
+                if (gameState && gameState.word && 
+                    msg.text.toLowerCase().includes(gameState.word.toLowerCase()) &&
+                    msg.userId !== gameState.currentDrawer) {
+                    handleCorrectGuess(msg);
+                }
+            });
+            
+            // Listen to correct guesses
+            database.ref(`rooms/${roomCode}/correctGuesses`).on('child_added', snapshot => {
+                const guess = snapshot.val();
+                showCorrectGuessNotification(guess);
+            });
+        }
+
+        function updatePlayersList(players) {
+            const container = document.getElementById('playersList');
+            container.innerHTML = '';
+            
+            if (!players) return;
+            
+            Object.entries(players).forEach(([id, player]) => {
+                const div = document.createElement('div');
+                div.className = `player-card p-3 rounded-xl flex justify-between items-center ${id === gameState?.currentDrawer ? 'drawing' : 'bg-gray-100'}`;
+                
+                const isCurrentUser = id === userId;
+                const isDrawer = id === gameState?.currentDrawer;
+                
+                div.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <span>${isDrawer ? '✏️ ' : ''}${player.name} ${isCurrentUser ? '(You)' : ''}</span>
+                        ${player.isViewer ? '<span class="text-xs bg-blue-200 text-blue-700 px-2 py-1 rounded-full">👁️</span>' : ''}
+                    </div>
+                    <span class="font-bold">${player.score || 0} pts</span>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function checkGameStart(players) {
+            if (!players || !gameState) return;
+            
+            const realPlayers = Object.values(players).filter(p => !p.isViewer);
+            const playerCount = realPlayers.length;
+            
+            if (gameState.status === 'waiting' && playerCount >= 2 && !gameState.currentDrawer) {
+                // Start game
+                startNewRound(Object.keys(players).filter(id => !players[id].isViewer));
+            } else if (playerCount < 2) {
+                document.getElementById('waitingOverlay').classList.remove('hidden');
+            } else {
+                document.getElementById('waitingOverlay').classList.add('hidden');
+            }
+        }
+
+        function startNewRound(playerIds) {
+            const drawer = playerIds[Math.floor(Math.random() * playerIds.length)];
+            const word = words[Math.floor(Math.random() * words.length)];
+            
+            database.ref(`rooms/${currentRoom}`).update({
+                status: 'playing',
+                currentDrawer: drawer,
+                word: word,
+                roundStart: firebase.database.ServerValue.TIMESTAMP,
+                correctGuesses: null
+            });
+            
+            // Clear canvas
+            database.ref(`rooms/${currentRoom}/clear`).set(Date.now());
+            database.ref(`rooms/${currentRoom}/drawings`).remove();
+            
+            // Start timer
+            startTimer(60);
+        }
+
+        function startTimer(seconds) {
+            if (timerInterval) clearInterval(timerInterval);
+            
+            let timeLeft = seconds;
+            document.getElementById('timer').textContent = timeLeft;
+            
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer').textContent = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    endRound();
+                }
+            }, 1000);
+        }
+
+        function updateGameUI() {
+            if (!gameState) return;
+            
+            const isCurrentDrawer = gameState.currentDrawer === userId;
+            isDrawing = isCurrentDrawer && !isViewer;
+            
+            // Update tools visibility
+            const tools = document.getElementById('drawingTools');
+            if (isDrawing) {
+                tools.classList.remove('hidden');
+                document.getElementById('wordDisplay').classList.remove('hidden');
+                document.getElementById('currentWord').textContent = gameState.word || '???';
+                document.getElementById('turnIndicator').classList.add('hidden');
+            } else {
+                tools.classList.add('hidden');
+                document.getElementById('wordDisplay').classList.add('hidden');
+                if (gameState.currentDrawer && gameState.status === 'playing') {
+                    document.getElementById('turnIndicator').classList.remove('hidden');
+                    const players = gameState.players || {};
+                    const drawerName = players[gameState.currentDrawer]?.name || 'Someone';
+                    document.getElementById('currentDrawer').textContent = drawerName;
+                }
+            }
+            
+            // Update round display
+            document.getElementById('roundDisplay').textContent = `Round ${gameState.round || 1}`;
+        }
+
+        function submitGuess() {
+            const input = document.getElementById('guessInput');
+            const text = input.value.trim();
+            if (!text) return;
+            
+            database.ref(`rooms/${currentRoom}/messages`).push({
+                userId: userId,
+                username: username,
+                text: text,
+                timestamp: firebase.database.ServerValue.TIMESTAMP,
+                isGuess: true
+            });
+            
+            input.value = '';
+        }
+
+        function addChatMessage(msg) {
+            const container = document.getElementById('chatMessages');
+            const div = document.createElement('div');
+            div.className = 'chat-message text-sm';
+            
+            const isSystem = !msg.userId;
+            const isCorrect = msg.isCorrect;
+            
+            if (isSystem) {
+                div.className += ' text-center text-purple-600 font-semibold my-2';
+                div.textContent = msg.text;
+            } else if (isCorrect) {
+                div.className += ' bg-green-100 p-2 rounded-lg text-green-800';
+                div.innerHTML = `<span class="font-bold">${msg.username}</span> guessed correctly! 🎉`;
+            } else {
+                const isMe = msg.userId === userId;
+                div.className += isMe ? ' text-right' : ' text-left';
+                div.innerHTML = `
+                    <span class="font-bold text-gray-600">${msg.username}:</span>
+                    <span class="bg-gray-200 px-2 py-1 rounded-lg inline-block">${msg.text}</span>
+                `;
+            }
+            
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function handleCorrectGuess(msg) {
+            // Update scores
+            const updates = {};
+            updates[`rooms/${currentRoom}/players/${msg.userId}/score`] = firebase.database.ServerValue.increment(10);
+            updates[`rooms/${currentRoom}/players/${gameState.currentDrawer}/score`] = firebase.database.ServerValue.increment(5);
+            
+            database.ref().update(updates);
+            
+            // Add correct guess notification
+            database.ref(`rooms/${currentRoom}/correctGuesses`).push({
+                username: msg.username,
+                timestamp: firebase.database.ServerValue.TIMESTAMP
+            });
+            
+            // Mark message as correct
+            database.ref(`rooms/${currentRoom}/messages`).orderByChild('timestamp').equalTo(msg.timestamp).once('value', snap => {
+                snap.forEach(child => {
+                    child.ref.update({ isCorrect: true });
+                });
+            });
+            
+            // Check if all guessed
+            checkRoundEnd();
+        }
+
+        function showCorrectGuessNotification(guess) {
+            // Visual notification handled in addChatMessage
+        }
+
+        function checkRoundEnd() {
+            // Simple implementation - could check if all non-drawers guessed
+        }
+
+        function endRound() {
+            // Reveal word
+            database.ref(`rooms/${currentRoom}/messages`).push({
+                text: `Round over! The word was: ${gameState.word}`,
+                timestamp: firebase.database.ServerValue.TIMESTAMP,
+                isSystem: true
+            });
+            
+            // Start new round after delay
+            setTimeout(() => {
+                const players = gameState.players || {};
+                const playerIds = Object.keys(players).filter(id => !players[id].isViewer);
+                
+                database.ref(`rooms/${currentRoom}`).update({
+                    round: (gameState.round || 1) + 1
+                });
+                
+                startNewRound(playerIds);
+            }, 3000);
+        }
+
+        function leaveRoom() {
+            if (currentRoom) {
+                database.ref(`rooms/${currentRoom}/players/${userId}`).remove();
+                if (timerInterval) clearInterval(timerInterval);
+            }
+            location.reload();
+        }
+
+        function showError(msg) {
+            const errorDiv = document.getElementById('loginError');
+            errorDiv.textContent = msg;
+            errorDiv.classList.remove('hidden');
+            setTimeout(() => errorDiv.classList.add('hidden'), 3000);
+        }
+
+        // Cleanup on page unload
+        window.onbeforeunload = () => {
+            if (currentRoom) {
+                database.ref(`rooms/${currentRoom}/players/${userId}`).remove();
+            }
+        };
+    </script>
 </body>
 </html>
