@@ -2,342 +2,1035 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>المصمم سعود | مطور تطبيقات ويب</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>لعبة التمثيل - 10 جولات | تصميم سعود</title>
   
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <!-- Premium Arabic Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
   
-  <!-- Icons -->
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
     :root {
-      --gold: #d4a86c;
-      --gold-light: #f5e7d3;
-      --dark: #0a0e0d;
-      --card: rgba(255,255,255,0.03);
+      --terracotta: #C65D3B;
+      --terracotta-dark: #A84A2F;
+      --burgundy: #6B2D2D;
+      --burgundy-dark: #4A1F1F;
+      --gold: #D4A84B;
+      --gold-light: #E8C878;
+      --cream: #FAF3EB;
+      --card-bg: #FFFFFF;
+      --text-primary: #2C1810;
+      --text-secondary: #8B6B5C;
+      --success: #2D6A4F;
+      --danger: #B83B3B;
+      --gradient-terracotta: linear-gradient(135deg, #C65D3B 0%, #A84A2F 100%);
+      --gradient-gold: linear-gradient(135deg, #D4A84B 0%, #E8C878 100%);
+      --shadow-soft: 0 4px 20px rgba(107, 45, 45, 0.1);
+      --shadow-terracotta: 0 4px 15px rgba(198, 93, 59, 0.25);
     }
 
-    body {
-      font-family: 'Cairo', sans-serif;
-      background: var(--dark);
-      color: var(--gold-light);
-      height: 100vh;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    /* Animated Background */
-    .bg {
-      position: fixed;
-      inset: 0;
-      z-index: -1;
-      background: 
-        radial-gradient(circle at 20% 50%, rgba(212,168,100,0.08) 0%, transparent 50%),
-        radial-gradient(circle at 80% 50%, rgba(212,168,100,0.05) 0%, transparent 50%),
-        var(--dark);
-    }
-
-    .bg::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image: 
-        radial-gradient(rgba(212,168,100,0.1) 1px, transparent 1px);
-      background-size: 40px 40px;
-      opacity: 0.3;
-    }
-
-    /* Floating Orbs */
-    .orb {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(80px);
-      opacity: 0.4;
-      animation: float 15s infinite ease-in-out;
-    }
-
-    .orb-1 {
-      width: 300px;
-      height: 300px;
-      background: var(--gold);
-      top: 10%;
-      right: 10%;
-      animation-delay: 0s;
-    }
-
-    .orb-2 {
-      width: 200px;
-      height: 200px;
-      background: var(--gold);
-      bottom: 10%;
-      left: 10%;
-      animation-delay: -7s;
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translate(0,0) scale(1); }
-      50% { transform: translate(-20px, 20px) scale(1.1); }
-    }
-
-    /* Main Container */
-    .container {
-      text-align: center;
-      max-width: 800px;
-      padding: 40px;
-      position: relative;
-      z-index: 1;
-    }
-
-    /* Name */
-    .name {
-      font-size: clamp(2.5rem, 6vw, 4rem);
-      font-weight: 900;
-      margin-bottom: 10px;
-      background: linear-gradient(135deg, var(--gold-light), var(--gold));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: fadeInUp 0.8s ease-out 0.1s both;
-    }
-
-    /* Title */
-    .title {
-      font-size: 1.1rem;
-      color: var(--gold);
-      font-weight: 600;
-      margin-bottom: 25px;
-      letter-spacing: 2px;
-      animation: fadeInUp 0.8s ease-out 0.2s both;
-    }
-
-    /* Description */
-    .description {
-      font-size: 1.1rem;
-      line-height: 1.8;
-      color: rgba(245,231,211,0.8);
-      max-width: 600px;
-      margin: 0 auto 40px;
-      animation: fadeInUp 0.8s ease-out 0.3s both;
-    }
-
-    /* أعمالي القسم */
-    .portfolio-section {
-      margin-bottom: 30px;
-      animation: fadeInUp 0.8s ease-out 0.35s both;
-    }
-
-    .section-label {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      margin-bottom: 20px;
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: var(--gold);
-      letter-spacing: 1px;
-    }
-
-    .section-label i {
-      font-size: 1.2rem;
-    }
-
-    .section-label::before,
-    .section-label::after {
-      content: '';
-      width: 40px;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--gold), transparent);
-    }
-
-    /* Work Buttons */
-    .works {
-      display: flex;
-      gap: 15px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .work-btn {
-      background: var(--card);
-      border: 1px solid rgba(212,168,100,0.2);
-      color: var(--gold-light);
-      padding: 15px 30px;
-      border-radius: 50px;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 0.95rem;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      transition: all 0.3s ease;
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
-      backdrop-filter: blur(10px);
-    }
-
-    .work-btn::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
+    body, html {
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(212,168,100,0.2), transparent);
-      transition: left 0.5s;
+      overflow: hidden;
+      font-family: 'Tajawal', 'Amiri', sans-serif;
+      background: #FFFFFF;
+      color: var(--text-primary);
+      position: fixed;
     }
 
-    .work-btn:hover::before {
-      left: 100%;
+    .app-container {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      background: #FFFFFF;
     }
 
-    .work-btn:hover {
-      border-color: var(--gold);
-      transform: translateY(-3px);
-      box-shadow: 0 10px 30px rgba(212,168,100,0.15);
+    .tab-navigation {
+      display: flex;
+      justify-content: center;
+      gap: 0.4rem;
+      padding: 0.6rem 1rem 0.4rem;
+      background: #FFFFFF;
+      border-bottom: 1px solid rgba(198, 93, 59, 0.15);
+      flex-shrink: 0;
     }
 
-    .work-btn i {
-      font-size: 1.1rem;
-      color: var(--gold);
-    }
-
-    /* Contact Button */
-    .contact-btn {
-      background: var(--gold);
-      color: var(--dark);
-      border: none;
-      padding: 18px 50px;
+    .tab-btn {
+      background: transparent;
+      border: 1px solid rgba(198, 93, 59, 0.3);
+      padding: 6px 16px;
       border-radius: 50px;
-      font-family: inherit;
-      font-size: 1.1rem;
+      font-family: 'Tajawal', sans-serif;
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tab-btn.active {
+      background: var(--gradient-terracotta);
+      color: white;
+      border-color: var(--terracotta);
+      box-shadow: var(--shadow-terracotta);
+    }
+
+    .tab-content {
+      flex: 1;
+      overflow: hidden;
+      padding: 0.8rem;
+      display: flex;
+      flex-direction: column;
+      background: #FFFFFF;
+    }
+
+    .tab-pane {
+      display: none;
+      height: 100%;
+      overflow-y: auto;
+      background: #FFFFFF;
+    }
+
+    .tab-pane.active-pane {
+      display: block;
+    }
+
+    #homeTab { overflow: hidden; }
+    .tab-pane::-webkit-scrollbar { width: 4px; }
+    .tab-pane::-webkit-scrollbar-track { background: rgba(198, 93, 59, 0.1); }
+    .tab-pane::-webkit-scrollbar-thumb { background: var(--terracotta); border-radius: 2px; }
+
+    .home-container {
+      max-width: 600px;
+      margin: 0 auto;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0.5rem;
+    }
+
+    .hero-card {
+      background: var(--card-bg);
+      border-radius: 24px;
+      padding: 1.2rem;
+      text-align: center;
+      border: 1px solid rgba(198, 93, 59, 0.2);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .hero-icon {
+      width: 60px;
+      height: 60px;
+      background: var(--gradient-terracotta);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 0.6rem;
+      font-size: 1.5rem;
+      color: white;
+      box-shadow: var(--shadow-terracotta);
+    }
+
+    .hero-title {
+      font-size: 1.6rem;
+      font-weight: 900;
+      font-family: 'Amiri', serif;
+      color: var(--burgundy);
+      margin-bottom: 0.2rem;
+    }
+
+    .designer-credit {
+      font-size: 0.7rem;
+      color: var(--terracotta);
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-weight: 600;
+    }
+
+    .categories-badge {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px;
+      margin: 0.6rem 0;
+    }
+
+    .cat-badge {
+      background: rgba(198, 93, 59, 0.1);
+      border: 1px solid rgba(198, 93, 59, 0.2);
+      padding: 4px 12px;
+      border-radius: 50px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--terracotta-dark);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .game-description {
+      background: rgba(245, 230, 211, 0.4);
+      border-radius: 16px;
+      padding: 0.8rem;
+      margin: 0.6rem 0;
+      text-align: right;
+    }
+
+    .game-description h3 {
+      color: var(--terracotta);
+      margin-bottom: 0.5rem;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
       font-weight: 700;
+    }
+
+    .rule-list {
+      list-style: none;
+    }
+    .rule-list li {
+      margin: 0.3rem 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 0.75rem;
+      line-height: 1.3;
+    }
+    .rule-list li i { color: var(--terracotta); width: 16px; font-size: 0.7rem; margin-top: 2px; }
+
+    .play-button-home {
+      background: var(--gradient-terracotta);
+      border: none;
+      padding: 10px 28px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: white;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 12px;
-      transition: all 0.3s ease;
-      box-shadow: 0 10px 30px rgba(212,168,100,0.3);
-      animation: fadeInUp 0.8s ease-out 0.5s both;
-      text-decoration: none;
+      gap: 8px;
+      margin-top: 0.6rem;
+      transition: all 0.3s;
+      box-shadow: var(--shadow-terracotta);
     }
 
-    .contact-btn:hover {
-      transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 15px 40px rgba(212,168,100,0.4);
+    .game-container {
+      max-width: 600px;
+      margin: 0 auto;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
-    /* Animations */
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    .game-card {
+      background: var(--card-bg);
+      border-radius: 28px;
+      border: 1px solid rgba(198, 93, 59, 0.2);
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
     }
 
-    /* Responsive */
-    @media (max-width: 600px) {
-      .container {
-        padding: 20px;
-      }
-      
-      .works {
-        flex-direction: column;
-        align-items: center;
-      }
-      
-      .work-btn {
-        width: 100%;
-        max-width: 280px;
-        justify-content: center;
-      }
-      
-      .section-label::before,
-      .section-label::after {
-        width: 20px;
-      }
+    .game-header {
+      background: rgba(198, 93, 59, 0.08);
+      padding: 0.8rem;
+      text-align: center;
+      border-bottom: 1px solid rgba(198, 93, 59, 0.15);
+    }
+    .game-header h2 {
+      font-size: 1.1rem;
+      font-family: 'Amiri', serif;
+      color: var(--burgundy);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .game-body { padding: 1.2rem; }
+    .word-card {
+      background: #FFFFFF;
+      border-radius: 20px;
+      padding: 1.5rem 1rem;
+      text-align: center;
+      margin-bottom: 1rem;
+      border: 2px solid rgba(198, 93, 59, 0.2);
+    }
+    .current-word {
+      font-size: 1.8rem;
+      font-weight: 800;
+      font-family: 'Amiri', serif;
+      color: var(--burgundy-dark);
+    }
+    .category-tag {
+      display: inline-block;
+      background: rgba(198, 93, 59, 0.1);
+      padding: 4px 14px;
+      border-radius: 20px;
+      margin-top: 8px;
+      font-size: 0.7rem;
+      color: var(--terracotta);
+      font-weight: 600;
+    }
+
+    .timer-area { text-align: center; margin: 1rem 0; }
+    .timer-circle {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      background: #FFFFFF;
+      padding: 0.6rem 1.5rem;
+      border-radius: 40px;
+      border: 2px solid rgba(198, 93, 59, 0.2);
+      min-width: 100px;
+    }
+    .timer-number {
+      font-size: 2.5rem;
+      font-weight: 900;
+      font-family: 'Tajawal', monospace;
+      color: var(--terracotta);
+      line-height: 1;
+    }
+    .timer-number.warning { color: var(--danger); animation: pulse 0.5s ease-in-out infinite; }
+    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
+    .action-buttons {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.6rem;
+      margin: 1rem 0;
+    }
+    .btn-action {
+      background: #FFFFFF;
+      border: 1px solid rgba(198, 93, 59, 0.3);
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Tajawal', sans-serif;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-success {
+      background: var(--success);
+      border-color: var(--success);
+      color: white;
+      grid-column: span 2;
+    }
+    .btn-skip { background: var(--danger); border-color: var(--danger); color: white; }
+    .btn-primary { background: var(--terracotta); border-color: var(--terracotta); color: white; }
+    .btn-new-game {
+      background: var(--gradient-gold);
+      border-color: var(--gold);
+      color: var(--burgundy-dark);
+      grid-column: span 2;
+    }
+    .btn-new-game:hover {
+      background: var(--gold);
+      transform: translateY(-2px);
+    }
+
+    .stats-row {
+      display: flex;
+      justify-content: space-between;
+      background: rgba(198, 93, 59, 0.05);
+      padding: 0.6rem 1rem;
+      border-radius: 16px;
+      margin-top: 0.8rem;
+    }
+    .stat-item { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: var(--text-secondary); }
+    .stat-value { font-size: 1.3rem; font-weight: 800; color: var(--terracotta); }
+
+    .team-panel {
+      max-width: 600px;
+      margin: 0 auto;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .team-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      margin-bottom: 1rem;
+      max-height: 350px;
+      overflow-y: auto;
+    }
+    .team-card {
+      background: #FFFFFF;
+      border-radius: 16px;
+      padding: 0.8rem 1rem;
+      border: 1px solid rgba(198, 93, 59, 0.15);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .team-card.winner {
+      border-color: var(--gold);
+      background: linear-gradient(135deg, rgba(212, 168, 75, 0.1) 0%, #FFFFFF 100%);
+    }
+    .team-info { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .team-name { font-size: 0.9rem; font-weight: 700; color: var(--text-primary); }
+    .team-score { font-size: 1.4rem; font-weight: 800; color: var(--terracotta); }
+    .team-actions { display: flex; gap: 6px; }
+    .team-btn {
+      background: rgba(198, 93, 59, 0.1);
+      border: none;
+      padding: 6px 12px;
+      border-radius: 8px;
+      color: var(--terracotta);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.7rem;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .team-btn.delete:hover { background: var(--danger); color: white; }
+    .winner-badge {
+      background: var(--gradient-gold);
+      color: var(--burgundy-dark);
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 0.6rem;
+      font-weight: 800;
+    }
+    .add-team-form {
+      display: flex;
+      gap: 8px;
+      margin-top: 0.5rem;
+      background: #FFFFFF;
+      padding: 0.8rem;
+      border-radius: 16px;
+      border: 1px solid rgba(198, 93, 59, 0.15);
+    }
+    .add-team-input {
+      flex: 1;
+      padding: 8px 14px;
+      border-radius: 50px;
+      border: 1px solid rgba(198, 93, 59, 0.2);
+      font-family: 'Tajawal', sans-serif;
+    }
+    .add-team-btn {
+      background: var(--gradient-terracotta);
+      border: none;
+      padding: 8px 18px;
+      border-radius: 50px;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(44, 24, 16, 0.7);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content {
+      background: #FFFFFF;
+      border-radius: 24px;
+      padding: 1.5rem;
+      max-width: 320px;
+      width: 85%;
+      text-align: center;
+    }
+    .team-option {
+      background: #FFFFFF;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 12px;
+      cursor: pointer;
+      border: 1px solid rgba(198, 93, 59, 0.15);
+      font-weight: 600;
+    }
+    .sound-toggle-inline {
+      position: fixed;
+      bottom: 15px;
+      left: 15px;
+      background: #FFFFFF;
+      padding: 8px 14px;
+      border-radius: 50px;
+      border: 1px solid rgba(198, 93, 59, 0.2);
+      cursor: pointer;
+      z-index: 200;
+      font-size: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .empty-state { text-align: center; padding: 2rem; color: var(--text-secondary); }
+    .victory-message {
+      background: var(--gradient-gold);
+      color: var(--burgundy-dark);
+      padding: 10px;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      text-align: center;
+      font-weight: bold;
+    }
+    @media (max-width: 640px) {
+      .current-word { font-size: 1.5rem; }
+      .action-buttons { grid-template-columns: 1fr; }
+      .btn-success, .btn-new-game { grid-column: span 1; }
+      .timer-number { font-size: 2rem; }
     }
   </style>
-  <base target="_blank">
 </head>
 <body>
-  <div class="bg">
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
+<div class="app-container">
+  <div class="tab-navigation">
+    <button class="tab-btn active" data-tab="home"><i class="fas fa-home"></i> الرئيسية</button>
+    <button class="tab-btn" data-tab="game"><i class="fas fa-mask"></i> اللعبة</button>
+    <button class="tab-btn" data-tab="teams"><i class="fas fa-users"></i> الفرق</button>
   </div>
 
-  <main class="container">
-    <h1 class="name">المصمم سعود</h1>
-    <div class="title">مطور تطبيقات وصفحات ويب تفاعلية</div>
-    
-    <p class="description">
-      أقوم بتحويل أفكارك إلى تطبيقات وصفحات ويب تفاعلية بالكامل.<br><br>
-      أصمم بناءً على طلباتك: تطبيق خاص بك، ألعابًا تفاعلية، دعوات عشاء إلكترونية، وأي فكرة إبداعية ترغب في تنفيذها.
-    </p>
-
-    <!-- قسم إستعرض أعمالي مع العنوان -->
-    <div class="portfolio-section">
-      <div class="section-label">
-        <i class="fas fa-star-of-life"></i>
-        <span>إستعرض أعمالي</span>
-        <i class="fas fa-star-of-life"></i>
-      </div>
-      
-      <div class="works">
-        <a href="https://takota3090-lab.github.io/malak-shark-game/" target="_blank" class="work-btn">
-          <i class="fas fa-mobile-alt"></i>
-          <span>تطبيق خاص</span>
-        </a>
-        
-        <a href="https://takota3090-lab.github.io/invitation/" target="_blank" class="work-btn">
-          <i class="fas fa-envelope-open"></i>
-          <span>دعوة إلكترونية</span>
-        </a>
-        
-        <a href="https://takota3090-lab.github.io/charades/" target="_blank" class="work-btn">
-          <i class="fas fa-theater-masks"></i>
-          <span>لعبة تمثيل</span>
-        </a>
+  <div class="tab-content">
+    <div class="tab-pane active-pane" id="homeTab">
+      <div class="home-container">
+        <div class="hero-card">
+          <div class="hero-icon"><i class="fas fa-theater-masks"></i></div>
+          <h1 class="hero-title">لعبة التمثيل</h1>
+          <div class="designer-credit"><i class="fas fa-pen-fancy"></i> تصميم سعود <i class="fas fa-pen-fancy"></i></div>
+          <div class="categories-badge">
+            <span class="cat-badge"><i class="fas fa-running"></i> أفعال</span>
+            <span class="cat-badge"><i class="fas fa-paw"></i> حيوانات</span>
+            <span class="cat-badge"><i class="fas fa-utensils"></i> أكلات</span>
+          </div>
+          <div class="game-description">
+            <h3><i class="fas fa-info-circle"></i> طريقة اللعب</h3>
+            <ul class="rule-list">
+              <li><i class="fas fa-theater-masks"></i> لاعب يمثل <strong>بدون كلام</strong> والباقي يخمنون</li>
+              <li><i class="fas fa-hourglass-start"></i> اضغط <strong>"بدء المؤقت"</strong> للعد التنازلي</li>
+              <li><i class="fas fa-trophy"></i> <strong>"تم التخمين"</strong> ← اختر الفريق الفائز + نقطة</li>
+              <li><i class="fas fa-forward"></i> <strong>"تخطي"</strong> لكلمة جديدة</li>
+              <li><i class="fas fa-flag-checkered"></i> أول فريق يصل <strong>10 نقاط</strong> هو البطل!</li>
+              <li><i class="fas fa-redo-alt"></i> اضغط <strong>"لعبة جديدة"</strong> لتصفير النقاط والبدء من جديد</li>
+            </ul>
+          </div>
+          <button class="play-button-home" id="playNowBtn"><i class="fas fa-play"></i> ابدأ اللعب</button>
+        </div>
       </div>
     </div>
+    <div class="tab-pane" id="gameTab">
+      <div class="game-container">
+        <div class="game-card">
+          <div class="game-header"><h2><i class="fas fa-theater-masks"></i> حان وقت التمثيل</h2></div>
+          <div class="game-body" id="gameDynamicContent"></div>
+        </div>
+      </div>
+    </div>
+    <div class="tab-pane" id="teamsTab">
+      <div class="team-panel">
+        <div id="teamListContainer" class="team-list"></div>
+        <div class="add-team-form">
+          <input type="text" id="teamNameInput" class="add-team-input" placeholder="اسم الفريق الجديد...">
+          <button id="addTeamBtn" class="add-team-btn"><i class="fas fa-plus"></i> إضافة</button>
+        </div>
+        <button id="goToGameBtn" class="add-team-btn" style="margin-top: 0.8rem; width: 100%; justify-content: center;"><i class="fas fa-mask"></i> الذهاب إلى اللعبة</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="sound-toggle-inline" id="soundToggle"><i class="fas fa-volume-mute"></i> الصوت</div>
 
-    <a href="https://wa.me/966560980666" class="contact-btn">
-      <span>تواصل معي</span>
-      <i class="fas fa-paper-plane"></i>
-    </a>
-  </main>
+<script>
+  // ==================== SOUND SYSTEM ====================
+  let soundEnabled = false;
+  let audioContext = null;
+  function initAudio() { 
+    if (!audioContext) {
+      try {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      } catch(e) { console.log('Web Audio not supported'); }
+    }
+  }
+  function playTone(freq, dur, type='sine') {
+    if(!soundEnabled || !audioContext) return;
+    try {
+      const osc = audioContext.createOscillator();
+      const gain = audioContext.createGain();
+      osc.connect(gain); 
+      gain.connect(audioContext.destination);
+      osc.frequency.value = freq; 
+      osc.type = type;
+      gain.gain.setValueAtTime(0.3, audioContext.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + dur);
+      osc.start(); 
+      osc.stop(audioContext.currentTime + dur);
+    } catch(e) {}
+  }
+  function play(sound) {
+    if(!soundEnabled) return;
+    initAudio();
+    if(sound === 'click' || sound === 'tabSwitch') playTone(600, 0.05, 'square');
+    else if(sound === 'success') { playTone(1200,0.15); setTimeout(()=>playTone(1600,0.2),100); }
+    else if(sound === 'start') { playTone(400,0.1); setTimeout(()=>playTone(600,0.1),100); setTimeout(()=>playTone(800,0.2),200); }
+    else if(sound === 'timesUp') { playTone(200,0.3); setTimeout(()=>playTone(200,0.3),200); setTimeout(()=>playTone(200,0.3),400); }
+    else if(sound === 'scoreUp') playTone(1200,0.12);
+    else if(sound === 'scoreDown') playTone(300,0.15);
+    else if(sound === 'winner') { playTone(1000,0.1); setTimeout(()=>playTone(1300,0.2),100); setTimeout(()=>playTone(1600,0.25),250); }
+    else if(sound === 'newWord') playTone(700,0.08);
+    else playTone(600,0.05);
+  }
+  
+  const soundBtn = document.getElementById('soundToggle');
+  soundBtn.addEventListener('click', () => {
+    soundEnabled = !soundEnabled;
+    soundBtn.classList.toggle('active', soundEnabled);
+    soundBtn.innerHTML = soundEnabled ? '<i class="fas fa-volume-up"></i> الصوت' : '<i class="fas fa-volume-mute"></i> الصوت';
+    if(soundEnabled) {
+      initAudio();
+      if(audioContext && audioContext.state === 'suspended') audioContext.resume();
+      setTimeout(()=>play('click'),100);
+    }
+  });
 
-  <script>
-    // Add hover tilt effect to buttons
-    document.querySelectorAll('.work-btn, .contact-btn').forEach(btn => {
-      btn.addEventListener('mousemove', (e) => {
-        const rect = btn.getBoundingClientRect();
-        const x = e.clientX - rect.left - rect.width / 2;
-        const y = e.clientY - rect.top - rect.height / 2;
-        btn.style.transform = `translate(${x * 0.1}px, ${y * 0.1}px)`;
-      });
+  // ==================== GAME DATA ====================
+  const gameCategories = {
+    "أفعال": ["يرقص العرضة","يغني","يطبخ منسف","يشرب قهوة","يركب جمل","يلعب كرة قدم","يؤذن","يلقي شعر","يرسم","يضحك","يبكي","ينام","يأكل تمر","يسقي الضيوف","يركض","يقفز","يسبح","يقرأ","يكتب","يقود سيارة","يصيد سمك","يطير طائرة","يحلق ذقن","يتزحلق","يتسلق جبل","يصارع","يلعب شطرنج","يخيط ملابس","يغسل سيارة","يصلي","يحفر بئر","يرمي سهام","يقطع خشب","يشوي لحم","يخبز خبز","يحلب بقرة","يرعى غنم","يحصد قمح","يدق طبل","يعزف عود","يصنع قهوة","يجهز خيمة","يغسل يده","يمشي على يديه","يتكلم بالتليفون","يشرب موية","يأكل برياني","ينظف بيت","يرتب مكتب","يصلح كمبيوتر","يشرب شاي","يأكل كبسة","يقلي بيض","يغلي ماء","يفتح باب","يسكر شباك","ينادي صديق","يلوح بيده","يصفق","يصفير"],
+    "حيوانات": ["جمل","صقر","حصان عربي","غزال","نمر","ذئب","ثعلب","وعل","نعامة","قط","كلب","نسر","فهد","أرنب","حمام","ضب","حرباء","عقاب","بومة","ثعبان","عقرب","عنكبوت","جربوع","هدهد","قرد","فيل","زرافة","أسد","بطريق","دب","دلفين","حوت","قرش","سمكة","سلحفاة","ضفدع","يعسوب","فراشة","نحلة","دودة","جراد","صرصور","بعوضة","ذبابة","عصفور","بلبل","قارورة","ببغاء","بجعة","تمساح","خفاش","حمار","حمار وحشي","ظبي","مها","راكون","سنجاب","فأر","جرذ"],
+    "أكلات": ["منسف","كنافة","كبسة","مطبق","جريش","هريس","صيادية","معصوب","مقلقل","مرقوق","عريكة","مضغوط","قرصان","مطازيز","سليق","كبيبة","حنيذ","مدفون","برياني","شاورما","فلافل","حمص","متبل","تبولة","فتوش","كبة","يربات","samboosa","لقيمات","عصيدة","تمر","تمر محشي","قهوة عربية","شاي","ليمون نعناع","جلسة","معمول","غريبة","بقلاوة","أصابع زينب","مشبك","رز بخاري","رز بالحليب","عيش السرايا","أم علي","مهلبية","بلاليط","شريك","خبز تنور","خبز رقاق","عصير تمر هندي","لبن","زبادي","جبن","سمن","سمن بري","عسل","طحينة","حلاوة طحينية","مرق دجاج","شوربة","سلطة","مشاوي","كفتة","كباب","تونة","بيض","زيتون","فول"]
+  };
+  let allWords = [];
+  for(let cat in gameCategories) {
+    gameCategories[cat].forEach(w => allWords.push({ word: w, category: cat }));
+  }
+
+  // ==================== TEAMS ====================
+  let teams = [];
+  function loadTeams() {
+    const saved = localStorage.getItem('charades_teams_v5');
+    if(saved) {
+      teams = JSON.parse(saved);
+    } else {
+      teams = [
+        { id: 1, name: "الفريق الأحمر", score: 0 },
+        { id: 2, name: "الفريق الأزرق", score: 0 }
+      ];
+    }
+    renderTeamList();
+  }
+  function saveTeams() { localStorage.setItem('charades_teams_v5', JSON.stringify(teams)); }
+  function addTeam(name) {
+    if(!name.trim()) return;
+    teams.push({ id: Date.now(), name: name.trim(), score: 0 });
+    saveTeams(); 
+    renderTeamList(); 
+    play('click');
+  }
+  function updateTeamScore(teamId, newScore) {
+    const team = teams.find(t=>t.id === teamId);
+    if(team) { 
+      team.score = Math.max(0, newScore); 
+      saveTeams(); 
+      renderTeamList(); 
+    }
+  }
+  function deleteTeam(teamId) {
+    if(confirm('هل أنت متأكد من حذف هذا الفريق؟')) {
+      teams = teams.filter(t=>t.id !== teamId);
+      saveTeams(); 
+      renderTeamList(); 
+      play('click');
+    }
+  }
+  
+  // NEW GAME FUNCTION - Resets all scores
+  function resetAllScores() {
+    if(confirm('🔄 هل تريد بدء لعبة جديدة؟\nسيتم تصفير جميع نقاط الفرق.')) {
+      teams.forEach(team => { team.score = 0; });
+      saveTeams();
+      renderTeamList();
+      // Reset game state
+      stopTimer();
+      roundCount = 0;
+      timeLeft = 60;
+      timerRunning = false;
+      gameActive = true;
+      gameWinner = null;
+      currentWordObj = getRandomWord();
+      updateRoundUI();
+      updateTimerUI();
+      refreshWordUI();
+      renderGameUI(); // Re-render to remove victory message
+      play('click');
+      alert('✨ تم بدء لعبة جديدة! جميع الفرق تبدأ من الصفر. ✨');
+    }
+  }
+  
+  function renderTeamList() {
+    const container = document.getElementById('teamListContainer');
+    if(!container) return;
+    if(teams.length === 0) { 
+      container.innerHTML = '<div class="empty-state"><i class="fas fa-users-slash"></i><div>لا توجد فرق. أضف فريقاً!</div></div>'; 
+      return; 
+    }
+    // Display in original order (no sorting)
+    container.innerHTML = teams.map(team => `
+      <div class="team-card ${gameWinner === team.id ? 'winner' : ''}">
+        <div class="team-info">
+          <div class="team-name">
+            ${escapeHtml(team.name)}
+            ${gameWinner === team.id ? '<span class="winner-badge"><i class="fas fa-crown"></i> بطل</span>' : ''}
+          </div>
+          <div class="team-score">${team.score}</div>
+        </div>
+        <div class="team-actions">
+          <button class="team-btn" onclick="window.adjustScore(${team.id}, -1)"><i class="fas fa-minus"></i></button>
+          <button class="team-btn" onclick="window.adjustScore(${team.id}, 1)"><i class="fas fa-plus"></i></button>
+          <button class="team-btn delete" onclick="window.deleteTeam(${team.id})"><i class="fas fa-trash"></i></button>
+        </div>
+      </div>
+    `).join('');
+  }
+  
+  window.adjustScore = (teamId, delta) => {
+    if(gameWinner) {
+      alert('🎉 اللعبة انتهت! اضغط على "لعبة جديدة" للبدء من جديد.');
+      return;
+    }
+    const team = teams.find(t=>t.id===teamId);
+    if(team) {
+      let newScore = team.score + delta;
+      if(newScore < 0) newScore = 0;
+      updateTeamScore(teamId, newScore);
+      play(delta > 0 ? 'scoreUp' : 'scoreDown');
       
-      btn.addEventListener('mouseleave', () => {
-        btn.style.transform = 'translate(0, 0)';
+      // Check for winner
+      if(newScore >= 10) {
+        gameWinner = team.id;
+        gameActive = false;
+        stopTimer();
+        play('winner');
+        alert(`🏆 مبروك! الفريق ${team.name} وصل إلى 10 نقاط وفاز باللعبة! 🏆\n\nاضغط على "لعبة جديدة" لبدء جولة جديدة.`);
+        renderGameUI(); // Refresh UI to show victory message and new game button
+      }
+    }
+  };
+  window.deleteTeam = (teamId) => deleteTeam(teamId);
+  function escapeHtml(str) { 
+    if(!str) return '';
+    return str.replace(/[&<>]/g, m => m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); 
+  }
+
+  // ==================== GAME STATE ====================
+  let currentWordObj = null;
+  let timerInterval = null;
+  let timeLeft = 60;
+  let roundCount = 0;
+  let gameActive = true;
+  let timerRunning = false;
+  let timesUpPlayed = false;
+  let gameWinner = null;
+
+  function stopTimer() { 
+    if(timerInterval) { 
+      clearInterval(timerInterval); 
+      timerInterval = null; 
+    } 
+    timerRunning = false; 
+    timesUpPlayed=false; 
+    const circle = document.querySelector('.timer-circle');
+    if(circle) circle.classList.remove('active');
+  }
+  
+  function startTimer() {
+    if(timerRunning) return;
+    if(!gameActive || gameWinner) {
+      alert('اللعبة انتهت! اضغط على "لعبة جديدة" للبدء.');
+      return;
+    }
+    if(timeLeft <= 0) { 
+      timeLeft = 60; 
+      updateTimerUI(); 
+    }
+    stopTimer();
+    timerRunning = true;
+    timesUpPlayed = false;
+    const circle = document.querySelector('.timer-circle');
+    if(circle) circle.classList.add('active');
+    play('start');
+    
+    timerInterval = setInterval(() => {
+      if(timeLeft <= 0) {
+        stopTimer();
+        if(!timesUpPlayed) { 
+          play('timesUp'); 
+          timesUpPlayed=true; 
+        }
+        updateTimerUI();
+        const timerEl = document.getElementById('gameTimerNumber');
+        if(timerEl) { 
+          timerEl.classList.add('times-up'); 
+          setTimeout(()=>timerEl.classList.remove('times-up'),1000);
+        }
+      } else {
+        timeLeft--;
+        updateTimerUI();
+        const timerEl = document.getElementById('gameTimerNumber');
+        if(timeLeft <=5 && timeLeft>0) { 
+          play('tick'); 
+          if(timerEl) timerEl.classList.add('warning');
+        } else { 
+          if(timerEl && timeLeft>5) timerEl.classList.remove('warning');
+        }
+      }
+    }, 1000);
+  }
+  
+  function updateTimerUI() { 
+    const el = document.getElementById('gameTimerNumber'); 
+    if(el) el.innerText = timeLeft; 
+  }
+  
+  function getRandomWord() { 
+    return { ...allWords[Math.floor(Math.random() * allWords.length)] }; 
+  }
+  
+  function refreshWordUI() {
+    const wordEl = document.getElementById('gameCurrentWord');
+    const catEl = document.getElementById('gameCategory');
+    if(wordEl) { 
+      wordEl.style.opacity='0'; 
+      setTimeout(()=>{ 
+        wordEl.innerText=currentWordObj.word; 
+        wordEl.style.opacity='1'; 
+      },150); 
+    }
+    if(catEl) catEl.innerText = `📂 ${currentWordObj.category}`;
+    if(gameActive && !gameWinner) play('newWord');
+  }
+  
+  function updateRoundUI() { 
+    const el = document.getElementById('gameRounds'); 
+    if(el) el.innerText = roundCount; 
+  }
+
+  function showTeamSelectionModal(onSelect) {
+    if(gameWinner) {
+      alert('🎉 اللعبة انتهت! اضغط على "لعبة جديدة" للبدء.');
+      onSelect(null);
+      return;
+    }
+    if(teams.length === 0) { 
+      alert('⚠️ لا توجد فرق! أضف فريقاً أولاً'); 
+      onSelect(null); 
+      return; 
+    }
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.innerHTML = `<div class="modal-content"><h3><i class="fas fa-trophy"></i> اختر الفريق الفائز</h3>
+      ${teams.map(team => `<div class="team-option" data-team-id="${team.id}"><i class="fas fa-users" style="margin-left:8px;"></i> ${escapeHtml(team.name)}</div>`).join('')}
+      <button class="team-btn" style="margin-top:1rem; width:100%; background:transparent; border:1px solid #ccc;" id="cancelModal"><i class="fas fa-times"></i> إلغاء</button></div>`;
+    document.body.appendChild(modal);
+    modal.querySelectorAll('.team-option').forEach(opt => {
+      opt.addEventListener('click', () => {
+        const teamId = parseInt(opt.dataset.teamId);
+        const team = teams.find(t=>t.id===teamId);
+        modal.remove();
+        onSelect(team);
       });
     });
-  </script>
+    modal.querySelector('#cancelModal').addEventListener('click', () => { modal.remove(); onSelect(null); });
+  }
+
+  function guessedCorrect() {
+    if(!gameActive || gameWinner) {
+      alert('اللعبة انتهت! اضغط على "لعبة جديدة" للبدء.');
+      return;
+    }
+    stopTimer();
+    play('success');
+    showTeamSelectionModal((selectedTeam) => {
+      if(selectedTeam && !gameWinner) {
+        let newScore = selectedTeam.score + 1;
+        updateTeamScore(selectedTeam.id, newScore);
+        
+        if(newScore >= 10) {
+          gameWinner = selectedTeam.id;
+          gameActive = false;
+          stopTimer();
+          play('winner');
+          alert(`🏆 مبروك! الفريق ${selectedTeam.name} وصل إلى 10 نقاط وفاز باللعبة! 🏆\n\nاضغط على "لعبة جديدة" لبدء جولة جديدة.`);
+          renderGameUI();
+          return;
+        }
+      }
+      if(!gameWinner) {
+        roundCount++;
+        updateRoundUI();
+        timeLeft = 60;
+        updateTimerUI();
+        currentWordObj = getRandomWord();
+        refreshWordUI();
+        timerRunning = false;
+        gameActive = true;
+        const timerEl = document.getElementById('gameTimerNumber');
+        if(timerEl) timerEl.classList.remove('warning');
+      }
+    });
+  }
+
+  function skipWord() {
+    if(!gameActive || gameWinner) {
+      alert('اللعبة انتهت! اضغط على "لعبة جديدة" للبدء.');
+      return;
+    }
+    play('skip');
+    roundCount++;
+    updateRoundUI();
+    currentWordObj = getRandomWord();
+    refreshWordUI();
+    stopTimer();
+    timerRunning = false;
+    timeLeft = 60;
+    updateTimerUI();
+    const timerEl = document.getElementById('gameTimerNumber');
+    if(timerEl) timerEl.classList.remove('warning');
+  }
+
+  function renderGameUI() {
+    if(!currentWordObj) currentWordObj = getRandomWord();
+    const victoryMessageHTML = gameWinner ? 
+      `<div class="victory-message">
+        <i class="fas fa-trophy"></i> 🏆 الفائز: ${escapeHtml(teams.find(t=>t.id===gameWinner)?.name || '')} 🏆 <i class="fas fa-trophy"></i>
+      </div>` : '';
+    
+    const html = `
+      ${victoryMessageHTML}
+      <div class="word-card"><div class="current-word" id="gameCurrentWord">${escapeHtml(currentWordObj.word)}</div><div class="category-tag" id="gameCategory">📂 ${currentWordObj.category}</div></div>
+      <div class="timer-area"><div class="timer-circle"><div class="timer-number" id="gameTimerNumber">${timeLeft}</div><div class="timer-label">ثانية</div></div></div>
+      <div class="action-buttons">
+        <button class="btn-action btn-primary" id="startTimerBtn"><i class="fas fa-hourglass-start"></i> بدء المؤقت</button>
+        <button class="btn-action btn-skip" id="gameSkipBtn"><i class="fas fa-forward"></i> تخطي</button>
+        <button class="btn-action btn-success" id="gameGuessBtn"><i class="fas fa-check-circle"></i> تم التخمين!</button>
+        <button class="btn-action btn-new-game" id="newGameBtn"><i class="fas fa-redo-alt"></i> لعبة جديدة</button>
+        <button class="btn-action" id="showTeamsBtn"><i class="fas fa-users"></i> عرض الفرق</button>
+      </div>
+      <div class="stats-row"><div class="stat-item"><i class="fas fa-redo-alt"></i> <span class="stat-value" id="gameRounds">${roundCount}</span> <span>جولة</span></div><div class="stat-item"><i class="fas fa-flag-checkered"></i> <span>الهدف: 10 نقاط</span></div></div>
+    `;
+    const container = document.getElementById('gameDynamicContent');
+    if(container) container.innerHTML = html;
+    
+    document.getElementById('startTimerBtn')?.addEventListener('click', () => { 
+      if(!timerRunning && timeLeft>0 && gameActive && !gameWinner) { 
+        startTimer(); 
+        play('click'); 
+      } else if(gameWinner) {
+        alert('اللعبة انتهت! اضغط على "لعبة جديدة" للبدء.');
+      }
+    });
+    document.getElementById('gameGuessBtn')?.addEventListener('click', () => guessedCorrect());
+    document.getElementById('gameSkipBtn')?.addEventListener('click', () => skipWord());
+    document.getElementById('showTeamsBtn')?.addEventListener('click', () => { 
+      switchToTab('teams'); 
+      play('click'); 
+    });
+    document.getElementById('newGameBtn')?.addEventListener('click', () => resetAllScores());
+  }
+
+  function initGame() {
+    stopTimer();
+    roundCount = 0;
+    timeLeft = 60;
+    timerRunning = false;
+    currentWordObj = getRandomWord();
+    gameActive = true;
+    gameWinner = null;
+    renderGameUI();
+  }
+
+  // ==================== TAB SWITCHING ====================
+  function switchToTab(tabId) {
+    document.querySelectorAll('.tab-btn').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active-pane'));
+    const targetBtn = Array.from(document.querySelectorAll('.tab-btn')).find(t => t.dataset.tab === tabId);
+    if(targetBtn) targetBtn.classList.add('active');
+    const targetPane = document.getElementById(`${tabId}Tab`);
+    if(targetPane) targetPane.classList.add('active-pane');
+    if(tabId === 'teams') renderTeamList();
+    play('tabSwitch');
+  }
+  
+  // Setup event listeners
+  document.querySelectorAll('.tab-btn').forEach(tab => {
+    tab.addEventListener('click', () => switchToTab(tab.dataset.tab));
+  });
+  
+  const playNowBtn = document.getElementById('playNowBtn');
+  if(playNowBtn) {
+    playNowBtn.addEventListener('click', () => { 
+      switchToTab('game'); 
+      play('click'); 
+    });
+  }
+  
+  const addTeamBtn = document.getElementById('addTeamBtn');
+  if(addTeamBtn) {
+    addTeamBtn.addEventListener('click', () => { 
+      const inp = document.getElementById('teamNameInput'); 
+      if(inp && inp.value.trim()) {
+        addTeam(inp.value.trim()); 
+        inp.value = ''; 
+      } else if(inp) {
+        inp.style.borderColor='var(--danger)'; 
+        setTimeout(()=>inp.style.borderColor='',1000);
+      }
+    });
+  }
+  
+  const goToGameBtn = document.getElementById('goToGameBtn');
+  if(goToGameBtn) {
+    goToGameBtn.addEventListener('click', () => switchToTab('game'));
+  }
+  
+  const teamNameInput = document.getElementById('teamNameInput');
+  if(teamNameInput) {
+    teamNameInput.addEventListener('keypress', (e)=> { 
+      if(e.key==='Enter') {
+        const addBtn = document.getElementById('addTeamBtn');
+        if(addBtn) addBtn.click();
+      }
+    });
+  }
+
+  // Initialize everything
+  loadTeams();
+  initGame();
+</script>
 </body>
 </html>
