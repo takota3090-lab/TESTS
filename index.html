@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>لعبة التمثيل - 10 جولات | تصميم سعود</title>
+  <title>لعبة التمثيل - اختيار الفئة | تصميم سعود</title>
   
   <!-- Premium Arabic Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
@@ -61,6 +61,7 @@
       background: #FFFFFF;
       border-bottom: 1px solid rgba(198, 93, 59, 0.15);
       flex-shrink: 0;
+      flex-wrap: wrap;
     }
 
     .tab-btn {
@@ -348,8 +349,13 @@
       color: var(--burgundy-dark);
       grid-column: span 2;
     }
-    .btn-new-game:hover {
-      background: var(--gold);
+    .btn-category {
+      background: var(--burgundy);
+      border-color: var(--burgundy);
+      color: white;
+    }
+    .btn-category:hover {
+      background: var(--burgundy-dark);
       transform: translateY(-2px);
     }
 
@@ -466,7 +472,7 @@
       width: 85%;
       text-align: center;
     }
-    .team-option {
+    .team-option, .category-option {
       background: #FFFFFF;
       padding: 10px;
       margin: 8px 0;
@@ -474,6 +480,12 @@
       cursor: pointer;
       border: 1px solid rgba(198, 93, 59, 0.15);
       font-weight: 600;
+      transition: all 0.2s;
+    }
+    .team-option:hover, .category-option:hover {
+      background: rgba(198, 93, 59, 0.1);
+      border-color: var(--terracotta);
+      transform: scale(1.02);
     }
     .sound-toggle-inline {
       position: fixed;
@@ -502,11 +514,22 @@
       text-align: center;
       font-weight: bold;
     }
+    .current-category-badge {
+      display: inline-block;
+      background: var(--terracotta);
+      color: white;
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      margin-right: 8px;
+    }
     @media (max-width: 640px) {
       .current-word { font-size: 1.5rem; }
       .action-buttons { grid-template-columns: 1fr; }
       .btn-success, .btn-new-game { grid-column: span 1; }
       .timer-number { font-size: 2rem; }
+      .tab-navigation { gap: 0.2rem; }
+      .tab-btn { padding: 4px 12px; font-size: 0.7rem; }
     }
   </style>
 </head>
@@ -528,13 +551,15 @@
           <div class="categories-badge">
             <span class="cat-badge"><i class="fas fa-running"></i> أفعال</span>
             <span class="cat-badge"><i class="fas fa-paw"></i> حيوانات</span>
-            <span class="cat-badge"><i class="fas fa-utensils"></i> أكلات</span>
+            <span class="cat-badge"><i class="fas fa-quote-right"></i> أمثال</span>
+            <span class="cat-badge"><i class="fas fa-mobile-alt"></i> أشياء</span>
           </div>
           <div class="game-description">
             <h3><i class="fas fa-info-circle"></i> طريقة اللعب</h3>
             <ul class="rule-list">
               <li><i class="fas fa-theater-masks"></i> لاعب يمثل <strong>بدون كلام</strong> والباقي يخمنون</li>
               <li><i class="fas fa-hourglass-start"></i> اضغط <strong>"بدء المؤقت"</strong> للعد التنازلي</li>
+              <li><i class="fas fa-layer-group"></i> اضغط <strong>"اختر الفئة"</strong> لتغيير نوع الكلمات</li>
               <li><i class="fas fa-trophy"></i> <strong>"تم التخمين"</strong> ← اختر الفريق الفائز + نقطة</li>
               <li><i class="fas fa-forward"></i> <strong>"تخطي"</strong> لكلمة جديدة</li>
               <li><i class="fas fa-flag-checkered"></i> أول فريق يصل <strong>10 نقاط</strong> هو البطل!</li>
@@ -619,21 +644,43 @@
     }
   });
 
-  // ==================== GAME DATA ====================
+  // ==================== GAME DATA - 4 CATEGORIES (FOOD REMOVED) ====================
   const gameCategories = {
     "أفعال": ["يرقص العرضة","يغني","يطبخ منسف","يشرب قهوة","يركب جمل","يلعب كرة قدم","يؤذن","يلقي شعر","يرسم","يضحك","يبكي","ينام","يأكل تمر","يسقي الضيوف","يركض","يقفز","يسبح","يقرأ","يكتب","يقود سيارة","يصيد سمك","يطير طائرة","يحلق ذقن","يتزحلق","يتسلق جبل","يصارع","يلعب شطرنج","يخيط ملابس","يغسل سيارة","يصلي","يحفر بئر","يرمي سهام","يقطع خشب","يشوي لحم","يخبز خبز","يحلب بقرة","يرعى غنم","يحصد قمح","يدق طبل","يعزف عود","يصنع قهوة","يجهز خيمة","يغسل يده","يمشي على يديه","يتكلم بالتليفون","يشرب موية","يأكل برياني","ينظف بيت","يرتب مكتب","يصلح كمبيوتر","يشرب شاي","يأكل كبسة","يقلي بيض","يغلي ماء","يفتح باب","يسكر شباك","ينادي صديق","يلوح بيده","يصفق","يصفير"],
-    "حيوانات": ["جمل","صقر","حصان عربي","غزال","نمر","ذئب","ثعلب","وعل","نعامة","قط","كلب","نسر","فهد","أرنب","حمام","ضب","حرباء","عقاب","بومة","ثعبان","عقرب","عنكبوت","جربوع","هدهد","قرد","فيل","زرافة","أسد","بطريق","دب","دلفين","حوت","قرش","سمكة","سلحفاة","ضفدع","يعسوب","فراشة","نحلة","دودة","جراد","صرصور","بعوضة","ذبابة","عصفور","بلبل","قارورة","ببغاء","بجعة","تمساح","خفاش","حمار","حمار وحشي","ظبي","مها","راكون","سنجاب","فأر","جرذ"],
-    "أكلات": ["منسف","كنافة","كبسة","مطبق","جريش","هريس","صيادية","معصوب","مقلقل","مرقوق","عريكة","مضغوط","قرصان","مطازيز","سليق","كبيبة","حنيذ","مدفون","برياني","شاورما","فلافل","حمص","متبل","تبولة","فتوش","كبة","يربات","samboosa","لقيمات","عصيدة","تمر","تمر محشي","قهوة عربية","شاي","ليمون نعناع","جلسة","معمول","غريبة","بقلاوة","أصابع زينب","مشبك","رز بخاري","رز بالحليب","عيش السرايا","أم علي","مهلبية","بلاليط","شريك","خبز تنور","خبز رقاق","عصير تمر هندي","لبن","زبادي","جبن","سمن","سمن بري","عسل","طحينة","حلاوة طحينية","مرق دجاج","شوربة","سلطة","مشاوي","كفتة","كباب","تونة","بيض","زيتون","فول"]
+    
+    "حيوانات": ["جمل","صقر","حصان عربي","غزال","نمر","ذئب","ثعلب","وعل","نعامة","قط","كلب","نسر","فهد","أرنب","حمام","ضب","حرباء","عقاب","بومة","ثعبان","عقرب","عنكبوت","جربوع","هدهد","قرد","فيل","زرافة","أسد","بطريق","دب","دلفين","حوت","قرش","سمكة","سلحفاة","ضفدع","يعسوب","فراشة","نحلة","دودة","جراد","صرصور","بعوضة","ذبابة","عصفور","بلبل","ببغاء","بجعة","تمساح","خفاش","حمار","حمار وحشي","ظبي","مها","راكون","سنجاب","فأر","جرذ"],
+    
+    "أمثال شعبية": ["اطلع من جلدك", "اللي ما يعرف الصقر يشويه", "اللي راح ما يرجع", "اللي على راسه بطحة يحس عليها", "امشي على قد لحافك", "الجار قبل الدار", "الرفيق قبل الطريق", "الصبر مفتاح الفرج", "العين بصيرة واليد قصيرة", "الغايب حجته معاه", "القناعة كنز لا يفنى", "الكذب ملح الرجال", "الله يعين على الظالم", "إن ضاقت بك السبل فاصبر", "باب النجار مخلع", "جبتك يا جحا للسوق تبيعك", "جحر الضب يهدم والضب يبني", "حبل الكذب قصير", "خير الكلام ما قل ودل", "دايم السيف ينعل", "ربعك ولا ذهبك", "ساكت واجد ناطق", "سمن على عسل", "شر البلية ما يضحك", "صاحب بالك سليم", "عصفور في اليد ولا عشرة على الشجرة", "على قدر لحافك مد رجليك", "في السفر رجال وفي الحضر عيال", "قال لها جحا أحمق قالته ومن ينكر", "كل شمس لها مغرب", "لا تحسب النشوة تبقى للأبد", "ما يصح إلا الصحيح", "ما يطيب العرس إلا بالركب", "من جاور الجبان ندم", "من طلب العلا سهر الليالي", "نفسك إن لم تشغلها بالحق شغلتك بالباطل", "وافق شن طبقة", "يا جحا لا تزعل", "يد الله مع الجماعة", "يسرك البطيخ ينطق", "يوم لك ويوم عليك"],
+    
+    "أشياء": ["تلفون", "سيارة", "طائرة", "قارب", "دراجة", "ساعة", "نظارة", "كتاب", "قلم", "مقص", "مفتاح", "باب", "شباك", "كرسي", "طاولة", "سرير", "ثلاجة", "فرن", "غسالة", "مكنسة", "فرشاة", "مرآة", "مشط", "خاتم", "سوار", "قلادة", "حقيبة", "محفظة", "مظلة", "شمسية", "سجادة", "وسادة", "لحاف", "ملعقة", "شوكة", "سكين", "صحن", "كأس", "إبريق", "دلة", "فناجين", "مبخرة", "عطر", "صابون", "منشفة", "مروحة", "مكيف", "تلفزيون", "راديو", "حاسوب", "آلة حاسبة", "كاميرا", "ساعة حائط", "مصباح", "شمعة", "ولاعة", "فأس", "مطرقة", "مسمار", "مسطرة", "ألوان", "دفتر", "ممحاة", "طباشير", "سبورة", "خريطة", "مجهر", "تلسكوب", "بوصلة"]
   };
+  
+  let currentCategory = "أفعال"; // Default category
   let allWords = [];
-  for(let cat in gameCategories) {
-    gameCategories[cat].forEach(w => allWords.push({ word: w, category: cat }));
+  
+  function updateAllWords() {
+    allWords = [];
+    for(let cat in gameCategories) {
+      gameCategories[cat].forEach(w => allWords.push({ word: w, category: cat }));
+    }
+  }
+  updateAllWords();
+  
+  function getRandomWordFromCategory(category) {
+    const wordsList = gameCategories[category];
+    if(!wordsList || wordsList.length === 0) return { word: "خطأ", category: category };
+    const randomIndex = Math.floor(Math.random() * wordsList.length);
+    return { word: wordsList[randomIndex], category: category };
+  }
+  
+  function getRandomWord() {
+    return getRandomWordFromCategory(currentCategory);
   }
 
   // ==================== TEAMS ====================
   let teams = [];
   function loadTeams() {
-    const saved = localStorage.getItem('charades_teams_v5');
+    const saved = localStorage.getItem('charades_teams_v7');
     if(saved) {
       teams = JSON.parse(saved);
     } else {
@@ -644,7 +691,7 @@
     }
     renderTeamList();
   }
-  function saveTeams() { localStorage.setItem('charades_teams_v5', JSON.stringify(teams)); }
+  function saveTeams() { localStorage.setItem('charades_teams_v7', JSON.stringify(teams)); }
   function addTeam(name) {
     if(!name.trim()) return;
     teams.push({ id: Date.now(), name: name.trim(), score: 0 });
@@ -669,13 +716,11 @@
     }
   }
   
-  // NEW GAME FUNCTION - Resets all scores
   function resetAllScores() {
     if(confirm('🔄 هل تريد بدء لعبة جديدة؟\nسيتم تصفير جميع نقاط الفرق.')) {
       teams.forEach(team => { team.score = 0; });
       saveTeams();
       renderTeamList();
-      // Reset game state
       stopTimer();
       roundCount = 0;
       timeLeft = 60;
@@ -686,7 +731,7 @@
       updateRoundUI();
       updateTimerUI();
       refreshWordUI();
-      renderGameUI(); // Re-render to remove victory message
+      renderGameUI();
       play('click');
       alert('✨ تم بدء لعبة جديدة! جميع الفرق تبدأ من الصفر. ✨');
     }
@@ -699,7 +744,6 @@
       container.innerHTML = '<div class="empty-state"><i class="fas fa-users-slash"></i><div>لا توجد فرق. أضف فريقاً!</div></div>'; 
       return; 
     }
-    // Display in original order (no sorting)
     container.innerHTML = teams.map(team => `
       <div class="team-card ${gameWinner === team.id ? 'winner' : ''}">
         <div class="team-info">
@@ -730,14 +774,13 @@
       updateTeamScore(teamId, newScore);
       play(delta > 0 ? 'scoreUp' : 'scoreDown');
       
-      // Check for winner
       if(newScore >= 10) {
         gameWinner = team.id;
         gameActive = false;
         stopTimer();
         play('winner');
         alert(`🏆 مبروك! الفريق ${team.name} وصل إلى 10 نقاط وفاز باللعبة! 🏆\n\nاضغط على "لعبة جديدة" لبدء جولة جديدة.`);
-        renderGameUI(); // Refresh UI to show victory message and new game button
+        renderGameUI();
       }
     }
   };
@@ -745,6 +788,45 @@
   function escapeHtml(str) { 
     if(!str) return '';
     return str.replace(/[&<>]/g, m => m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); 
+  }
+
+  // ==================== CATEGORY SELECTION ====================
+  function showCategorySelectionModal() {
+    if(gameWinner) {
+      alert('اللعبة انتهت! اضغط على "لعبة جديدة" للبدء.');
+      return;
+    }
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    const categories = Object.keys(gameCategories);
+    modal.innerHTML = `<div class="modal-content">
+      <h3><i class="fas fa-layer-group"></i> اختر الفئة</h3>
+      <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.5rem;">الفئة الحالية: <strong style="color: var(--terracotta);">${currentCategory}</strong></div>
+      ${categories.map(cat => {
+        let icon = '';
+        if(cat === 'أفعال') icon = '🏃';
+        else if(cat === 'حيوانات') icon = '🐪';
+        else if(cat === 'أمثال شعبية') icon = '📜';
+        else if(cat === 'أشياء') icon = '📱';
+        return `<div class="category-option" data-category="${cat}">${icon} ${cat}</div>`;
+      }).join('')}
+      <button class="team-btn" style="margin-top:1rem; width:100%; background:transparent; border:1px solid #ccc;" id="cancelModal"><i class="fas fa-times"></i> إلغاء</button>
+    </div>`;
+    document.body.appendChild(modal);
+    
+    modal.querySelectorAll('.category-option').forEach(opt => {
+      opt.addEventListener('click', () => {
+        const newCategory = opt.dataset.category;
+        if(newCategory !== currentCategory) {
+          currentCategory = newCategory;
+          currentWordObj = getRandomWord();
+          refreshWordUI();
+          play('click');
+        }
+        modal.remove();
+      });
+    });
+    modal.querySelector('#cancelModal').addEventListener('click', () => { modal.remove(); });
   }
 
   // ==================== GAME STATE ====================
@@ -817,10 +899,6 @@
     if(el) el.innerText = timeLeft; 
   }
   
-  function getRandomWord() { 
-    return { ...allWords[Math.floor(Math.random() * allWords.length)] }; 
-  }
-  
   function refreshWordUI() {
     const wordEl = document.getElementById('gameCurrentWord');
     const catEl = document.getElementById('gameCategory');
@@ -831,7 +909,7 @@
         wordEl.style.opacity='1'; 
       },150); 
     }
-    if(catEl) catEl.innerText = `📂 ${currentWordObj.category}`;
+    if(catEl) catEl.innerHTML = `📂 ${currentWordObj.category} <span class="current-category-badge"><i class="fas fa-check"></i> الفئة الحالية</span>`;
     if(gameActive && !gameWinner) play('newWord');
   }
   
@@ -932,10 +1010,11 @@
     
     const html = `
       ${victoryMessageHTML}
-      <div class="word-card"><div class="current-word" id="gameCurrentWord">${escapeHtml(currentWordObj.word)}</div><div class="category-tag" id="gameCategory">📂 ${currentWordObj.category}</div></div>
+      <div class="word-card"><div class="current-word" id="gameCurrentWord">${escapeHtml(currentWordObj.word)}</div><div class="category-tag" id="gameCategory">📂 ${currentWordObj.category} <span class="current-category-badge"><i class="fas fa-check"></i> الفئة الحالية</span></div></div>
       <div class="timer-area"><div class="timer-circle"><div class="timer-number" id="gameTimerNumber">${timeLeft}</div><div class="timer-label">ثانية</div></div></div>
       <div class="action-buttons">
         <button class="btn-action btn-primary" id="startTimerBtn"><i class="fas fa-hourglass-start"></i> بدء المؤقت</button>
+        <button class="btn-action btn-category" id="chooseCategoryBtn"><i class="fas fa-layer-group"></i> اختر الفئة</button>
         <button class="btn-action btn-skip" id="gameSkipBtn"><i class="fas fa-forward"></i> تخطي</button>
         <button class="btn-action btn-success" id="gameGuessBtn"><i class="fas fa-check-circle"></i> تم التخمين!</button>
         <button class="btn-action btn-new-game" id="newGameBtn"><i class="fas fa-redo-alt"></i> لعبة جديدة</button>
@@ -954,6 +1033,7 @@
         alert('اللعبة انتهت! اضغط على "لعبة جديدة" للبدء.');
       }
     });
+    document.getElementById('chooseCategoryBtn')?.addEventListener('click', () => showCategorySelectionModal());
     document.getElementById('gameGuessBtn')?.addEventListener('click', () => guessedCorrect());
     document.getElementById('gameSkipBtn')?.addEventListener('click', () => skipWord());
     document.getElementById('showTeamsBtn')?.addEventListener('click', () => { 
@@ -986,7 +1066,6 @@
     play('tabSwitch');
   }
   
-  // Setup event listeners
   document.querySelectorAll('.tab-btn').forEach(tab => {
     tab.addEventListener('click', () => switchToTab(tab.dataset.tab));
   });
@@ -1028,7 +1107,6 @@
     });
   }
 
-  // Initialize everything
   loadTeams();
   initGame();
 </script>
