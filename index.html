@@ -2,357 +2,357 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>لعبة التمثيل - العب مع الأصدقاء مباشرة | تصميم سعود</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>لعبة الرسم - تخمين الصور | تصميم سعود</title>
   
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body, html {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
       font-family: 'Tajawal', sans-serif;
-      background: #FFFFFF;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
     }
-    .app-container {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      background: #FFFFFF;
-    }
-    .tab-navigation {
-      display: flex;
-      justify-content: center;
-      gap: 0.4rem;
-      padding: 0.6rem;
-      background: #FFFFFF;
-      border-bottom: 1px solid rgba(198, 93, 59, 0.15);
-      flex-wrap: wrap;
-    }
-    .tab-btn {
-      background: transparent;
-      border: 1px solid rgba(198, 93, 59, 0.3);
-      padding: 6px 16px;
-      border-radius: 50px;
-      font-weight: 600;
-      font-size: 0.8rem;
-      color: #8B6B5C;
-      cursor: pointer;
-      transition: all 0.3s;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .tab-btn.active {
-      background: linear-gradient(135deg, #C65D3B 0%, #A84A2F 100%);
-      color: white;
-      border-color: #C65D3B;
-    }
-    .tab-content {
-      flex: 1;
-      overflow: hidden;
-      padding: 0.8rem;
-    }
-    .tab-pane {
-      display: none;
-      height: 100%;
-      overflow-y: auto;
-    }
-    .tab-pane.active-pane {
-      display: block;
-    }
-    .card {
-      background: white;
-      border-radius: 24px;
-      padding: 1.2rem;
-      text-align: center;
-      border: 1px solid rgba(198, 93, 59, 0.2);
-      box-shadow: 0 4px 20px rgba(107, 45, 45, 0.1);
-      max-width: 500px;
+    
+    .container {
+      max-width: 1200px;
       margin: 0 auto;
     }
-    .room-code {
+    
+    /* Room Join Screen */
+    .join-screen, .game-screen {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+    
+    .join-screen {
+      max-width: 500px;
+      margin: 50px auto;
+      text-align: center;
+    }
+    
+    .game-screen {
+      display: none;
+    }
+    
+    h1 {
+      color: #667eea;
+      margin-bottom: 10px;
       font-size: 2rem;
-      font-weight: 800;
-      font-family: monospace;
-      color: #C65D3B;
-      letter-spacing: 2px;
-      background: #f5f5f5;
-      padding: 12px;
-      border-radius: 12px;
-      margin: 0.5rem 0;
-      text-align: center;
     }
-    .copy-btn {
-      background: #6B2D2D;
-      border: none;
-      padding: 6px 16px;
-      border-radius: 20px;
-      color: white;
-      cursor: pointer;
-      font-size: 0.8rem;
-      margin: 0.5rem;
+    
+    .subtitle {
+      color: #666;
+      margin-bottom: 30px;
     }
-    .btn-primary {
-      background: linear-gradient(135deg, #C65D3B 0%, #A84A2F 100%);
-      border: none;
-      padding: 12px 24px;
-      border-radius: 50px;
-      color: white;
-      font-weight: 700;
-      cursor: pointer;
-      margin: 0.5rem;
-      transition: transform 0.2s;
-    }
-    .btn-primary:hover {
-      transform: translateY(-2px);
-    }
-    .instruction-box {
-      background: rgba(198, 93, 59, 0.1);
-      border-radius: 16px;
-      padding: 1rem;
-      margin: 1rem 0;
-      text-align: right;
-    }
-    .instruction-box h3 {
-      color: #C65D3B;
-      margin-bottom: 0.5rem;
-    }
-    .instruction-box li {
-      margin: 0.5rem 0;
-      font-size: 0.85rem;
-      list-style: none;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .word-card {
-      background: white;
-      border-radius: 20px;
-      padding: 1.5rem;
-      text-align: center;
-      border: 2px solid rgba(198, 93, 59, 0.2);
-      margin: 1rem 0;
-    }
-    .current-word {
-      font-size: 1.8rem;
-      font-weight: 800;
-      color: #4A1F1F;
-      word-break: break-word;
-    }
-    .timer-number {
-      font-size: 2.5rem;
-      font-weight: 900;
-      color: #C65D3B;
-    }
-    .timer-number.warning {
-      color: #B83B3B;
-      animation: pulse 0.5s infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.1); }
-    }
-    .action-buttons {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0.6rem;
-      margin: 1rem 0;
-    }
-    .btn-action {
-      background: white;
-      border: 1px solid rgba(198, 93, 59, 0.3);
-      padding: 10px;
-      border-radius: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-    }
-    .btn-action:hover {
-      transform: translateY(-2px);
-    }
-    .btn-success { background: #2D6A4F; color: white; border: none; }
-    .btn-skip { background: #B83B3B; color: white; border: none; }
-    .btn-primary-action { background: #C65D3B; color: white; border: none; }
-    .viewer-banner {
-      background: linear-gradient(135deg, #6B2D2D, #C65D3B);
-      color: white;
-      padding: 8px;
-      border-radius: 12px;
-      text-align: center;
-      margin-bottom: 1rem;
-    }
-    .online-badge {
-      display: inline-block;
-      background: #2D6A4F;
-      color: white;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 0.7rem;
-      margin-right: 8px;
-    }
-    .team-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px;
-      border-bottom: 1px solid #eee;
-    }
-    .team-name {
-      font-weight: bold;
-      font-size: 1rem;
-    }
-    .team-score {
-      color: #C65D3B;
-      font-weight: bold;
-      font-size: 1.3rem;
-    }
-    .winner-badge {
-      background: #D4A84B;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 0.7rem;
-      font-weight: bold;
-      margin-right: 8px;
-    }
-    .stats-row {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 1rem;
-      padding-top: 1rem;
-      border-top: 1px solid #eee;
-    }
-    .loading {
-      text-align: center;
-      padding: 2rem;
-    }
-    .join-input-area {
-      margin: 1rem 0;
-      display: flex;
-      flex-direction: column;
-      gap: 0.8rem;
-    }
-    .join-input {
+    
+    input {
       width: 100%;
       padding: 12px;
-      border: 2px solid rgba(198, 93, 59, 0.3);
-      border-radius: 50px;
-      font-size: 1rem;
+      margin: 10px 0;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      font-size: 16px;
+      font-family: 'Tajawal', sans-serif;
       text-align: center;
-      font-family: monospace;
-      font-size: 1.2rem;
     }
-    .join-button {
-      background: #C65D3B;
+    
+    button {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
       border: none;
-      padding: 12px;
-      border-radius: 50px;
+      padding: 12px 30px;
+      border-radius: 10px;
+      font-size: 16px;
       font-weight: bold;
       cursor: pointer;
+      margin: 10px 5px;
+      transition: transform 0.2s;
     }
-    .error-message {
-      background: #ffebee;
-      color: #B83B3B;
+    
+    button:hover {
+      transform: translateY(-2px);
+    }
+    
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    /* Game Layout */
+    .game-layout {
+      display: grid;
+      grid-template-columns: 1fr 350px;
+      gap: 20px;
+    }
+    
+    /* Drawing Area */
+    .drawing-area {
+      background: white;
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+    
+    canvas {
+      border: 3px solid #ddd;
+      border-radius: 10px;
+      cursor: crosshair;
+      background: white;
+      width: 100%;
+      height: auto;
+    }
+    
+    .drawing-tools {
+      margin-top: 15px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    
+    .tool-btn {
+      background: #f0f0f0;
+      color: #333;
+      padding: 8px 15px;
+      font-size: 14px;
+    }
+    
+    .tool-btn.active {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+    
+    .color-picker {
+      width: 40px;
+      height: 40px;
+      border: 2px solid #ddd;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    
+    /* Chat Area */
+    .chat-area {
+      background: white;
+      border-radius: 20px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      height: 600px;
+    }
+    
+    .current-word {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+      margin-bottom: 15px;
+    }
+    
+    .current-word h3 {
+      font-size: 12px;
+      opacity: 0.9;
+      margin-bottom: 5px;
+    }
+    
+    .word-display {
+      font-size: 24px;
+      font-weight: bold;
+      letter-spacing: 2px;
+    }
+    
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      margin: 15px 0;
       padding: 10px;
-      border-radius: 12px;
-      margin: 10px 0;
+      background: #f9f9f9;
+      border-radius: 10px;
+    }
+    
+    .message {
+      padding: 8px 12px;
+      margin: 5px 0;
+      background: white;
+      border-radius: 10px;
+      animation: fadeIn 0.3s;
+    }
+    
+    .message.correct {
+      background: #d4edda;
+      color: #155724;
+      border-right: 4px solid #28a745;
+    }
+    
+    .message.system {
+      background: #e2e3e5;
+      color: #383d41;
+      text-align: center;
+      font-size: 12px;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .guess-input-area {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .guess-input {
+      flex: 1;
+      text-align: right;
+    }
+    
+    .players-list {
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 2px solid #eee;
+    }
+    
+    .players-list h4 {
+      margin-bottom: 10px;
+      color: #667eea;
+    }
+    
+    .player-item {
+      padding: 5px;
+      margin: 3px 0;
+      background: #f0f0f0;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+    }
+    
+    .player-item.host {
+      background: #ffe6b3;
+      font-weight: bold;
+    }
+    
+    .score {
+      color: #667eea;
+      font-weight: bold;
+    }
+    
+    .room-info {
+      background: #f0f0f0;
+      padding: 10px;
+      border-radius: 10px;
+      margin-bottom: 15px;
       text-align: center;
     }
-    @media (max-width: 640px) {
-      .current-word { font-size: 1.3rem; }
-      .action-buttons { grid-template-columns: 1fr; }
-      .timer-number { font-size: 2rem; }
+    
+    .room-code {
+      font-size: 20px;
+      font-weight: bold;
+      color: #667eea;
+      font-family: monospace;
+    }
+    
+    .timer {
+      font-size: 18px;
+      font-weight: bold;
+      color: #dc3545;
+    }
+    
+    @media (max-width: 768px) {
+      .game-layout {
+        grid-template-columns: 1fr;
+      }
+      .chat-area {
+        height: 400px;
+      }
+      .drawing-area {
+        order: 2;
+      }
     }
   </style>
 </head>
 <body>
-<div class="app-container">
-  <div class="tab-navigation">
-    <button class="tab-btn active" data-tab="home"><i class="fas fa-home"></i> الرئيسية</button>
-    <button class="tab-btn" data-tab="game"><i class="fas fa-mask"></i> اللعبة</button>
-    <button class="tab-btn" data-tab="teams"><i class="fas fa-users"></i> الفرق</button>
+<div class="container">
+  <!-- Join Screen -->
+  <div id="joinScreen" class="join-screen">
+    <i class="fas fa-paint-brush" style="font-size: 50px; color: #667eea;"></i>
+    <h1>🎨 لعبة الرسم والتخمين</h1>
+    <p class="subtitle">ارسم وصديقك يخمن! العب مع الأصدقاء مباشرة</p>
+    
+    <input type="text" id="playerName" placeholder="اسمك" value="لاعب">
+    <input type="text" id="roomCodeInput" placeholder="رمز الغرفة (اتركه فارغاً لإنشاء غرفة جديدة)">
+    
+    <button id="joinOrCreateBtn">🚀 دخول / إنشاء غرفة</button>
+    
+    <div id="joinError" style="color: red; margin-top: 10px;"></div>
   </div>
-
-  <div class="tab-content">
-    <!-- Home Tab -->
-    <div class="tab-pane active-pane" id="homeTab">
-      <div class="card">
-        <i class="fas fa-theater-masks" style="font-size: 2.5rem; color: #C65D3B;"></i>
-        <h1 style="color: #6B2D2D; margin: 0.5rem 0;">لعبة التمثيل</h1>
-        <p style="color: #8B6B5C; margin-bottom: 1rem;">🎭 العب مع أصدقائك في الوقت الفعلي!</p>
-        
-        <div class="instruction-box">
-          <h3><i class="fas fa-chalkboard-user"></i> للمضيف (منشئ اللعبة)</h3>
-          <ul>
-            <li><i class="fas fa-plus-circle"></i> اضغط "إنشاء غرفة جديدة"</li>
-            <li><i class="fas fa-copy"></i> انسخ رمز الغرفة وشاركه مع الأصدقاء</li>
-            <li><i class="fas fa-gamepad"></i> أنت تتحكم بالمؤقت والتخطي والتسجيل</li>
-          </ul>
-        </div>
-        
-        <div class="instruction-box">
-          <h3><i class="fas fa-users"></i> للمشاهدين (الأصدقاء)</h3>
-          <ul>
-            <li><i class="fas fa-key"></i> اضغط "انضمام إلى غرفة"</li>
-            <li><i class="fas fa-qrcode"></i> أدخل رمز الغرفة الذي أرسله المضيف</li>
-            <li><i class="fas fa-eye"></i> شاهد الكلمة والمؤقت بشكل متزامن</li>
-          </ul>
-        </div>
-        
-        <div class="join-input-area">
-          <input type="text" id="quickJoinCode" class="join-input" placeholder="أدخل رمز الغرفة هنا">
-          <button class="join-button" id="quickJoinBtn"><i class="fas fa-sign-in-alt"></i> انضمام إلى الغرفة</button>
-        </div>
-        
-        <button class="btn-primary" id="createRoomBtn" style="background: #2D6A4F; width: 100%; margin: 0.5rem 0;">
-          <i class="fas fa-plus-circle"></i> إنشاء غرفة جديدة
-        </button>
-        
-        <div id="errorDisplay" style="margin-top: 1rem;"></div>
-      </div>
+  
+  <!-- Game Screen -->
+  <div id="gameScreen" class="game-screen">
+    <div class="room-info">
+      <span>🏠 رمز الغرفة: </span>
+      <span id="roomCodeDisplay" class="room-code"></span>
+      <button id="copyRoomBtn" style="background: #28a745; padding: 5px 15px; margin: 0 10px;">📋 نسخ</button>
+      <span id="playerRole" style="margin-right: 20px;"></span>
     </div>
-
-    <!-- Game Tab -->
-    <div class="tab-pane" id="gameTab">
-      <div class="card" id="gameContent">
-        <div class="loading">
-          <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: #C65D3B;"></i>
-          <p style="margin-top: 1rem;">جاري الاتصال...</p>
+    
+    <div class="game-layout">
+      <!-- Drawing Area -->
+      <div class="drawing-area">
+        <canvas id="drawCanvas" width="800" height="500" style="width:100%; height:auto; max-width:800px; aspect-ratio:800/500"></canvas>
+        
+        <div class="drawing-tools">
+          <button class="tool-btn" id="penBtn"><i class="fas fa-pen"></i> قلم</button>
+          <button class="tool-btn" id="eraserBtn"><i class="fas fa-eraser"></i> ممحاة</button>
+          <button class="tool-btn" id="clearBtn"><i class="fas fa-trash"></i> مسح الكل</button>
+          <input type="color" id="colorPicker" value="#000000" class="color-picker">
+          <input type="range" id="brushSize" min="2" max="20" value="5" style="width: 100px;">
         </div>
       </div>
-    </div>
-
-    <!-- Teams Tab -->
-    <div class="tab-pane" id="teamsTab">
-      <div class="card">
-        <h3><i class="fas fa-trophy"></i> الفرق والنقاط</h3>
-        <div id="teamList"></div>
-        <div style="display: flex; gap: 8px; margin-top: 1rem;">
-          <input type="text" id="teamName" placeholder="اسم الفريق الجديد" style="flex: 1; padding: 10px; border-radius: 50px; border: 1px solid #ddd;">
-          <button id="addTeamBtn" style="background: #C65D3B; border: none; padding: 10px 20px; border-radius: 50px; color: white; cursor: pointer;">إضافة</button>
+      
+      <!-- Chat Area -->
+      <div class="chat-area">
+        <div class="current-word">
+          <h3>🎯 الكلمة الحالية</h3>
+          <div class="word-display" id="currentWordDisplay">???</div>
+          <div class="timer" id="timerDisplay">⏱️ 60 ثانية</div>
         </div>
-        <p style="font-size: 0.7rem; color: #8B6B5C; margin-top: 1rem;">
-          <i class="fas fa-info-circle"></i> النقاط تتزامن مع جميع اللاعبين تلقائياً
-        </p>
+        
+        <div class="messages" id="messages">
+          <div class="message system">✨ مرحباً! انتظر بدء اللعبة...</div>
+        </div>
+        
+        <div class="guess-input-area">
+          <input type="text" id="guessInput" class="guess-input" placeholder="اكتب تخمينك هنا...">
+          <button id="sendGuessBtn">💬 أرسل</button>
+        </div>
+        
+        <div class="players-list">
+          <h4><i class="fas fa-users"></i> اللاعبون (<span id="playerCount">0</span>)</h4>
+          <div id="playersList"></div>
+        </div>
+        
+        <button id="nextRoundBtn" style="background: #28a745; width: 100%; margin-top: 10px;">🎯 الجولة التالية</button>
       </div>
     </div>
   </div>
 </div>
 
 <script type="module">
-  // Import Firebase SDK
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-  import { getDatabase, ref, set, onValue, update, get } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
+  import { getDatabase, ref, set, onValue, update, push, onChildAdded, get } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
   
-  // Your web app's Firebase configuration
+  // Firebase Config
   const firebaseConfig = {
     apiKey: "AIzaSyDEwWDRWOZ13iK_iDPqUymNlhgz9R4nmXY",
     authDomain: "gameapp-3fd40.firebaseapp.com",
@@ -361,549 +361,503 @@
     messagingSenderId: "216038176025",
     appId: "1:216038176025:web:d73fc67524770decbc8188"
   };
-
-  // Initialize Firebase
-  let app, database;
-  try {
-    app = initializeApp(firebaseConfig);
-    database = getDatabase(app);
-    console.log("✅ Firebase connected successfully!");
-  } catch (error) {
-    console.error("❌ Firebase initialization error:", error);
-    document.getElementById('errorDisplay').innerHTML = `
-      <div class="error-message">
-        <i class="fas fa-exclamation-triangle"></i> خطأ في الاتصال بقاعدة البيانات<br>
-        يرجى التحقق من اتصال الإنترنت
-      </div>
-    `;
+  
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  
+  // Game Words
+  const words = [
+    "قطة", "كلب", "شمس", "قمر", "سيارة", "طائرة", "بيت", "شجرة", "زهرة", "سمكة",
+    "تفاحة", "موزة", "برتقال", "فراشة", "نحلة", "أسد", "فيل", "زرافة", "بحر", "جبل",
+    "نجمة", "قلب", "سحابة", "مطر", "قوس قزح", "ساعة", "كتاب", "قلم", "كرسي", "طاولة"
+  ];
+  
+  let currentUser = {
+    id: null,
+    name: null,
+    roomId: null,
+    isHost: false
+  };
+  
+  let drawingEnabled = false;
+  let isDrawing = false;
+  let lastX = 0, lastY = 0;
+  let canvas, ctx;
+  let currentWord = "";
+  let roundActive = false;
+  let roundTime = 60;
+  let timerInterval = null;
+  let players = {};
+  let hostId = null;
+  
+  // Initialize canvas
+  function initCanvas() {
+    canvas = document.getElementById('drawCanvas');
+    ctx = canvas.getContext('2d');
+    canvas.width = 800;
+    canvas.height = 500;
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = 'black';
+    
+    // Drawing events
+    canvas.addEventListener('mousedown', startDrawing);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', stopDrawing);
+    canvas.addEventListener('mouseleave', stopDrawing);
+    
+    // Touch events for mobile
+    canvas.addEventListener('touchstart', startDrawingTouch);
+    canvas.addEventListener('touchmove', drawTouch);
+    canvas.addEventListener('touchend', stopDrawing);
   }
   
-  // Game variables
-  let roomId = null;
-  let isHost = false;
-  let currentUserId = null;
-  let gameDataRef = null;
-  let teamsRef = null;
-  let timerInterval = null;
+  function startDrawing(e) {
+    if (!drawingEnabled) return;
+    isDrawing = true;
+    const pos = getMousePos(e);
+    lastX = pos.x;
+    lastY = pos.y;
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(lastX, lastY);
+    ctx.stroke();
+  }
   
-  // Game state
-  let currentWord = { word: "انتظر بدء اللعبة", category: "أفعال" };
-  let timeLeft = 60;
-  let timerRunning = false;
-  let roundCount = 0;
-  let gameActive = true;
-  let gameWinner = null;
-  let teams = [];
+  function draw(e) {
+    if (!isDrawing || !drawingEnabled) return;
+    const pos = getMousePos(e);
+    const brushSize = document.getElementById('brushSize').value;
+    ctx.lineWidth = brushSize;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = document.getElementById('colorPicker').value;
+    
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(pos.x, pos.y);
+    ctx.stroke();
+    
+    lastX = pos.x;
+    lastY = pos.y;
+    
+    // Save drawing to Firebase
+    if (currentUser.isHost && currentUser.roomId) {
+      const imageData = canvas.toDataURL();
+      update(ref(db, `rooms/${currentUser.roomId}/drawing`), { data: imageData });
+    }
+  }
   
-  // Categories
-  const categories = {
-    "أفعال": ["يرقص العرضة", "يغني", "يطبخ منسف", "يشرب قهوة", "يركب جمل", "يلعب كرة قدم", "يؤذن", "يلقي شعر", "يرسم", "يضحك", "يبكي", "ينام", "يأكل تمر", "يركض", "يقفز", "يسبح", "يقرأ", "يكتب", "يقود سيارة"],
-    "حيوانات": ["جمل", "صقر", "حصان عربي", "غزال", "نمر", "ذئب", "ثعلب", "وعل", "نعامة", "قط", "كلب", "نسر", "فهد", "أرنب", "حمام", "أسد", "فيل", "زرافة", "دلفين"],
-    "أمثال شعبية": ["اطلع من جلدك", "اللي ما يعرف الصقر يشويه", "الجار قبل الدار", "الصبر مفتاح الفرج", "العين بصيرة واليد قصيرة", "القناعة كنز لا يفنى"],
-    "أشياء": ["تلفون", "سيارة", "طائرة", "ساعة", "نظارة", "كتاب", "قلم", "مقص", "مفتاح", "باب", "كرسي", "طاولة", "سرير", "ثلاجة", "غسالة"]
-  };
+  function startDrawingTouch(e) {
+    e.preventDefault();
+    if (!drawingEnabled) return;
+    isDrawing = true;
+    const pos = getTouchPos(e);
+    lastX = pos.x;
+    lastY = pos.y;
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(lastX, lastY);
+    ctx.stroke();
+  }
+  
+  function drawTouch(e) {
+    e.preventDefault();
+    if (!isDrawing || !drawingEnabled) return;
+    const pos = getTouchPos(e);
+    const brushSize = document.getElementById('brushSize').value;
+    ctx.lineWidth = brushSize;
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = document.getElementById('colorPicker').value;
+    
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(pos.x, pos.y);
+    ctx.stroke();
+    
+    lastX = pos.x;
+    lastY = pos.y;
+    
+    if (currentUser.isHost && currentUser.roomId) {
+      const imageData = canvas.toDataURL();
+      update(ref(db, `rooms/${currentUser.roomId}/drawing`), { data: imageData });
+    }
+  }
+  
+  function stopDrawing() {
+    isDrawing = false;
+  }
+  
+  function getMousePos(e) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    return {
+      x: (e.clientX - rect.left) * scaleX,
+      y: (e.clientY - rect.top) * scaleY
+    };
+  }
+  
+  function getTouchPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const touch = e.touches[0];
+    return {
+      x: (touch.clientX - rect.left) * scaleX,
+      y: (touch.clientY - rect.top) * scaleY
+    };
+  }
+  
+  function clearCanvas() {
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    if (currentUser.isHost && currentUser.roomId) {
+      const imageData = canvas.toDataURL();
+      update(ref(db, `rooms/${currentUser.roomId}/drawing`), { data: imageData });
+    }
+  }
+  
+  function loadDrawing(imageData) {
+    const img = new Image();
+    img.onload = () => {
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    };
+    img.src = imageData;
+  }
   
   function getRandomWord() {
-    const catNames = Object.keys(categories);
-    const randomCat = catNames[Math.floor(Math.random() * catNames.length)];
-    const words = categories[randomCat];
-    return { word: words[Math.floor(Math.random() * words.length)], category: randomCat };
+    return words[Math.floor(Math.random() * words.length)];
   }
   
-  function generateUserId() {
-    return 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+  function startRound() {
+    if (!currentUser.isHost) return;
+    
+    const newWord = getRandomWord();
+    currentWord = newWord;
+    roundActive = true;
+    roundTime = 60;
+    
+    update(ref(db, `rooms/${currentUser.roomId}/game`), {
+      currentWord: newWord,
+      roundActive: true,
+      roundTime: 60,
+      lastUpdate: Date.now()
+    });
+    
+    clearCanvas();
+    
+    addMessage(`🎨 الجولة الجديدة! الكلمة: ${newWord}`, 'system');
+    addMessage(`🖌️ ابدأ الرسم! الوقت: 60 ثانية`, 'system');
+    
+    startTimer();
   }
   
-  currentUserId = generateUserId();
-  
-  function showError(message) {
-    const errorDiv = document.getElementById('errorDisplay');
-    if (errorDiv) {
-      errorDiv.innerHTML = `<div class="error-message"><i class="fas fa-exclamation-triangle"></i> ${message}</div>`;
-      setTimeout(() => {
-        errorDiv.innerHTML = '';
-      }, 5000);
-    }
-    alert(message);
-  }
-  
-  // Create new room
-  window.createRoom = async function() {
-    if (!database) {
-      showError('❌ لم يتم الاتصال بقاعدة البيانات. يرجى تحديث الصفحة.');
-      return;
-    }
+  function startTimer() {
+    if (timerInterval) clearInterval(timerInterval);
     
-    try {
-      const loadingDiv = document.getElementById('errorDisplay');
-      if (loadingDiv) loadingDiv.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> جاري إنشاء الغرفة...</div>';
-      
-      roomId = Math.random().toString(36).substring(2, 8).toUpperCase();
-      isHost = true;
-      
-      const initialWord = getRandomWord();
-      const gameData = {
-        word: initialWord.word,
-        category: initialWord.category,
-        timeLeft: 60,
-        timerRunning: false,
-        roundCount: 0,
-        gameActive: true,
-        gameWinner: null,
-        hostId: currentUserId,
-        createdAt: Date.now()
-      };
-      
-      const initialTeams = [
-        { id: 1, name: "الفريق الأحمر", score: 0 },
-        { id: 2, name: "الفريق الأزرق", score: 0 }
-      ];
-      
-      console.log("Creating room:", roomId);
-      await set(ref(database, 'rooms/' + roomId + '/game'), gameData);
-      await set(ref(database, 'rooms/' + roomId + '/teams'), initialTeams);
-      await set(ref(database, 'rooms/' + roomId + '/host'), currentUserId);
-      
-      localStorage.setItem('myRoom', roomId);
-      localStorage.setItem('isHost', 'true');
-      listenToRoom(roomId);
-      
-      if (loadingDiv) loadingDiv.innerHTML = '';
-      alert('✅ تم إنشاء الغرفة بنجاح!\n\nرمز الغرفة: ' + roomId + '\n\nشارك هذا الرمز مع أصدقائك');
-      switchToTab('game');
-    } catch (error) {
-      console.error("Error creating room:", error);
-      showError('❌ حدث خطأ في إنشاء الغرفة: ' + error.message);
-    }
-  };
-  
-  // Join existing room
-  window.joinRoom = async function(code) {
-    if (!database) {
-      showError('❌ لم يتم الاتصال بقاعدة البيانات. يرجى تحديث الصفحة.');
-      return;
-    }
-    
-    const roomCode = (code || document.getElementById('quickJoinCode')?.value || prompt("🔑 أدخل رمز الغرفة:", "")).trim().toUpperCase();
-    if (!roomCode) return;
-    
-    const loadingDiv = document.getElementById('errorDisplay');
-    if (loadingDiv) loadingDiv.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> جاري البحث عن الغرفة...</div>';
-    
-    try {
-      const roomRef = ref(database, 'rooms/' + roomCode);
-      const snapshot = await get(roomRef);
-      
-      if (snapshot.exists()) {
-        roomId = roomCode;
-        isHost = false;
-        localStorage.setItem('joinedRoom', roomId);
-        localStorage.removeItem('isHost');
-        listenToRoom(roomId);
-        switchToTab('game');
-        if (loadingDiv) loadingDiv.innerHTML = '';
-        alert('✅ تم الانضمام إلى الغرفة بنجاح!');
-      } else {
-        showError('❌ غرفة غير موجودة! تأكد من الرقم وأعد المحاولة.');
-        if (loadingDiv) loadingDiv.innerHTML = '';
-      }
-    } catch (error) {
-      console.error("Error joining room:", error);
-      showError('❌ حدث خطأ في الاتصال: ' + error.message);
-      if (loadingDiv) loadingDiv.innerHTML = '';
-    }
-  };
-  
-  // Listen to real-time updates
-  function listenToRoom(roomCode) {
-    roomId = roomCode;
-    
-    // Listen to game data
-    gameDataRef = ref(database, 'rooms/' + roomId + '/game');
-    onValue(gameDataRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        currentWord = { word: data.word, category: data.category };
-        timeLeft = data.timeLeft;
-        timerRunning = data.timerRunning;
-        roundCount = data.roundCount;
-        gameActive = data.gameActive;
-        gameWinner = data.gameWinner;
+    timerInterval = setInterval(() => {
+      if (roundActive && roundTime > 0) {
+        roundTime--;
+        document.getElementById('timerDisplay').innerHTML = `⏱️ ${roundTime} ثانية`;
         
-        updateGameUI();
+        if (currentUser.isHost) {
+          update(ref(db, `rooms/${currentUser.roomId}/game`), { roundTime: roundTime });
+        }
         
-        // Handle timer countdown for host
-        if (isHost && timerRunning && gameActive && !gameWinner) {
-          if (timerInterval) clearInterval(timerInterval);
-          timerInterval = setInterval(async () => {
-            const currentGameRef = ref(database, 'rooms/' + roomId + '/game');
-            const snap = await get(currentGameRef);
-            const current = snap.val();
-            if (current && current.timerRunning && current.timeLeft > 0 && current.gameActive && !current.gameWinner) {
-              const newTime = current.timeLeft - 1;
-              update(ref(database, 'rooms/' + roomId + '/game'), { timeLeft: newTime });
-              if (newTime <= 0) {
-                update(ref(database, 'rooms/' + roomId + '/game'), { timerRunning: false });
-                clearInterval(timerInterval);
-              }
-            } else {
-              clearInterval(timerInterval);
-            }
-          }, 1000);
-        } else if (timerInterval && !timerRunning) {
+        if (roundTime <= 0) {
           clearInterval(timerInterval);
-          timerInterval = null;
+          roundActive = false;
+          addMessage(`⏰ انتهى الوقت! الكلمة كانت: ${currentWord}`, 'system');
+          if (currentUser.isHost) {
+            update(ref(db, `rooms/${currentUser.roomId}/game`), { roundActive: false });
+          }
+          drawingEnabled = false;
+        }
+      }
+    }, 1000);
+  }
+  
+  function addMessage(text, type = 'normal', playerName = '') {
+    const messagesDiv = document.getElementById('messages');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${type}`;
+    
+    if (type === 'correct') {
+      messageDiv.innerHTML = `<strong>🎉 ${playerName}</strong> خمن الكلمة! +10 نقاط`;
+    } else if (type === 'normal') {
+      messageDiv.innerHTML = `<strong>${playerName}</strong>: ${text}`;
+    } else {
+      messageDiv.innerHTML = text;
+    }
+    
+    messagesDiv.appendChild(messageDiv);
+    messageDiv.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    
+    // Keep only last 50 messages
+    while (messagesDiv.children.length > 50) {
+      messagesDiv.removeChild(messagesDiv.firstChild);
+    }
+  }
+  
+  function checkGuess(guess, playerId, playerName) {
+    if (!roundActive) return false;
+    if (guess.toLowerCase() === currentWord.toLowerCase()) {
+      // Correct guess!
+      addMessage(`🎉 ${playerName} خمن الكلمة! +10 نقاط`, 'correct', playerName);
+      
+      // Update player score
+      const newScore = (players[playerId]?.score || 0) + 10;
+      update(ref(db, `rooms/${currentUser.roomId}/players/${playerId}`), { score: newScore });
+      
+      // End round
+      roundActive = false;
+      if (timerInterval) clearInterval(timerInterval);
+      
+      if (currentUser.isHost) {
+        update(ref(db, `rooms/${currentUser.roomId}/game`), { roundActive: false });
+      }
+      
+      drawingEnabled = false;
+      return true;
+    }
+    return false;
+  }
+  
+  // Firebase Listeners
+  function listenToRoom(roomId) {
+    // Listen to game state
+    const gameRef = ref(db, `rooms/${roomId}/game`);
+    onValue(gameRef, (snapshot) => {
+      const game = snapshot.val();
+      if (game) {
+        currentWord = game.currentWord;
+        roundActive = game.roundActive;
+        roundTime = game.roundTime;
+        
+        document.getElementById('currentWordDisplay').innerHTML = currentUser.isHost ? currentWord : '???';
+        document.getElementById('timerDisplay').innerHTML = `⏱️ ${roundTime} ثانية`;
+        
+        if (currentUser.isHost && roundActive) {
+          drawingEnabled = true;
+        } else if (!currentUser.isHost) {
+          drawingEnabled = false;
         }
       }
     });
     
-    // Listen to teams data
-    teamsRef = ref(database, 'rooms/' + roomId + '/teams');
-    onValue(teamsRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        teams = data;
-        renderTeamList();
+    // Listen to drawing
+    const drawingRef = ref(db, `rooms/${roomId}/drawing`);
+    onValue(drawingRef, (snapshot) => {
+      const drawing = snapshot.val();
+      if (drawing && drawing.data && !currentUser.isHost) {
+        loadDrawing(drawing.data);
       }
     });
     
-    // Check if user is host
-    const hostRef = ref(database, 'rooms/' + roomId + '/host');
-    get(hostRef).then((snapshot) => {
-      isHost = (snapshot.val() === currentUserId);
-      updateGameUI();
+    // Listen to players
+    const playersRef = ref(db, `rooms/${roomId}/players`);
+    onValue(playersRef, (snapshot) => {
+      players = snapshot.val() || {};
+      updatePlayersList();
     });
-  }
-  
-  // Update game data
-  function updateGameData(updates) {
-    if (isHost && roomId && database) {
-      update(ref(database, 'rooms/' + roomId + '/game'), updates).catch(err => {
-        console.error("Error updating game data:", err);
-        showError("حدث خطأ في تحديث البيانات");
-      });
-    }
-  }
-  
-  function updateTeams(teamsData) {
-    if (isHost && roomId && database) {
-      set(ref(database, 'rooms/' + roomId + '/teams'), teamsData).catch(err => {
-        console.error("Error updating teams:", err);
-        showError("حدث خطأ في تحديث الفرق");
-      });
-    }
-  }
-  
-  window.startTimer = function() {
-    if (!isHost) {
-      showError('⚠️ فقط المضيف يمكنه بدء المؤقت');
-      return;
-    }
-    if (timerRunning || !gameActive || gameWinner) return;
-    if (timeLeft <= 0) {
-      updateGameData({ timeLeft: 60, timerRunning: true });
-    } else {
-      updateGameData({ timerRunning: true });
-    }
-  };
-  
-  window.skipWord = function() {
-    if (!isHost) {
-      showError('⚠️ فقط المضيف يمكنه تخطي الكلمة');
-      return;
-    }
-    if (!gameActive || gameWinner) return;
-    const newWord = getRandomWord();
-    updateGameData({
-      word: newWord.word,
-      category: newWord.category,
-      roundCount: roundCount + 1,
-      timeLeft: 60,
-      timerRunning: false
-    });
-  };
-  
-  window.guessCorrect = function() {
-    if (!isHost) {
-      showError('⚠️ فقط المضيف يمكنه تسجيل النقاط');
-      return;
-    }
-    if (!gameActive || gameWinner) return;
-    showTeamSelectionModal();
-  };
-  
-  function addPointsToTeam(teamId) {
-    const team = teams.find(t => t.id === teamId);
-    if (team) {
-      team.score++;
-      updateTeams([...teams]);
-      
-      if (team.score >= 10) {
-        updateGameData({
-          gameActive: false,
-          gameWinner: team.id
-        });
-        alert(`🏆 مبروك! الفريق ${team.name} وصل إلى 10 نقاط وفاز باللعبة! 🏆`);
-      } else {
-        const newWord = getRandomWord();
-        updateGameData({
-          word: newWord.word,
-          category: newWord.category,
-          roundCount: roundCount + 1,
-          timeLeft: 60,
-          timerRunning: false
-        });
+    
+    // Listen to messages
+    const messagesRef = ref(db, `rooms/${roomId}/messages`);
+    onChildAdded(messagesRef, (snapshot) => {
+      const msg = snapshot.val();
+      if (msg && msg.playerId !== currentUser.id) {
+        if (msg.type === 'guess') {
+          addMessage(msg.text, 'normal', msg.playerName);
+        } else if (msg.type === 'correct') {
+          addMessage(`🎉 ${msg.playerName} خمن الكلمة! +10 نقاط`, 'correct');
+        }
       }
-    }
-  }
-  
-  window.resetGame = function() {
-    if (!isHost) {
-      showError('⚠️ فقط المضيف يمكنه بدء لعبة جديدة');
-      return;
-    }
-    const newWord = getRandomWord();
-    const resetTeams = teams.map(t => ({ ...t, score: 0 }));
-    updateTeams(resetTeams);
-    updateGameData({
-      word: newWord.word,
-      category: newWord.category,
-      timeLeft: 60,
-      timerRunning: false,
-      roundCount: 0,
-      gameActive: true,
-      gameWinner: null
     });
-  };
-  
-  window.changeCategory = function() {
-    if (!isHost) {
-      showError('⚠️ فقط المضيف يمكنه تغيير الفئة');
-      return;
-    }
-    showCategorySelectionModal();
-  };
-  
-  function setCategory(category) {
-    const words = categories[category];
-    if (words) {
-      const newWord = words[Math.floor(Math.random() * words.length)];
-      updateGameData({
-        word: newWord,
-        category: category
-      });
-    }
   }
   
-  function updateGameUI() {
-    const container = document.getElementById('gameContent');
-    if (!container) return;
+  function updatePlayersList() {
+    const playersDiv = document.getElementById('playersList');
+    const playerCount = Object.keys(players).length;
+    document.getElementById('playerCount').innerText = playerCount;
     
-    const winner = teams.find(t => t.id === gameWinner);
-    
-    if (isHost) {
-      container.innerHTML = `
-        ${gameWinner ? `<div class="instruction-box" style="background: #D4A84B; color: #4A1F1F; text-align: center;">
-          <i class="fas fa-trophy"></i> 🏆 الفائز: ${winner?.name} 🏆 <i class="fas fa-trophy"></i>
-        </div>` : ''}
-        <div class="viewer-banner" style="background: #2D6A4F;">
-          <i class="fas fa-chalkboard-user"></i> أنت المضيف - أنت تتحكم باللعبة
-        </div>
-        <div class="room-code">
-          رمز الغرفة: <strong style="font-size: 1.5rem;">${roomId}</strong>
-          <button class="copy-btn" id="copyRoomCode" style="background: #C65D3B;"><i class="fas fa-copy"></i> نسخ</button>
-        </div>
-        
-        <div class="word-card">
-          <div class="current-word">${currentWord.word}</div>
-          <div style="margin-top: 8px; font-size: 0.8rem; color: #C65D3B;">📂 ${currentWord.category}</div>
-        </div>
-        
-        <div class="timer-area">
-          <div class="timer-number ${timeLeft <= 5 ? 'warning' : ''}">${timeLeft}</div>
-          <div>ثانية</div>
-        </div>
-        
-        <div class="action-buttons">
-          <button class="btn-action btn-primary-action" id="startTimerBtn"><i class="fas fa-hourglass-start"></i> بدء المؤقت</button>
-          <button class="btn-action btn-primary-action" id="categoryBtn"><i class="fas fa-layer-group"></i> الفئة</button>
-          <button class="btn-action btn-skip" id="skipBtn"><i class="fas fa-forward"></i> تخطي</button>
-          <button class="btn-action btn-success" id="guessBtn"><i class="fas fa-check-circle"></i> تم التخمين</button>
-          <button class="btn-action" id="resetBtn"><i class="fas fa-redo-alt"></i> لعبة جديدة</button>
-        </div>
-        
-        <div class="stats-row">
-          <span><i class="fas fa-redo-alt"></i> جولة: <strong>${roundCount}</strong></span>
-          <span><i class="fas fa-flag-checkered"></i> الهدف: 10 نقاط</span>
-        </div>
-      `;
-      
-      document.getElementById('startTimerBtn')?.addEventListener('click', window.startTimer);
-      document.getElementById('categoryBtn')?.addEventListener('click', window.changeCategory);
-      document.getElementById('skipBtn')?.addEventListener('click', window.skipWord);
-      document.getElementById('guessBtn')?.addEventListener('click', window.guessCorrect);
-      document.getElementById('resetBtn')?.addEventListener('click', window.resetGame);
-      document.getElementById('copyRoomCode')?.addEventListener('click', () => {
-        navigator.clipboard.writeText(roomId);
-        alert('✅ تم نسخ رمز الغرفة: ' + roomId);
-      });
-    } else {
-      container.innerHTML = `
-        ${gameWinner ? `<div class="instruction-box" style="background: #D4A84B; color: #4A1F1F; text-align: center;">
-          <i class="fas fa-trophy"></i> 🏆 الفائز: ${winner?.name} 🏆 <i class="fas fa-trophy"></i>
-        </div>` : ''}
-        <div class="viewer-banner">
-          <i class="fas fa-eye"></i> أنت في وضع المشاهد | غرفة: <strong>${roomId}</strong>
-          <span class="online-badge"><i class="fas fa-wifi"></i> متصل</span>
-        </div>
-        
-        <div class="word-card">
-          <div class="current-word">${currentWord.word}</div>
-          <div style="margin-top: 8px; font-size: 0.8rem; color: #C65D3B;">📂 ${currentWord.category}</div>
-        </div>
-        
-        <div class="timer-area">
-          <div class="timer-number ${timeLeft <= 5 ? 'warning' : ''}">${timeLeft}</div>
-          <div>ثانية</div>
-        </div>
-        
-        <div class="stats-row">
-          <span><i class="fas fa-redo-alt"></i> جولة: <strong>${roundCount}</strong></span>
-          <span><i class="fas fa-flag-checkered"></i> الهدف: 10 نقاط</span>
-        </div>
-        
-        <div class="instruction-box" style="margin-top: 1rem; text-align: center;">
-          <i class="fas fa-info-circle"></i> أنت تشاهد اللعبة بشكل مباشر. المضيف هو من يتحكم بالمؤقت والكلمات.
-        </div>
-      `;
-    }
-  }
-  
-  function renderTeamList() {
-    const container = document.getElementById('teamList');
-    if (!container) return;
-    
-    if (!teams || teams.length === 0) {
-      container.innerHTML = '<p style="text-align: center; padding: 1rem;">لا توجد فرق</p>';
-      return;
-    }
-    
-    container.innerHTML = teams.map(team => `
-      <div class="team-item">
-        <div>
-          <span class="team-name">${team.name}</span>
-          ${gameWinner === team.id ? '<span class="winner-badge"><i class="fas fa-crown"></i> بطل</span>' : ''}
-        </div>
-        <div class="team-score">${team.score}</div>
+    playersDiv.innerHTML = Object.entries(players).map(([id, player]) => `
+      <div class="player-item ${hostId === id ? 'host' : ''}">
+        <span>${player.name} ${hostId === id ? '👑' : ''}</span>
+        <span class="score">⭐ ${player.score || 0}</span>
       </div>
     `).join('');
   }
   
-  function showTeamSelectionModal() {
-    const modal = document.createElement('div');
-    modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 1000;';
-    modal.innerHTML = `
-      <div style="background: white; border-radius: 24px; padding: 1.5rem; width: 80%; max-width: 300px; text-align: center;">
-        <h3 style="margin-bottom: 1rem; color: #C65D3B;"><i class="fas fa-trophy"></i> اختر الفريق الفائز</h3>
-        ${teams.map(team => `<div style="padding: 12px; margin: 5px 0; background: #f5f5f5; border-radius: 12px; cursor: pointer; font-weight: bold;" onclick="window.selectTeamAndClose(${team.id})">${team.name}</div>`).join('')}
-        <button onclick="closeModal()" style="margin-top: 1rem; padding: 8px 16px; background: #ddd; border: none; border-radius: 20px; cursor: pointer;">إلغاء</button>
-      </div>
-    `;
-    document.body.appendChild(modal);
-    window.selectTeamAndClose = (teamId) => {
-      addPointsToTeam(teamId);
-      modal.remove();
+  // Create or Join Room
+  async function createOrJoinRoom() {
+    const playerName = document.getElementById('playerName').value.trim() || 'لاعب';
+    const roomCode = document.getElementById('roomCodeInput').value.trim().toUpperCase();
+    
+    currentUser.name = playerName;
+    currentUser.id = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+    
+    if (!roomCode) {
+      // Create new room
+      currentUser.roomId = Math.random().toString(36).substring(2, 8).toUpperCase();
+      currentUser.isHost = true;
+      hostId = currentUser.id;
+      
+      const roomData = {
+        hostId: currentUser.id,
+        createdAt: Date.now(),
+        game: {
+          currentWord: getRandomWord(),
+          roundActive: false,
+          roundTime: 60
+        },
+        players: {
+          [currentUser.id]: {
+            name: playerName,
+            score: 0,
+            joinedAt: Date.now()
+          }
+        },
+        drawing: { data: null }
+      };
+      
+      await set(ref(db, `rooms/${currentUser.roomId}`), roomData);
+      
+    } else {
+      // Join existing room
+      currentUser.roomId = roomCode;
+      currentUser.isHost = false;
+      
+      const roomRef = ref(db, `rooms/${roomCode}`);
+      const snapshot = await get(roomRef);
+      
+      if (!snapshot.exists()) {
+        document.getElementById('joinError').innerHTML = '❌ غرفة غير موجودة!';
+        return false;
+      }
+      
+      const roomData = snapshot.val();
+      hostId = roomData.hostId;
+      
+      // Add player to room
+      await update(ref(db, `rooms/${roomCode}/players/${currentUser.id}`), {
+        name: playerName,
+        score: 0,
+        joinedAt: Date.now()
+      });
+    }
+    
+    // Switch to game screen
+    document.getElementById('joinScreen').style.display = 'none';
+    document.getElementById('gameScreen').style.display = 'block';
+    document.getElementById('roomCodeDisplay').innerHTML = currentUser.roomId;
+    document.getElementById('playerRole').innerHTML = currentUser.isHost ? '👑 المضيف (الرسام)' : '🎨 مشاهد (مخمن)';
+    
+    initCanvas();
+    listenToRoom(currentUser.roomId);
+    
+    if (currentUser.isHost) {
+      drawingEnabled = true;
+      document.getElementById('nextRoundBtn').style.display = 'block';
+    } else {
+      drawingEnabled = false;
+      document.getElementById('nextRoundBtn').style.display = 'none';
+    }
+    
+    // Setup send message
+    document.getElementById('sendGuessBtn').onclick = sendGuess;
+    document.getElementById('guessInput').onkeypress = (e) => {
+      if (e.key === 'Enter') sendGuess();
     };
-    window.closeModal = () => modal.remove();
+    
+    // Setup next round button
+    document.getElementById('nextRoundBtn').onclick = () => {
+      if (currentUser.isHost) {
+        startRound();
+      }
+    };
+    
+    // Setup tools
+    document.getElementById('penBtn').onclick = () => {
+      drawingEnabled = true;
+      document.getElementById('penBtn').classList.add('active');
+      document.getElementById('eraserBtn').classList.remove('active');
+    };
+    document.getElementById('eraserBtn').onclick = () => {
+      drawingEnabled = true;
+      document.getElementById('eraserBtn').classList.add('active');
+      document.getElementById('penBtn').classList.remove('active');
+      document.getElementById('colorPicker').value = '#ffffff';
+    };
+    document.getElementById('clearBtn').onclick = () => {
+      if (confirm('مسح الرسمة؟')) {
+        clearCanvas();
+      }
+    };
+    document.getElementById('colorPicker').onchange = (e) => {
+      if (document.getElementById('eraserBtn').classList.contains('active')) {
+        document.getElementById('penBtn').click();
+      }
+    };
+    
+    // Copy room button
+    document.getElementById('copyRoomBtn').onclick = () => {
+      navigator.clipboard.writeText(currentUser.roomId);
+      alert('✅ تم نسخ رمز الغرفة: ' + currentUser.roomId);
+    };
+    
+    return true;
   }
   
-  function showCategorySelectionModal() {
-    const modal = document.createElement('div');
-    modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 1000;';
-    const catNames = Object.keys(categories);
-    modal.innerHTML = `
-      <div style="background: white; border-radius: 24px; padding: 1.5rem; width: 80%; max-width: 300px; text-align: center;">
-        <h3 style="margin-bottom: 1rem; color: #C65D3B;"><i class="fas fa-layer-group"></i> اختر الفئة</h3>
-        ${catNames.map(cat => {
-          let icon = cat === 'أفعال' ? '🏃' : cat === 'حيوانات' ? '🐪' : cat === 'أمثال شعبية' ? '📜' : '📱';
-          return `<div style="padding: 10px; margin: 5px 0; background: #f5f5f5; border-radius: 12px; cursor: pointer;" onclick="window.selectCategoryAndClose('${cat}')">${icon} ${cat}</div>`;
-        }).join('')}
-        <button onclick="closeCategoryModal()" style="margin-top: 1rem; padding: 8px 16px; background: #ddd; border: none; border-radius: 20px; cursor: pointer;">إلغاء</button>
-      </div>
-    `;
-    document.body.appendChild(modal);
-    window.selectCategoryAndClose = (category) => {
-      setCategory(category);
-      modal.remove();
-    };
-    window.closeCategoryModal = () => modal.remove();
-  }
-  
-  window.addTeam = function() {
-    if (!isHost) {
-      alert('⚠️ فقط المضيف يمكنه إضافة فرق جديدة');
+  async function sendGuess() {
+    const guess = document.getElementById('guessInput').value.trim();
+    if (!guess) return;
+    
+    if (!roundActive) {
+      addMessage('⚠️ لا توجد جولة نشطة حالياً!', 'system');
+      document.getElementById('guessInput').value = '';
       return;
     }
-    const input = document.getElementById('teamName');
-    const name = input.value.trim();
-    if (name) {
-      const newTeam = { id: Date.now(), name: name, score: 0 };
-      const updatedTeams = [...teams, newTeam];
-      updateTeams(updatedTeams);
-      input.value = '';
-      alert('✅ تم إضافة الفريق: ' + name);
-    } else {
-      alert('الرجاء إدخال اسم الفريق');
+    
+    // Check if guess is correct
+    if (checkGuess(guess, currentUser.id, currentUser.name)) {
+      addMessage(`${currentUser.name} خمن الكلمة! +10 نقاط`, 'correct');
+      
+      // Save correct guess to Firebase
+      const messagesRef = ref(db, `rooms/${currentUser.roomId}/messages`);
+      push(messagesRef, {
+        playerId: currentUser.id,
+        playerName: currentUser.name,
+        text: guess,
+        type: 'correct',
+        timestamp: Date.now()
+      });
+      
+      document.getElementById('guessInput').value = '';
+      return;
     }
-  };
-  
-  function switchToTab(tabId) {
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-    document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active-pane'));
-    const targetBtn = Array.from(document.querySelectorAll('.tab-btn')).find(btn => btn.dataset.tab === tabId);
-    if (targetBtn) targetBtn.classList.add('active');
-    const targetPane = document.getElementById(`${tabId}Tab`);
-    if (targetPane) targetPane.classList.add('active-pane');
-    if (tabId === 'teams') renderTeamList();
+    
+    // Save guess to Firebase
+    const messagesRef = ref(db, `rooms/${currentUser.roomId}/messages`);
+    push(messagesRef, {
+      playerId: currentUser.id,
+      playerName: currentUser.name,
+      text: guess,
+      type: 'guess',
+      timestamp: Date.now()
+    });
+    
+    addMessage(guess, 'normal', currentUser.name);
+    document.getElementById('guessInput').value = '';
   }
   
   // Event Listeners
-  document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.addEventListener('click', () => switchToTab(btn.dataset.tab));
-  });
+  document.getElementById('joinOrCreateBtn').onclick = createOrJoinRoom;
   
-  document.getElementById('createRoomBtn')?.addEventListener('click', window.createRoom);
-  document.getElementById('quickJoinBtn')?.addEventListener('click', () => {
-    const codeInput = document.getElementById('quickJoinCode');
-    const code = codeInput.value.trim();
-    if (code) {
-      window.joinRoom(code);
-      codeInput.value = '';
-    } else {
-      alert('الرجاء إدخال رمز الغرفة');
-    }
-  });
-  document.getElementById('addTeamBtn')?.addEventListener('click', window.addTeam);
-  
-  document.getElementById('teamName')?.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') window.addTeam();
-  });
-  
-  document.getElementById('quickJoinCode')?.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-      document.getElementById('quickJoinBtn').click();
-    }
-  });
-  
-  // Check if user is returning to a room
-  const savedRoom = localStorage.getItem('myRoom') || localStorage.getItem('joinedRoom');
-  if (savedRoom && database) {
-    const isHostSaved = localStorage.getItem('myRoom') === savedRoom;
-    roomId = savedRoom;
-    isHost = isHostSaved;
-    listenToRoom(roomId);
-    switchToTab('game');
-  }
+  // Enter key on room code
+  document.getElementById('roomCodeInput').onkeypress = (e) => {
+    if (e.key === 'Enter') createOrJoinRoom();
+  };
 </script>
 </body>
 </html>
