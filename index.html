@@ -3,10 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>لعبة التمثيل - نظام الغرف | تصميم سعود</title>
+  <title>لعبة التمثيل - العب مع الأصدقاء مباشرة | تصميم سعود</title>
   
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
   
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -84,6 +88,7 @@
       padding: 12px;
       border-radius: 12px;
       margin: 0.5rem 0;
+      text-align: center;
     }
     .copy-btn {
       background: #6B2D2D;
@@ -104,6 +109,10 @@
       font-weight: 700;
       cursor: pointer;
       margin: 0.5rem;
+      transition: transform 0.2s;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
     }
     .instruction-box {
       background: rgba(198, 93, 59, 0.1);
@@ -119,6 +128,10 @@
     .instruction-box li {
       margin: 0.5rem 0;
       font-size: 0.85rem;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
     .word-card {
       background: white;
@@ -132,11 +145,20 @@
       font-size: 1.8rem;
       font-weight: 800;
       color: #4A1F1F;
+      word-break: break-word;
     }
     .timer-number {
       font-size: 2.5rem;
       font-weight: 900;
       color: #C65D3B;
+    }
+    .timer-number.warning {
+      color: #B83B3B;
+      animation: pulse 0.5s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
     }
     .action-buttons {
       display: grid;
@@ -151,9 +173,18 @@
       border-radius: 12px;
       font-weight: 700;
       cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .btn-action:hover {
+      transform: translateY(-2px);
     }
     .btn-success { background: #2D6A4F; color: white; border: none; }
     .btn-skip { background: #B83B3B; color: white; border: none; }
+    .btn-primary-action { background: #C65D3B; color: white; border: none; }
     .viewer-banner {
       background: linear-gradient(135deg, #6B2D2D, #C65D3B);
       color: white;
@@ -162,17 +193,72 @@
       text-align: center;
       margin-bottom: 1rem;
     }
+    .online-badge {
+      display: inline-block;
+      background: #2D6A4F;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      margin-right: 8px;
+    }
+    .team-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      border-bottom: 1px solid #eee;
+    }
+    .team-name {
+      font-weight: bold;
+      font-size: 1rem;
+    }
+    .team-score {
+      color: #C65D3B;
+      font-weight: bold;
+      font-size: 1.3rem;
+    }
+    .join-input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid rgba(198, 93, 59, 0.3);
+      border-radius: 50px;
+      font-size: 1rem;
+      text-align: center;
+      margin: 1rem 0;
+      font-family: monospace;
+      font-size: 1.2rem;
+    }
+    .stats-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid #eee;
+    }
+    .loading {
+      text-align: center;
+      padding: 2rem;
+    }
+    .winner-badge {
+      background: #D4A84B;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: bold;
+      margin-right: 8px;
+    }
     @media (max-width: 640px) {
       .current-word { font-size: 1.3rem; }
       .action-buttons { grid-template-columns: 1fr; }
+      .timer-number { font-size: 2rem; }
     }
   </style>
 </head>
 <body>
 <div class="app-container">
   <div class="tab-navigation">
-    <button class="tab-btn" data-tab="home"><i class="fas fa-home"></i> الرئيسية</button>
-    <button class="tab-btn" data-tab="host"><i class="fas fa-chalkboard-user"></i> استضافة</button>
+    <button class="tab-btn active" data-tab="home"><i class="fas fa-home"></i> الرئيسية</button>
     <button class="tab-btn" data-tab="game"><i class="fas fa-mask"></i> اللعبة</button>
     <button class="tab-btn" data-tab="teams"><i class="fas fa-users"></i> الفرق</button>
   </div>
@@ -181,410 +267,496 @@
     <!-- Home Tab -->
     <div class="tab-pane active-pane" id="homeTab">
       <div class="card">
-        <i class="fas fa-theater-masks" style="font-size: 2rem; color: #C65D3B;"></i>
+        <i class="fas fa-theater-masks" style="font-size: 2.5rem; color: #C65D3B;"></i>
         <h1 style="color: #6B2D2D; margin: 0.5rem 0;">لعبة التمثيل</h1>
+        <p style="color: #8B6B5C; margin-bottom: 1rem;">🎭 العب مع أصدقائك في الوقت الفعلي!</p>
+        
         <div class="instruction-box">
-          <h3><i class="fas fa-info-circle"></i> كيف تلعب؟</h3>
-          <ul style="list-style: none;">
-            <li><i class="fas fa-chalkboard-user"></i> <strong>المضيف:</strong> اضغط "استضافة" → أنشئ غرفة → انسخ الرابط وأرسله للأصدقاء</li>
-            <li><i class="fas fa-eye"></i> <strong>المشاهد:</strong> افتح الرابط أو أدخل رمز الغرفة في تبويب اللعبة</li>
-            <li><i class="fas fa-hourglass-start"></i> <strong>المضيف</strong> يتحكم ببدء المؤقت والتخطي والتخمين</li>
-            <li><i class="fas fa-trophy"></i> أول فريق يصل 10 نقاط يفوز</li>
+          <h3><i class="fas fa-chalkboard-user"></i> للمضيف (منشئ اللعبة)</h3>
+          <ul>
+            <li><i class="fas fa-plus-circle"></i> اضغط "إنشاء غرفة جديدة"</li>
+            <li><i class="fas fa-copy"></i> انسخ رمز الغرفة وشاركه مع الأصدقاء</li>
+            <li><i class="fas fa-gamepad"></i> أنت تتحكم بالمؤقت والتخطي والتسجيل</li>
+            <li><i class="fas fa-sync-alt"></i> الجميع يرى نفس الشاشة بشكل متزامن</li>
           </ul>
         </div>
-        <button class="btn-primary" id="startHostBtn"><i class="fas fa-chalkboard-user"></i> استضافة لعبة</button>
+        
+        <div class="instruction-box">
+          <h3><i class="fas fa-users"></i> للمشاهدين (الأصدقاء)</h3>
+          <ul>
+            <li><i class="fas fa-key"></i> اضغط "انضمام إلى غرفة"</li>
+            <li><i class="fas fa-qrcode"></i> أدخل رمز الغرفة الذي أرسله المضيف</li>
+            <li><i class="fas fa-eye"></i> شاهد الكلمة والمؤقت بشكل متزامن مع الجميع</li>
+            <li><i class="fas fa-mobile-alt"></i> يمكن لعدد غير محدود من الأصدقاء الانضمام</li>
+          </ul>
+        </div>
+        
+        <button class="btn-primary" id="createRoomBtn" style="background: #2D6A4F; width: 100%; margin: 0.5rem 0;">
+          <i class="fas fa-plus-circle"></i> إنشاء غرفة جديدة
+        </button>
+        <button class="btn-primary" id="joinRoomBtn" style="background: #C65D3B; width: 100%; margin: 0.5rem 0;">
+          <i class="fas fa-sign-in-alt"></i> انضمام إلى غرفة
+        </button>
       </div>
-    </div>
-
-    <!-- Host Tab -->
-    <div class="tab-pane" id="hostTab">
-      <div class="card" id="hostContent"></div>
     </div>
 
     <!-- Game Tab -->
     <div class="tab-pane" id="gameTab">
-      <div class="card" id="gameContent"></div>
+      <div class="card" id="gameContent">
+        <div class="loading">
+          <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: #C65D3B;"></i>
+          <p style="margin-top: 1rem;">جاري الاتصال...</p>
+        </div>
+      </div>
     </div>
 
     <!-- Teams Tab -->
     <div class="tab-pane" id="teamsTab">
       <div class="card">
-        <h3><i class="fas fa-users"></i> الفرق</h3>
+        <h3><i class="fas fa-trophy"></i> الفرق والنقاط</h3>
         <div id="teamList"></div>
         <div style="display: flex; gap: 8px; margin-top: 1rem;">
-          <input type="text" id="teamName" placeholder="اسم الفريق" style="flex: 1; padding: 8px; border-radius: 50px; border: 1px solid #ddd;">
-          <button id="addTeam" style="background: #C65D3B; border: none; padding: 8px 16px; border-radius: 50px; color: white;">إضافة</button>
+          <input type="text" id="teamName" placeholder="اسم الفريق الجديد" style="flex: 1; padding: 10px; border-radius: 50px; border: 1px solid #ddd;">
+          <button id="addTeamBtn" style="background: #C65D3B; border: none; padding: 10px 20px; border-radius: 50px; color: white; cursor: pointer;">إضافة</button>
         </div>
+        <p style="font-size: 0.7rem; color: #8B6B5C; margin-top: 1rem;">
+          <i class="fas fa-info-circle"></i> النقاط تتزامن مع جميع اللاعبين تلقائياً
+        </p>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-  // ==================== GAME DATA ====================
-  const categories = {
-    "أفعال": ["يرقص","يغني","يأكل","يشرب","يركض","يقفز","يضحك","يبكي","ينام","يقرأ","يكتب","يرسم"],
-    "حيوانات": ["جمل","صقر","حصان","نمر","أسد","فيل","زرافة","قط","كلب","ثعبان","عقاب","دolphin"],
-    "أمثال": ["الجار قبل الدار", "الصبر مفتاح الفرج", "العين بصيرة", "القناعة كنز", "الكذب ملح الرجال"],
-    "أشياء": ["تلفون","سيارة","كتاب","قلم","كرسي","طاولة","مفتاح","ساعة","نظارة","حقيبة"]
+  // ==================== FIREBASE CONFIGURATION ====================
+  const firebaseConfig = {
+    apiKey: "AIzaSyDEwWDRWOZ13iK_iDPqUymNlhgz9R4nmXY",
+    authDomain: "gameapp-3fd40.firebaseapp.com",
+    projectId: "gameapp-3fd40",
+    storageBucket: "gameapp-3fd40.firebasestorage.app",
+    messagingSenderId: "216038176025",
+    appId: "1:216038176025:web:d73fc67524770decbc8188"
   };
   
-  let currentWord = { word: "ابدأ اللعبة", category: "أفعال" };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const database = firebase.database();
+  
+  // Game variables
+  let roomId = null;
+  let isHost = false;
+  let currentUserId = null;
+  let gameDataRef = null;
+  let teamsRef = null;
+  let timerInterval = null;
+  
+  // Game state
+  let currentWord = { word: "انتظر بدء اللعبة", category: "أفعال" };
   let timeLeft = 60;
   let timerRunning = false;
-  let timerInterval = null;
   let roundCount = 0;
   let gameActive = true;
   let gameWinner = null;
-  let teams = [{ id: 1, name: "الفريق الأحمر", score: 0 }, { id: 2, name: "الفريق الأزرق", score: 0 }];
+  let teams = [];
   
-  // Room system
-  let roomId = null;
-  let isHost = false;
+  // Categories
+  const categories = {
+    "أفعال": ["يرقص العرضة", "يغني", "يطبخ منسف", "يشرب قهوة", "يركب جمل", "يلعب كرة قدم", "يؤذن", "يلقي شعر", "يرسم", "يضحك", "يبكي", "ينام", "يأكل تمر", "يركض", "يقفز", "يسبح", "يقرأ", "يكتب", "يقود سيارة", "يصلح كمبيوتر", "يغسل يديه", "يصفق", "يصفير"],
+    "حيوانات": ["جمل", "صقر", "حصان عربي", "غزال", "نمر", "ذئب", "ثعلب", "وعل", "نعامة", "قط", "كلب", "نسر", "فهد", "أرنب", "حمام", "أسد", "فيل", "زرافة", "دلفين", "سلحفاة", "ثعبان", "عقرب", "نحلة", "فراشة"],
+    "أمثال شعبية": ["اطلع من جلدك", "اللي ما يعرف الصقر يشويه", "الجار قبل الدار", "الصبر مفتاح الفرج", "العين بصيرة واليد قصيرة", "القناعة كنز لا يفنى", "الكذب ملح الرجال", "باب النجار مخلع", "حبل الكذب قصير", "عصفور في اليد ولا عشرة على الشجرة", "على قدر لحافك مد رجليك", "من طلب العلا سهر الليالي"],
+    "أشياء": ["تلفون", "سيارة", "طائرة", "ساعة", "نظارة", "كتاب", "قلم", "مقص", "مفتاح", "باب", "كرسي", "طاولة", "سرير", "ثلاجة", "غسالة", "حقيبة", "مظلة", "مرآة", "مشط", "خاتم", "سوار", "محفظة", "مصباح", "مروحة"]
+  };
   
   function getRandomWord() {
-    const cats = Object.keys(categories);
-    const randomCat = cats[Math.floor(Math.random() * cats.length)];
+    const catNames = Object.keys(categories);
+    const randomCat = catNames[Math.floor(Math.random() * catNames.length)];
     const words = categories[randomCat];
     return { word: words[Math.floor(Math.random() * words.length)], category: randomCat };
   }
   
-  // Save game state to localStorage for viewers
-  function saveGameState() {
-    if (roomId) {
-      const state = {
-        word: currentWord.word,
-        category: currentWord.category,
-        timeLeft: timeLeft,
-        roundCount: roundCount,
-        gameActive: gameActive,
-        gameWinner: gameWinner,
-        teams: teams
-      };
-      localStorage.setItem(`room_${roomId}`, JSON.stringify(state));
+  function generateUserId() {
+    return 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+  }
+  
+  currentUserId = generateUserId();
+  
+  // Create new room
+  function createRoom() {
+    roomId = Math.random().toString(36).substring(2, 8).toUpperCase();
+    isHost = true;
+    
+    const initialWord = getRandomWord();
+    const gameData = {
+      word: initialWord.word,
+      category: initialWord.category,
+      timeLeft: 60,
+      timerRunning: false,
+      roundCount: 0,
+      gameActive: true,
+      gameWinner: null,
+      hostId: currentUserId,
+      createdAt: Date.now()
+    };
+    
+    const initialTeams = [
+      { id: 1, name: "الفريق الأحمر", score: 0 },
+      { id: 2, name: "الفريق الأزرق", score: 0 }
+    ];
+    
+    database.ref('rooms/' + roomId + '/game').set(gameData);
+    database.ref('rooms/' + roomId + '/teams').set(initialTeams);
+    database.ref('rooms/' + roomId + '/host').set(currentUserId);
+    
+    localStorage.setItem('myRoom', roomId);
+    listenToRoom(roomId);
+    
+    alert('✅ تم إنشاء الغرفة بنجاح!\n\nرمز الغرفة: ' + roomId + '\n\nشارك هذا الرمز مع أصدقائك ليدخلوا كمتفرجين');
+    switchToTab('game');
+  }
+  
+  // Join existing room
+  function joinRoom() {
+    const code = prompt("🔑 أدخل رمز الغرفة:", "");
+    if (code && code.trim()) {
+      const roomCode = code.trim().toUpperCase();
+      database.ref('rooms/' + roomCode).once('value', (snapshot) => {
+        if (snapshot.exists()) {
+          roomId = roomCode;
+          isHost = false;
+          localStorage.setItem('joinedRoom', roomId);
+          listenToRoom(roomId);
+          switchToTab('game');
+        } else {
+          alert('❌ غرفة غير موجودة! تأكد من الرقم وأعد المحاولة.');
+        }
+      });
     }
   }
   
-  // Load game state for viewers
-  function loadGameState() {
-    if (!isHost && roomId) {
-      const saved = localStorage.getItem(`room_${roomId}`);
-      if (saved) {
-        const state = JSON.parse(saved);
-        currentWord = { word: state.word, category: state.category };
-        timeLeft = state.timeLeft;
-        roundCount = state.roundCount;
-        gameActive = state.gameActive;
-        gameWinner = state.gameWinner;
-        teams = state.teams;
-        renderGameUI();
+  // Listen to real-time updates
+  function listenToRoom(roomCode) {
+    roomId = roomCode;
+    
+    // Listen to game data
+    gameDataRef = database.ref('rooms/' + roomId + '/game');
+    gameDataRef.on('value', (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        currentWord = { word: data.word, category: data.category };
+        timeLeft = data.timeLeft;
+        timerRunning = data.timerRunning;
+        roundCount = data.roundCount;
+        gameActive = data.gameActive;
+        gameWinner = data.gameWinner;
+        
+        updateGameUI();
+        
+        // Handle timer countdown for host
+        if (isHost && timerRunning && gameActive && !gameWinner) {
+          if (timerInterval) clearInterval(timerInterval);
+          timerInterval = setInterval(() => {
+            database.ref('rooms/' + roomId + '/game').once('value', (snap) => {
+              const current = snap.val();
+              if (current && current.timerRunning && current.timeLeft > 0 && current.gameActive && !current.gameWinner) {
+                const newTime = current.timeLeft - 1;
+                database.ref('rooms/' + roomId + '/game').update({ timeLeft: newTime });
+                if (newTime <= 0) {
+                  database.ref('rooms/' + roomId + '/game').update({ timerRunning: false });
+                  clearInterval(timerInterval);
+                }
+              } else {
+                clearInterval(timerInterval);
+              }
+            });
+          }, 1000);
+        } else if (timerInterval && !timerRunning) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+        }
+      }
+    });
+    
+    // Listen to teams data
+    teamsRef = database.ref('rooms/' + roomId + '/teams');
+    teamsRef.on('value', (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        teams = data;
         renderTeamList();
       }
+    });
+    
+    // Check if user is host
+    database.ref('rooms/' + roomId + '/host').once('value', (snapshot) => {
+      isHost = (snapshot.val() === currentUserId);
+      updateGameUI();
+    });
+  }
+  
+  // Update game data
+  function updateGameData(updates) {
+    if (isHost && roomId) {
+      database.ref('rooms/' + roomId + '/game').update(updates);
     }
   }
   
-  // Sync periodically for viewers
-  setInterval(() => {
-    if (!isHost && roomId) {
-      loadGameState();
+  function updateTeams(teamsData) {
+    if (isHost && roomId) {
+      database.ref('rooms/' + roomId + '/teams').set(teamsData);
     }
-  }, 1000);
-  
-  // Timer functions
-  function stopTimer() {
-    if (timerInterval) clearInterval(timerInterval);
-    timerRunning = false;
   }
   
   function startTimer() {
+    if (!isHost) return;
     if (timerRunning || !gameActive || gameWinner) return;
-    if (timeLeft <= 0) timeLeft = 60;
-    stopTimer();
-    timerRunning = true;
-    timerInterval = setInterval(() => {
-      if (timeLeft <= 0) {
-        stopTimer();
-      } else {
-        timeLeft--;
-        if (isHost) saveGameState();
-        updateTimerDisplay();
-      }
-    }, 1000);
-  }
-  
-  function updateTimerDisplay() {
-    document.querySelectorAll('.timer-display').forEach(el => el.innerText = timeLeft);
-  }
-  
-  // Word refresh
-  function refreshWord() {
-    currentWord = getRandomWord();
-    document.querySelectorAll('.word-display').forEach(el => el.innerText = currentWord.word);
-    document.querySelectorAll('.cat-display').forEach(el => el.innerText = `📂 ${currentWord.category}`);
-    if (isHost) saveGameState();
-  }
-  
-  function skipWord() {
-    if (!gameActive || gameWinner) return;
-    roundCount++;
-    refreshWord();
-    stopTimer();
-    timeLeft = 60;
-    timerRunning = false;
-    updateTimerDisplay();
-    document.querySelectorAll('.round-display').forEach(el => el.innerText = roundCount);
-    if (isHost) saveGameState();
-  }
-  
-  // Team functions
-  function addTeam(name) {
-    if (!name.trim()) return;
-    teams.push({ id: Date.now(), name: name.trim(), score: 0 });
-    renderTeamList();
-    saveTeams();
-  }
-  
-  function updateTeamScore(teamId, delta) {
-    const team = teams.find(t => t.id === teamId);
-    if (team) {
-      team.score = Math.max(0, team.score + delta);
-      renderTeamList();
-      saveTeams();
-      if (team.score >= 10 && !gameWinner) {
-        gameWinner = team.id;
-        gameActive = false;
-        stopTimer();
-        alert(`🏆 الفائز: ${team.name} 🏆`);
-        if (isHost) saveGameState();
-        renderGameUI();
-      }
-      if (isHost) saveGameState();
+    if (timeLeft <= 0) {
+      updateGameData({ timeLeft: 60, timerRunning: true });
+    } else {
+      updateGameData({ timerRunning: true });
     }
   }
   
-  function saveTeams() {
-    localStorage.setItem('teams', JSON.stringify(teams));
+  function skipWord() {
+    if (!isHost) return;
+    if (!gameActive || gameWinner) return;
+    const newWord = getRandomWord();
+    updateGameData({
+      word: newWord.word,
+      category: newWord.category,
+      roundCount: roundCount + 1,
+      timeLeft: 60,
+      timerRunning: false
+    });
+  }
+  
+  function guessCorrect() {
+    if (!isHost) return;
+    if (!gameActive || gameWinner) return;
+    showTeamSelectionModal();
+  }
+  
+  function addPointsToTeam(teamId) {
+    const team = teams.find(t => t.id === teamId);
+    if (team) {
+      team.score++;
+      updateTeams([...teams]);
+      
+      if (team.score >= 10) {
+        updateGameData({
+          gameActive: false,
+          gameWinner: team.id
+        });
+        alert(`🏆 مبروك! الفريق ${team.name} وصل إلى 10 نقاط وفاز باللعبة! 🏆`);
+      } else {
+        const newWord = getRandomWord();
+        updateGameData({
+          word: newWord.word,
+          category: newWord.category,
+          roundCount: roundCount + 1,
+          timeLeft: 60,
+          timerRunning: false
+        });
+      }
+    }
+  }
+  
+  function resetGame() {
+    if (!isHost) return;
+    const newWord = getRandomWord();
+    const resetTeams = teams.map(t => ({ ...t, score: 0 }));
+    updateTeams(resetTeams);
+    updateGameData({
+      word: newWord.word,
+      category: newWord.category,
+      timeLeft: 60,
+      timerRunning: false,
+      roundCount: 0,
+      gameActive: true,
+      gameWinner: null
+    });
+  }
+  
+  function changeCategory() {
+    if (!isHost) return;
+    showCategorySelectionModal();
+  }
+  
+  function setCategory(category) {
+    const words = categories[category];
+    if (words) {
+      const newWord = words[Math.floor(Math.random() * words.length)];
+      updateGameData({
+        word: newWord,
+        category: category
+      });
+    }
+  }
+  
+  function updateGameUI() {
+    const container = document.getElementById('gameContent');
+    if (!container) return;
+    
+    const winner = teams.find(t => t.id === gameWinner);
+    
+    if (isHost) {
+      container.innerHTML = `
+        ${gameWinner ? `<div class="instruction-box" style="background: #D4A84B; color: #4A1F1F; text-align: center;">
+          <i class="fas fa-trophy"></i> 🏆 الفائز: ${winner?.name} 🏆 <i class="fas fa-trophy"></i>
+        </div>` : ''}
+        <div class="viewer-banner" style="background: #2D6A4F;">
+          <i class="fas fa-chalkboard-user"></i> أنت المضيف - أنت تتحكم باللعبة
+        </div>
+        <div class="room-code">
+          رمز الغرفة: <strong style="font-size: 1.5rem;">${roomId}</strong>
+          <button class="copy-btn" id="copyRoomCode" style="background: #C65D3B;"><i class="fas fa-copy"></i> نسخ</button>
+        </div>
+        
+        <div class="word-card">
+          <div class="current-word">${currentWord.word}</div>
+          <div style="margin-top: 8px; font-size: 0.8rem; color: #C65D3B;">📂 ${currentWord.category}</div>
+        </div>
+        
+        <div class="timer-area">
+          <div class="timer-number ${timeLeft <= 5 ? 'warning' : ''}">${timeLeft}</div>
+          <div>ثانية</div>
+        </div>
+        
+        <div class="action-buttons">
+          <button class="btn-action btn-primary-action" id="startTimerBtn"><i class="fas fa-hourglass-start"></i> بدء المؤقت</button>
+          <button class="btn-action btn-primary-action" id="categoryBtn"><i class="fas fa-layer-group"></i> الفئة</button>
+          <button class="btn-action btn-skip" id="skipBtn"><i class="fas fa-forward"></i> تخطي</button>
+          <button class="btn-action btn-success" id="guessBtn"><i class="fas fa-check-circle"></i> تم التخمين</button>
+          <button class="btn-action" id="resetBtn"><i class="fas fa-redo-alt"></i> لعبة جديدة</button>
+        </div>
+        
+        <div class="stats-row">
+          <span><i class="fas fa-redo-alt"></i> جولة: <strong>${roundCount}</strong></span>
+          <span><i class="fas fa-flag-checkered"></i> الهدف: 10 نقاط</span>
+        </div>
+      `;
+      
+      document.getElementById('startTimerBtn')?.addEventListener('click', startTimer);
+      document.getElementById('categoryBtn')?.addEventListener('click', changeCategory);
+      document.getElementById('skipBtn')?.addEventListener('click', skipWord);
+      document.getElementById('guessBtn')?.addEventListener('click', guessCorrect);
+      document.getElementById('resetBtn')?.addEventListener('click', resetGame);
+      document.getElementById('copyRoomCode')?.addEventListener('click', () => {
+        navigator.clipboard.writeText(roomId);
+        alert('✅ تم نسخ رمز الغرفة: ' + roomId);
+      });
+    } else {
+      container.innerHTML = `
+        ${gameWinner ? `<div class="instruction-box" style="background: #D4A84B; color: #4A1F1F; text-align: center;">
+          <i class="fas fa-trophy"></i> 🏆 الفائز: ${winner?.name} 🏆 <i class="fas fa-trophy"></i>
+        </div>` : ''}
+        <div class="viewer-banner">
+          <i class="fas fa-eye"></i> أنت في وضع المشاهد | غرفة: <strong>${roomId}</strong>
+          <span class="online-badge"><i class="fas fa-wifi"></i> متصل</span>
+        </div>
+        
+        <div class="word-card">
+          <div class="current-word">${currentWord.word}</div>
+          <div style="margin-top: 8px; font-size: 0.8rem; color: #C65D3B;">📂 ${currentWord.category}</div>
+        </div>
+        
+        <div class="timer-area">
+          <div class="timer-number ${timeLeft <= 5 ? 'warning' : ''}">${timeLeft}</div>
+          <div>ثانية</div>
+        </div>
+        
+        <div class="stats-row">
+          <span><i class="fas fa-redo-alt"></i> جولة: <strong>${roundCount}</strong></span>
+          <span><i class="fas fa-flag-checkered"></i> الهدف: 10 نقاط</span>
+        </div>
+        
+        <div class="instruction-box" style="margin-top: 1rem; text-align: center;">
+          <i class="fas fa-info-circle"></i> أنت تشاهد اللعبة بشكل مباشر. المضيف هو من يتحكم بالمؤقت والكلمات.
+        </div>
+      `;
+    }
   }
   
   function renderTeamList() {
     const container = document.getElementById('teamList');
     if (!container) return;
+    
+    if (!teams || teams.length === 0) {
+      container.innerHTML = '<p style="text-align: center; padding: 1rem;">لا توجد فرق</p>';
+      return;
+    }
+    
     container.innerHTML = teams.map(team => `
-      <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px; border-bottom: 1px solid #eee;">
-        <div><strong>${team.name}</strong> <span style="color: #C65D3B; font-weight: bold;">${team.score}</span></div>
+      <div class="team-item">
         <div>
-          <button onclick="updateTeamScore(${team.id}, -1)" style="background: #eee; border: none; padding: 4px 8px; border-radius: 8px;">-</button>
-          <button onclick="updateTeamScore(${team.id}, 1)" style="background: #C65D3B; border: none; padding: 4px 8px; border-radius: 8px; color: white;">+</button>
-          <button onclick="deleteTeam(${team.id})" style="background: #B83B3B; border: none; padding: 4px 8px; border-radius: 8px; color: white;">🗑</button>
+          <span class="team-name">${team.name}</span>
+          ${gameWinner === team.id ? '<span class="winner-badge"><i class="fas fa-crown"></i> بطل</span>' : ''}
         </div>
+        <div class="team-score">${team.score}</div>
       </div>
     `).join('');
   }
   
-  function deleteTeam(id) {
-    teams = teams.filter(t => t.id !== id);
-    renderTeamList();
-    saveTeams();
-  }
-  
-  function resetGame() {
-    teams.forEach(t => t.score = 0);
-    roundCount = 0;
-    timeLeft = 60;
-    timerRunning = false;
-    gameActive = true;
-    gameWinner = null;
-    stopTimer();
-    refreshWord();
-    updateTimerDisplay();
-    document.querySelectorAll('.round-display').forEach(el => el.innerText = roundCount);
-    renderTeamList();
-    saveTeams();
-    if (isHost) saveGameState();
-  }
-  
-  // Team selection modal for scoring
-  function showTeamSelection(callback) {
+  function showTeamSelectionModal() {
     const modal = document.createElement('div');
-    modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 1000;';
+    modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 1000;';
     modal.innerHTML = `
       <div style="background: white; border-radius: 24px; padding: 1.5rem; width: 80%; max-width: 300px; text-align: center;">
-        <h3 style="margin-bottom: 1rem;">اختر الفريق الفائز</h3>
-        ${teams.map(team => `<div style="padding: 10px; margin: 5px 0; background: #f5f5f5; border-radius: 12px; cursor: pointer;" onclick="window.selectTeam(${team.id})">${team.name}</div>`).join('')}
-        <button onclick="closeModal()" style="margin-top: 1rem; padding: 8px 16px; background: #ddd; border: none; border-radius: 20px;">إلغاء</button>
+        <h3 style="margin-bottom: 1rem; color: #C65D3B;"><i class="fas fa-trophy"></i> اختر الفريق الفائز</h3>
+        ${teams.map(team => `<div style="padding: 12px; margin: 5px 0; background: #f5f5f5; border-radius: 12px; cursor: pointer; font-weight: bold; transition: all 0.2s;" onmouseover="this.style.background='#e0e0e0'" onmouseout="this.style.background='#f5f5f5'" onclick="window.selectTeam(${team.id})">${team.name}</div>`).join('')}
+        <button onclick="closeModal()" style="margin-top: 1rem; padding: 8px 16px; background: #ddd; border: none; border-radius: 20px; cursor: pointer;">إلغاء</button>
       </div>
     `;
     document.body.appendChild(modal);
     window.selectTeam = (teamId) => {
-      callback(teamId);
+      addPointsToTeam(teamId);
       modal.remove();
     };
     window.closeModal = () => modal.remove();
   }
   
-  function guessCorrect() {
-    if (!gameActive || gameWinner) return;
-    stopTimer();
-    showTeamSelection((teamId) => {
-      const team = teams.find(t => t.id === teamId);
-      if (team) {
-        team.score++;
-        renderTeamList();
-        saveTeams();
-        if (team.score >= 10) {
-          gameWinner = team.id;
-          gameActive = false;
-          alert(`🏆 الفائز: ${team.name} 🏆`);
-          if (isHost) saveGameState();
-          renderGameUI();
-          return;
-        }
-      }
-      roundCount++;
-      document.querySelectorAll('.round-display').forEach(el => el.innerText = roundCount);
-      refreshWord();
-      timeLeft = 60;
-      timerRunning = false;
-      updateTimerDisplay();
-      if (isHost) saveGameState();
-    });
-  }
-  
-  // ==================== UI RENDERING ====================
-  function renderHostUI() {
-    const container = document.getElementById('hostContent');
-    const inviteLink = `${window.location.href.split('?')[0]}?room=${roomId}`;
-    container.innerHTML = `
-      <h3><i class="fas fa-chalkboard-user"></i> أنت المضيف</h3>
-      <div class="instruction-box" style="background: #2D6A4F; color: white;">
-        <i class="fas fa-info-circle"></i> شارك هذا الرابط مع أصدقائك
-      </div>
-      <div class="room-code">${roomId}</div>
-      <button class="copy-btn" id="copyLinkBtn"><i class="fas fa-copy"></i> نسخ رابط الدعوة</button>
-      <button class="copy-btn" id="copyCodeBtn" style="background: #C65D3B;"><i class="fas fa-key"></i> نسخ الرمز</button>
-      
-      <div class="word-card">
-        <div class="current-word word-display">${currentWord.word}</div>
-        <div class="cat-display" style="margin-top: 8px; font-size: 0.8rem; color: #C65D3B;">📂 ${currentWord.category}</div>
-      </div>
-      
-      <div class="timer-area">
-        <div class="timer-number timer-display">${timeLeft}</div>
-        <div>ثانية</div>
-      </div>
-      
-      <div class="action-buttons">
-        <button class="btn-action" id="hostStartTimer"><i class="fas fa-hourglass-start"></i> بدء المؤقت</button>
-        <button class="btn-action btn-skip" id="hostSkip"><i class="fas fa-forward"></i> تخطي</button>
-        <button class="btn-action btn-success" id="hostGuess"><i class="fas fa-check-circle"></i> تم التخمين</button>
-        <button class="btn-action" id="hostReset"><i class="fas fa-redo-alt"></i> لعبة جديدة</button>
-      </div>
-      
-      <div class="stats-row" style="display: flex; justify-content: space-between; margin-top: 1rem;">
-        <span><i class="fas fa-redo-alt"></i> جولة: <strong class="round-display">${roundCount}</strong></span>
-        <span><i class="fas fa-flag-checkered"></i> الهدف: 10 نقاط</span>
+  function showCategorySelectionModal() {
+    const modal = document.createElement('div');
+    modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 1000;';
+    const catNames = Object.keys(categories);
+    modal.innerHTML = `
+      <div style="background: white; border-radius: 24px; padding: 1.5rem; width: 80%; max-width: 300px; text-align: center;">
+        <h3 style="margin-bottom: 1rem; color: #C65D3B;"><i class="fas fa-layer-group"></i> اختر الفئة</h3>
+        ${catNames.map(cat => {
+          let icon = cat === 'أفعال' ? '🏃' : cat === 'حيوانات' ? '🐪' : cat === 'أمثال شعبية' ? '📜' : '📱';
+          return `<div style="padding: 10px; margin: 5px 0; background: #f5f5f5; border-radius: 12px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#e0e0e0'" onmouseout="this.style.background='#f5f5f5'" onclick="window.selectCategory('${cat}')">${icon} ${cat}</div>`;
+        }).join('')}
+        <button onclick="closeCategoryModal()" style="margin-top: 1rem; padding: 8px 16px; background: #ddd; border: none; border-radius: 20px; cursor: pointer;">إلغاء</button>
       </div>
     `;
-    
-    document.getElementById('copyLinkBtn')?.addEventListener('click', () => {
-      navigator.clipboard.writeText(inviteLink);
-      alert('✅ تم نسخ الرابط! أرسله لأصدقائك عبر واتساب أو أي تطبيق.');
-    });
-    document.getElementById('copyCodeBtn')?.addEventListener('click', () => {
-      navigator.clipboard.writeText(roomId);
-      alert('✅ تم نسخ الرمز: ' + roomId);
-    });
-    document.getElementById('hostStartTimer')?.addEventListener('click', () => startTimer());
-    document.getElementById('hostSkip')?.addEventListener('click', () => skipWord());
-    document.getElementById('hostGuess')?.addEventListener('click', () => guessCorrect());
-    document.getElementById('hostReset')?.addEventListener('click', () => resetGame());
+    document.body.appendChild(modal);
+    window.selectCategory = (category) => {
+      setCategory(category);
+      modal.remove();
+    };
+    window.closeCategoryModal = () => modal.remove();
   }
   
-  function renderViewerUI() {
-    const container = document.getElementById('gameContent');
-    container.innerHTML = `
-      <div class="viewer-banner">
-        <i class="fas fa-eye"></i> أنت في وضع المشاهد | غرفة: <strong>${roomId}</strong>
-      </div>
-      <div class="word-card">
-        <div class="current-word word-display">${currentWord.word}</div>
-        <div class="cat-display" style="margin-top: 8px; font-size: 0.8rem; color: #C65D3B;">📂 ${currentWord.category}</div>
-      </div>
-      <div class="timer-area">
-        <div class="timer-number timer-display">${timeLeft}</div>
-        <div>ثانية</div>
-      </div>
-      <div class="stats-row" style="display: flex; justify-content: space-between; margin-top: 1rem;">
-        <span><i class="fas fa-redo-alt"></i> جولة: <strong class="round-display">${roundCount}</strong></span>
-        <span><i class="fas fa-flag-checkered"></i> الهدف: 10 نقاط</span>
-      </div>
-      <div class="instruction-box" style="margin-top: 1rem; text-align: center;">
-        <i class="fas fa-info-circle"></i> أنت تشاهد اللعبة. المضيف هو من يتحكم بالمؤقت والكلمات.
-      </div>
-    `;
-  }
-  
-  function renderGameUI() {
-    if (isHost) {
-      renderHostUI();
-    } else {
-      renderViewerUI();
+  function addTeam() {
+    const input = document.getElementById('teamName');
+    const name = input.value.trim();
+    if (name && isHost) {
+      const newTeam = { id: Date.now(), name: name, score: 0 };
+      const updatedTeams = [...teams, newTeam];
+      updateTeams(updatedTeams);
+      input.value = '';
+    } else if (!isHost) {
+      alert('⚠️ فقط المضيف يمكنه إضافة فرق جديدة');
+    } else if (!name) {
+      alert('الرجاء إدخال اسم الفريق');
     }
   }
   
-  // ==================== ROOM MANAGEMENT ====================
-  function createRoom() {
-    roomId = Math.random().toString(36).substring(2, 8).toUpperCase();
-    isHost = true;
-    localStorage.setItem('host_room', roomId);
-    localStorage.setItem('is_host', 'true');
-    currentWord = getRandomWord();
-    roundCount = 0;
-    timeLeft = 60;
-    gameActive = true;
-    gameWinner = null;
-    teams.forEach(t => t.score = 0);
-    saveGameState();
-    renderHostUI();
-    switchToTab('host');
-  }
-  
-  function joinRoom(code) {
-    if (!code) {
-      code = prompt("🔑 أدخل رمز الغرفة:", "");
-    }
-    if (code) {
-      roomId = code.toUpperCase();
-      isHost = false;
-      localStorage.setItem('viewer_room', roomId);
-      loadGameState();
-      renderViewerUI();
-      switchToTab('game');
-    }
-  }
-  
-  function checkRoomFromURL() {
-    const params = new URLSearchParams(window.location.search);
-    const room = params.get('room');
-    if (room) {
-      roomId = room.toUpperCase();
-      isHost = false;
-      loadGameState();
-      renderViewerUI();
-      switchToTab('game');
-    }
-  }
-  
-  // ==================== TAB SWITCHING ====================
   function switchToTab(tabId) {
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
     document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active-pane'));
     document.querySelector(`.tab-btn[data-tab="${tabId}"]`).classList.add('active');
     document.getElementById(`${tabId}Tab`).classList.add('active-pane');
-    
     if (tabId === 'teams') renderTeamList();
-    if (tabId === 'game') renderGameUI();
-    if (tabId === 'host' && isHost) renderHostUI();
   }
   
   // Event Listeners
@@ -592,36 +764,22 @@
     btn.addEventListener('click', () => switchToTab(btn.dataset.tab));
   });
   
-  document.getElementById('startHostBtn')?.addEventListener('click', () => {
-    createRoom();
+  document.getElementById('createRoomBtn')?.addEventListener('click', createRoom);
+  document.getElementById('joinRoomBtn')?.addEventListener('click', joinRoom);
+  document.getElementById('addTeamBtn')?.addEventListener('click', addTeam);
+  
+  document.getElementById('teamName')?.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') addTeam();
   });
   
-  document.getElementById('addTeam')?.addEventListener('click', () => {
-    const input = document.getElementById('teamName');
-    if (input.value.trim()) {
-      addTeam(input.value.trim());
-      input.value = '';
-    }
-  });
-  
-  // Expose functions globally
-  window.updateTeamScore = updateTeamScore;
-  window.deleteTeam = deleteTeam;
-  window.selectTeam = null;
-  
-  // Initialize
-  const savedTeams = localStorage.getItem('teams');
-  if (savedTeams) teams = JSON.parse(savedTeams);
-  renderTeamList();
-  checkRoomFromURL();
-  
-  // Check if user is a host from previous session
-  const savedHostRoom = localStorage.getItem('host_room');
-  if (savedHostRoom && !roomId) {
-    roomId = savedHostRoom;
-    isHost = true;
-    loadGameState();
-    renderHostUI();
+  // Check if user is returning to a room
+  const savedRoom = localStorage.getItem('myRoom') || localStorage.getItem('joinedRoom');
+  if (savedRoom) {
+    const isHostSaved = localStorage.getItem('myRoom') === savedRoom;
+    roomId = savedRoom;
+    isHost = isHostSaved;
+    listenToRoom(roomId);
+    switchToTab('game');
   }
 </script>
 </body>
