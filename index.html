@@ -83,11 +83,6 @@
       transform: translateY(-2px);
     }
     
-    button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-    
     .game-layout {
       display: grid;
       grid-template-columns: 1fr 350px;
@@ -108,6 +103,7 @@
       background: white;
       width: 100%;
       height: auto;
+      touch-action: none;
     }
     
     .drawing-tools {
@@ -156,14 +152,8 @@
       margin-bottom: 15px;
     }
     
-    .current-word h3 {
-      font-size: 12px;
-      opacity: 0.9;
-      margin-bottom: 5px;
-    }
-    
     .word-display {
-      font-size: 24px;
+      font-size: 28px;
       font-weight: bold;
       letter-spacing: 2px;
     }
@@ -244,29 +234,37 @@
     }
     
     .room-info {
-      background: #f0f0f0;
-      padding: 10px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 15px;
       border-radius: 10px;
       margin-bottom: 15px;
+      text-align: center;
+      color: white;
+    }
+    
+    .room-code-box {
+      background: white;
+      border-radius: 15px;
+      padding: 15px;
+      margin: 10px 0;
       text-align: center;
     }
     
     .room-code {
-      font-size: 24px;
+      font-size: 48px;
       font-weight: bold;
       color: #667eea;
       font-family: monospace;
-      background: white;
-      padding: 5px 15px;
-      border-radius: 8px;
+      letter-spacing: 5px;
+      background: #f8f9fa;
+      padding: 10px 20px;
+      border-radius: 10px;
       display: inline-block;
-      margin: 0 10px;
     }
     
     .timer {
-      font-size: 18px;
+      font-size: 16px;
       font-weight: bold;
-      color: #ffc107;
       margin-top: 5px;
     }
     
@@ -286,6 +284,14 @@
       100% { transform: rotate(360deg); }
     }
     
+    .success-message {
+      background: #d4edda;
+      color: #155724;
+      padding: 10px;
+      border-radius: 10px;
+      margin: 10px 0;
+    }
+    
     @media (max-width: 768px) {
       .game-layout {
         grid-template-columns: 1fr;
@@ -293,8 +299,8 @@
       .chat-area {
         height: 400px;
       }
-      .drawing-area {
-        order: 2;
+      .room-code {
+        font-size: 32px;
       }
     }
   </style>
@@ -310,7 +316,8 @@
     <input type="text" id="playerName" placeholder="اسمك" value="لاعب">
     <input type="text" id="roomCodeInput" placeholder="رمز الغرفة (اتركه فارغاً لإنشاء غرفة جديدة)">
     
-    <button id="joinOrCreateBtn">🚀 دخول / إنشاء غرفة</button>
+    <button id="createRoomBtn" style="background: #28a745; width: 100%;">✨ إنشاء غرفة جديدة</button>
+    <button id="joinRoomBtn" style="background: #667eea; width: 100%;">🔑 انضمام إلى غرفة</button>
     
     <div id="joinError" style="color: red; margin-top: 10px;"></div>
   </div>
@@ -318,10 +325,12 @@
   <!-- Game Screen -->
   <div id="gameScreen" class="game-screen">
     <div class="room-info">
-      <span>🏠 رمز الغرفة: </span>
-      <span id="roomCodeDisplay" class="room-code"></span>
-      <button id="copyRoomBtn" style="background: #28a745; padding: 5px 15px; margin: 0 10px;">📋 نسخ</button>
-      <span id="playerRole" style="margin-right: 20px;"></span>
+      <div>🏠 رمز الغرفة</div>
+      <div class="room-code-box">
+        <div class="room-code" id="roomCodeDisplay"></div>
+      </div>
+      <button id="copyRoomBtn" style="background: #28a745; padding: 8px 20px; margin-top: 5px;">📋 نسخ الرمز</button>
+      <div id="playerRole" style="margin-top: 10px; font-size: 14px;"></div>
     </div>
     
     <div class="game-layout">
@@ -330,7 +339,7 @@
         <canvas id="drawCanvas" width="800" height="500" style="width:100%; height:auto; max-width:800px; aspect-ratio:800/500"></canvas>
         
         <div class="drawing-tools">
-          <button class="tool-btn" id="penBtn"><i class="fas fa-pen"></i> قلم</button>
+          <button class="tool-btn active" id="penBtn"><i class="fas fa-pen"></i> قلم</button>
           <button class="tool-btn" id="eraserBtn"><i class="fas fa-eraser"></i> ممحاة</button>
           <button class="tool-btn" id="clearBtn"><i class="fas fa-trash"></i> مسح الكل</button>
           <input type="color" id="colorPicker" value="#000000" class="color-picker">
@@ -343,16 +352,16 @@
         <div class="current-word">
           <h3>🎯 الكلمة الحالية</h3>
           <div class="word-display" id="currentWordDisplay">???</div>
-          <div class="timer" id="timerDisplay">⏱️ انتظر بدء الجولة</div>
+          <div class="timer" id="timerDisplay">⏸️ في انتظار البدء</div>
         </div>
         
         <div class="messages" id="messages">
-          <div class="message system">✨ مرحباً! انتظر بدء اللعبة...</div>
+          <div class="message system">✨ مرحباً! اضغط "ابدأ الجولة" لبدء الرسم</div>
         </div>
         
         <div class="guess-input-area">
-          <input type="text" id="guessInput" class="guess-input" placeholder="اكتب تخمينك هنا...">
-          <button id="sendGuessBtn">💬 أرسل</button>
+          <input type="text" id="guessInput" class="guess-input" placeholder="اكتب تخمينك هنا..." disabled>
+          <button id="sendGuessBtn" disabled>💬 أرسل</button>
         </div>
         
         <div class="players-list">
@@ -380,16 +389,23 @@
     appId: "1:216038176025:web:d73fc67524770decbc8188"
   };
   
-  console.log("Initializing Firebase...");
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
-  console.log("Firebase initialized successfully!");
+  console.log("🚀 Starting application...");
+  
+  let app, db;
+  try {
+    app = initializeApp(firebaseConfig);
+    db = getDatabase(app);
+    console.log("✅ Firebase initialized!");
+  } catch (error) {
+    console.error("❌ Firebase error:", error);
+    alert("خطأ في الاتصال بقاعدة البيانات");
+  }
   
   // Game Words
   const words = [
     "قطة", "كلب", "شمس", "قمر", "سيارة", "طائرة", "بيت", "شجرة", "زهرة", "سمكة",
     "تفاحة", "موزة", "برتقال", "فراشة", "نحلة", "أسد", "فيل", "زرافة", "بحر", "جبل",
-    "نجمة", "قلب", "سحابة", "مطر", "قوس قزح", "ساعة", "كتاب", "قلم", "كرسي", "طاولة"
+    "نجمة", "قلب", "سحابة", "مطر", "ساعة", "كتاب", "قلم", "كرسي", "طاولة", "هاتف"
   ];
   
   let currentUser = {
@@ -410,7 +426,6 @@
   let players = {};
   let hostId = null;
   
-  // Initialize canvas
   function initCanvas() {
     canvas = document.getElementById('drawCanvas');
     ctx = canvas.getContext('2d');
@@ -418,18 +433,16 @@
     canvas.height = 500;
     ctx.fillStyle = 'white';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = 'black';
     
-    // Drawing events
     canvas.addEventListener('mousedown', startDrawing);
     canvas.addEventListener('mousemove', draw);
     canvas.addEventListener('mouseup', stopDrawing);
     canvas.addEventListener('mouseleave', stopDrawing);
-    
-    // Touch events for mobile
     canvas.addEventListener('touchstart', startDrawingTouch);
     canvas.addEventListener('touchmove', drawTouch);
     canvas.addEventListener('touchend', stopDrawing);
+    
+    console.log("✅ Canvas initialized");
   }
   
   function startDrawing(e) {
@@ -462,7 +475,6 @@
     lastX = pos.x;
     lastY = pos.y;
     
-    // Save drawing to Firebase
     if (currentUser.isHost && currentUser.roomId) {
       const imageData = canvas.toDataURL();
       update(ref(db, `rooms/${currentUser.roomId}/drawing`), { data: imageData });
@@ -488,7 +500,6 @@
     const pos = getTouchPos(e);
     const brushSize = document.getElementById('brushSize').value;
     ctx.lineWidth = brushSize;
-    ctx.lineCap = 'round';
     ctx.strokeStyle = document.getElementById('colorPicker').value;
     
     ctx.beginPath();
@@ -552,7 +563,10 @@
   }
   
   function startRound() {
-    if (!currentUser.isHost) return;
+    if (!currentUser.isHost) {
+      addMessage("⚠️ فقط المضيف يمكنه بدء الجولة", 'system');
+      return;
+    }
     
     const newWord = getRandomWord();
     currentWord = newWord;
@@ -567,9 +581,9 @@
     });
     
     clearCanvas();
-    
     addMessage(`🎨 الجولة الجديدة!`, 'system');
-    addMessage(`🖌️ ابدأ الرسم! الوقت: 60 ثانية`, 'system');
+    addMessage(`🖌️ الكلمة: ${newWord}`, 'system');
+    addMessage(`⏱️ الوقت: 60 ثانية`, 'system');
     
     startTimer();
   }
@@ -615,7 +629,6 @@
     messagesDiv.appendChild(messageDiv);
     messageDiv.scrollIntoView({ behavior: 'smooth', block: 'end' });
     
-    // Keep only last 50 messages
     while (messagesDiv.children.length > 50) {
       messagesDiv.removeChild(messagesDiv.firstChild);
     }
@@ -624,14 +637,11 @@
   function checkGuess(guess, playerId, playerName) {
     if (!roundActive) return false;
     if (guess.toLowerCase() === currentWord.toLowerCase()) {
-      // Correct guess!
       addMessage(`🎉 ${playerName} خمن الكلمة! +10 نقاط`, 'correct', playerName);
       
-      // Update player score
       const newScore = (players[playerId]?.score || 0) + 10;
       update(ref(db, `rooms/${currentUser.roomId}/players/${playerId}`), { score: newScore });
       
-      // End round
       roundActive = false;
       if (timerInterval) clearInterval(timerInterval);
       
@@ -645,11 +655,9 @@
     return false;
   }
   
-  // Firebase Listeners
   function listenToRoom(roomId) {
-    console.log("Listening to room:", roomId);
+    console.log(`🎧 Listening to room: ${roomId}`);
     
-    // Listen to game state
     const gameRef = ref(db, `rooms/${roomId}/game`);
     onValue(gameRef, (snapshot) => {
       const game = snapshot.val();
@@ -667,13 +675,10 @@
         
         if (currentUser.isHost && roundActive) {
           drawingEnabled = true;
-        } else if (!currentUser.isHost) {
-          drawingEnabled = false;
         }
       }
     });
     
-    // Listen to drawing
     const drawingRef = ref(db, `rooms/${roomId}/drawing`);
     onValue(drawingRef, (snapshot) => {
       const drawing = snapshot.val();
@@ -682,14 +687,12 @@
       }
     });
     
-    // Listen to players
     const playersRef = ref(db, `rooms/${roomId}/players`);
     onValue(playersRef, (snapshot) => {
       players = snapshot.val() || {};
       updatePlayersList();
     });
     
-    // Listen to messages
     const messagesRef = ref(db, `rooms/${roomId}/messages`);
     onChildAdded(messagesRef, (snapshot) => {
       const msg = snapshot.val();
@@ -716,109 +719,71 @@
     `).join('');
   }
   
-  // Create or Join Room
-  async function createOrJoinRoom() {
+  async function createRoom() {
     const playerName = document.getElementById('playerName').value.trim() || 'لاعب';
-    const roomCode = document.getElementById('roomCodeInput').value.trim().toUpperCase();
     
     currentUser.name = playerName;
     currentUser.id = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+    currentUser.roomId = Math.random().toString(36).substring(2, 8).toUpperCase();
+    currentUser.isHost = true;
+    hostId = currentUser.id;
     
-    const btn = document.getElementById('joinOrCreateBtn');
-    btn.innerHTML = '<span class="loading"></span> جاري الاتصال...';
+    const btn = document.getElementById('createRoomBtn');
+    btn.innerHTML = '<span class="loading"></span> جاري إنشاء الغرفة...';
     btn.disabled = true;
     
     try {
-      if (!roomCode) {
-        // Create new room
-        console.log("Creating new room...");
-        currentUser.roomId = Math.random().toString(36).substring(2, 8).toUpperCase();
-        currentUser.isHost = true;
-        hostId = currentUser.id;
-        
-        const initialWord = getRandomWord();
-        
-        const roomData = {
-          hostId: currentUser.id,
-          createdAt: Date.now(),
-          game: {
-            currentWord: initialWord,
-            roundActive: false,
-            roundTime: 60
-          },
-          players: {
-            [currentUser.id]: {
-              name: playerName,
-              score: 0,
-              joinedAt: Date.now()
-            }
-          },
-          drawing: { data: null },
-          messages: {}
-        };
-        
-        await set(ref(db, `rooms/${currentUser.roomId}`), roomData);
-        console.log("Room created:", currentUser.roomId);
-        
-      } else {
-        // Join existing room
-        console.log("Joining room:", roomCode);
-        currentUser.roomId = roomCode;
-        currentUser.isHost = false;
-        
-        const roomRef = ref(db, `rooms/${roomCode}`);
-        const snapshot = await get(roomRef);
-        
-        if (!snapshot.exists()) {
-          throw new Error("الغرفة غير موجودة");
-        }
-        
-        const roomData = snapshot.val();
-        hostId = roomData.hostId;
-        
-        // Add player to room
-        await update(ref(db, `rooms/${roomCode}/players/${currentUser.id}`), {
-          name: playerName,
-          score: 0,
-          joinedAt: Date.now()
-        });
-        
-        console.log("Joined room successfully!");
-      }
+      console.log(`📝 Creating room: ${currentUser.roomId}`);
+      
+      const initialWord = getRandomWord();
+      
+      const roomData = {
+        hostId: currentUser.id,
+        createdAt: Date.now(),
+        game: {
+          currentWord: initialWord,
+          roundActive: false,
+          roundTime: 60
+        },
+        players: {
+          [currentUser.id]: {
+            name: playerName,
+            score: 0,
+            joinedAt: Date.now()
+          }
+        },
+        drawing: { data: null },
+        messages: {}
+      };
+      
+      await set(ref(db, `rooms/${currentUser.roomId}`), roomData);
+      console.log("✅ Room saved!");
       
       // Switch to game screen
       document.getElementById('joinScreen').style.display = 'none';
       document.getElementById('gameScreen').style.display = 'block';
       document.getElementById('roomCodeDisplay').innerHTML = currentUser.roomId;
-      document.getElementById('playerRole').innerHTML = currentUser.isHost ? '👑 المضيف (الرسام)' : '🎨 مشاهد (مخمن)';
+      document.getElementById('playerRole').innerHTML = '👑 أنت المضيف (الرسام)';
       
       initCanvas();
       listenToRoom(currentUser.roomId);
       
-      if (currentUser.isHost) {
-        drawingEnabled = true;
-        document.getElementById('nextRoundBtn').style.display = 'block';
-      } else {
-        drawingEnabled = false;
-        document.getElementById('nextRoundBtn').style.display = 'block';
-      }
+      // Enable drawing for host
+      drawingEnabled = true;
       
-      // Setup send message
-      document.getElementById('sendGuessBtn').onclick = sendGuess;
-      document.getElementById('guessInput').onkeypress = (e) => {
-        if (e.key === 'Enter') sendGuess();
+      // Enable host controls
+      document.getElementById('nextRoundBtn').style.display = 'block';
+      document.getElementById('guessInput').disabled = true;
+      document.getElementById('sendGuessBtn').disabled = true;
+      
+      // Setup buttons
+      document.getElementById('nextRoundBtn').onclick = () => startRound();
+      document.getElementById('copyRoomBtn').onclick = () => {
+        navigator.clipboard.writeText(currentUser.roomId);
+        alert('✅ تم نسخ رمز الغرفة: ' + currentUser.roomId);
       };
       
-      // Setup next round button
-      document.getElementById('nextRoundBtn').onclick = () => {
-        if (currentUser.isHost) {
-          startRound();
-        } else {
-          addMessage('⚠️ فقط المضيف يمكنه بدء الجولة', 'system');
-        }
-      };
-      
-      // Setup tools
+      // Setup drawing tools
       document.getElementById('penBtn').onclick = () => {
         drawingEnabled = true;
         document.getElementById('penBtn').classList.add('active');
@@ -835,25 +800,94 @@
           clearCanvas();
         }
       };
-      document.getElementById('colorPicker').onchange = (e) => {
-        if (document.getElementById('eraserBtn').classList.contains('active')) {
-          document.getElementById('penBtn').click();
-        }
-      };
       
-      // Copy room button
+      addMessage(`✨ تم إنشاء الغرفة بنجاح!`, 'system');
+      addMessage(`🔑 رمز الغرفة: ${currentUser.roomId}`, 'system');
+      addMessage(`🎨 اضغط "ابدأ الجولة" لبدء الرسم`, 'system');
+      
+    } catch (error) {
+      console.error("Error:", error);
+      document.getElementById('joinError').innerHTML = '❌ خطأ في إنشاء الغرفة: ' + error.message;
+      btn.innerHTML = '✨ إنشاء غرفة جديدة';
+      btn.disabled = false;
+    }
+  }
+  
+  async function joinRoom() {
+    const playerName = document.getElementById('playerName').value.trim() || 'لاعب';
+    const roomCode = document.getElementById('roomCodeInput').value.trim().toUpperCase();
+    
+    if (!roomCode) {
+      document.getElementById('joinError').innerHTML = '❌ الرجاء إدخال رمز الغرفة';
+      return;
+    }
+    
+    currentUser.name = playerName;
+    currentUser.id = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+    currentUser.roomId = roomCode;
+    currentUser.isHost = false;
+    
+    const btn = document.getElementById('joinRoomBtn');
+    btn.innerHTML = '<span class="loading"></span> جاري الانضمام...';
+    btn.disabled = true;
+    
+    try {
+      console.log(`🔑 Joining room: ${roomCode}`);
+      
+      const roomRef = ref(db, `rooms/${roomCode}`);
+      const snapshot = await get(roomRef);
+      
+      if (!snapshot.exists()) {
+        throw new Error("الغرفة غير موجودة");
+      }
+      
+      const roomData = snapshot.val();
+      hostId = roomData.hostId;
+      
+      await update(ref(db, `rooms/${roomCode}/players/${currentUser.id}`), {
+        name: playerName,
+        score: 0,
+        joinedAt: Date.now()
+      });
+      
+      console.log("✅ Joined room!");
+      
+      // Switch to game screen
+      document.getElementById('joinScreen').style.display = 'none';
+      document.getElementById('gameScreen').style.display = 'block';
+      document.getElementById('roomCodeDisplay').innerHTML = currentUser.roomId;
+      document.getElementById('playerRole').innerHTML = '🎨 أنت مشاهد (مخمن)';
+      
+      initCanvas();
+      listenToRoom(currentUser.roomId);
+      
+      // Disable drawing for viewers
+      drawingEnabled = false;
+      
+      // Enable guessing for viewers
+      document.getElementById('nextRoundBtn').style.display = 'block';
+      document.getElementById('guessInput').disabled = false;
+      document.getElementById('sendGuessBtn').disabled = false;
+      
+      document.getElementById('nextRoundBtn').onclick = () => {
+        addMessage('⚠️ فقط المضيف يمكنه بدء الجولة', 'system');
+      };
       document.getElementById('copyRoomBtn').onclick = () => {
         navigator.clipboard.writeText(currentUser.roomId);
         alert('✅ تم نسخ رمز الغرفة: ' + currentUser.roomId);
       };
+      document.getElementById('sendGuessBtn').onclick = sendGuess;
+      document.getElementById('guessInput').onkeypress = (e) => {
+        if (e.key === 'Enter') sendGuess();
+      };
       
-      // Set pen as active by default
-      document.getElementById('penBtn').click();
+      addMessage(`✨ انضممت إلى الغرفة بنجاح!`, 'system');
+      addMessage(`🎨 انتظر حتى يبدأ المضيف الجولة`, 'system');
       
     } catch (error) {
       console.error("Error:", error);
       document.getElementById('joinError').innerHTML = '❌ ' + error.message;
-      btn.innerHTML = '🚀 دخول / إنشاء غرفة';
+      btn.innerHTML = '🔑 انضمام إلى غرفة';
       btn.disabled = false;
     }
   }
@@ -868,9 +902,7 @@
       return;
     }
     
-    // Check if guess is correct
     if (checkGuess(guess, currentUser.id, currentUser.name)) {
-      // Save correct guess to Firebase
       const messagesRef = ref(db, `rooms/${currentUser.roomId}/messages`);
       push(messagesRef, {
         playerId: currentUser.id,
@@ -879,12 +911,10 @@
         type: 'correct',
         timestamp: Date.now()
       });
-      
       document.getElementById('guessInput').value = '';
       return;
     }
     
-    // Save guess to Firebase
     const messagesRef = ref(db, `rooms/${currentUser.roomId}/messages`);
     push(messagesRef, {
       playerId: currentUser.id,
@@ -899,16 +929,19 @@
   }
   
   // Event Listeners
-  document.getElementById('joinOrCreateBtn').onclick = createOrJoinRoom;
-  
-  // Enter key on room code
+  document.getElementById('createRoomBtn').onclick = createRoom;
+  document.getElementById('joinRoomBtn').onclick = joinRoom;
   document.getElementById('roomCodeInput').onkeypress = (e) => {
-    if (e.key === 'Enter') createOrJoinRoom();
+    if (e.key === 'Enter') joinRoom();
   };
-  
-  // Enter key on player name
   document.getElementById('playerName').onkeypress = (e) => {
-    if (e.key === 'Enter') createOrJoinRoom();
+    if (e.key === 'Enter') {
+      if (document.getElementById('roomCodeInput').value) {
+        joinRoom();
+      } else {
+        createRoom();
+      }
+    }
   };
 </script>
 </body>
