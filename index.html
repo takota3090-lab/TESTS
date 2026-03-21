@@ -3,410 +3,141 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>لعبة التمثيل - استضافة مباشرة | تصميم سعود</title>
+  <title>لعبة التمثيل - نظام الغرف | تصميم سعود</title>
   
-  <!-- Premium Arabic Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
-  
-  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
-    :root {
-      --terracotta: #C65D3B;
-      --terracotta-dark: #A84A2F;
-      --burgundy: #6B2D2D;
-      --burgundy-dark: #4A1F1F;
-      --gold: #D4A84B;
-      --gold-light: #E8C878;
-      --cream: #FAF3EB;
-      --card-bg: #FFFFFF;
-      --text-primary: #2C1810;
-      --text-secondary: #8B6B5C;
-      --success: #2D6A4F;
-      --danger: #B83B3B;
-      --whatsapp: #25D366;
-      --whatsapp-dark: #128C7E;
-      --gradient-terracotta: linear-gradient(135deg, #C65D3B 0%, #A84A2F 100%);
-      --gradient-gold: linear-gradient(135deg, #D4A84B 0%, #E8C878 100%);
-      --shadow-soft: 0 4px 20px rgba(107, 45, 45, 0.1);
-      --shadow-terracotta: 0 4px 15px rgba(198, 93, 59, 0.25);
-    }
-
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
     body, html {
       width: 100%;
       height: 100%;
       overflow: hidden;
-      font-family: 'Tajawal', 'Amiri', sans-serif;
+      font-family: 'Tajawal', sans-serif;
       background: #FFFFFF;
-      color: var(--text-primary);
-      position: fixed;
     }
-
     .app-container {
-      position: relative;
-      z-index: 2;
-      width: 100%;
-      height: 100%;
       display: flex;
       flex-direction: column;
+      height: 100%;
       background: #FFFFFF;
     }
-
     .tab-navigation {
       display: flex;
       justify-content: center;
       gap: 0.4rem;
-      padding: 0.6rem 1rem 0.4rem;
+      padding: 0.6rem;
       background: #FFFFFF;
       border-bottom: 1px solid rgba(198, 93, 59, 0.15);
-      flex-shrink: 0;
       flex-wrap: wrap;
     }
-
     .tab-btn {
       background: transparent;
       border: 1px solid rgba(198, 93, 59, 0.3);
       padding: 6px 16px;
       border-radius: 50px;
-      font-family: 'Tajawal', sans-serif;
       font-weight: 600;
       font-size: 0.8rem;
-      color: var(--text-secondary);
+      color: #8B6B5C;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.3s;
       display: flex;
       align-items: center;
       gap: 6px;
     }
-
     .tab-btn.active {
-      background: var(--gradient-terracotta);
+      background: linear-gradient(135deg, #C65D3B 0%, #A84A2F 100%);
       color: white;
-      border-color: var(--terracotta);
-      box-shadow: var(--shadow-terracotta);
+      border-color: #C65D3B;
     }
-
     .tab-content {
       flex: 1;
       overflow: hidden;
       padding: 0.8rem;
-      display: flex;
-      flex-direction: column;
-      background: #FFFFFF;
     }
-
     .tab-pane {
       display: none;
       height: 100%;
       overflow-y: auto;
-      background: #FFFFFF;
     }
-
     .tab-pane.active-pane {
       display: block;
     }
-
-    #homeTab, #hostTab, #inviteTab { overflow: hidden; }
-    .tab-pane::-webkit-scrollbar { width: 4px; }
-    .tab-pane::-webkit-scrollbar-track { background: rgba(198, 93, 59, 0.1); }
-    .tab-pane::-webkit-scrollbar-thumb { background: var(--terracotta); border-radius: 2px; }
-
-    /* Home Tab Styles */
-    .home-container, .host-container, .invite-container {
-      max-width: 600px;
-      margin: 0 auto;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 0.5rem;
-    }
-
-    .hero-card, .host-card, .invite-card {
-      background: var(--card-bg);
+    .card {
+      background: white;
       border-radius: 24px;
       padding: 1.2rem;
       text-align: center;
       border: 1px solid rgba(198, 93, 59, 0.2);
-      box-shadow: var(--shadow-soft);
-    }
-
-    .hero-icon {
-      width: 60px;
-      height: 60px;
-      background: var(--gradient-terracotta);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 0.6rem;
-      font-size: 1.5rem;
-      color: white;
-      box-shadow: var(--shadow-terracotta);
-    }
-
-    .hero-title {
-      font-size: 1.6rem;
-      font-weight: 900;
-      font-family: 'Amiri', serif;
-      color: var(--burgundy);
-      margin-bottom: 0.2rem;
-    }
-
-    .designer-credit {
-      font-size: 0.7rem;
-      color: var(--terracotta);
-      margin-bottom: 0.8rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      font-weight: 600;
-    }
-
-    .categories-badge {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 6px;
-      margin: 0.6rem 0;
-    }
-
-    .cat-badge {
-      background: rgba(198, 93, 59, 0.1);
-      border: 1px solid rgba(198, 93, 59, 0.2);
-      padding: 4px 12px;
-      border-radius: 50px;
-      font-size: 0.7rem;
-      font-weight: 600;
-      color: var(--terracotta-dark);
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .game-description {
-      background: rgba(245, 230, 211, 0.4);
-      border-radius: 16px;
-      padding: 0.8rem;
-      margin: 0.6rem 0;
-      text-align: right;
-    }
-
-    .game-description h3 {
-      color: var(--terracotta);
-      margin-bottom: 0.5rem;
-      font-size: 0.85rem;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-weight: 700;
-    }
-
-    .rule-list {
-      list-style: none;
-    }
-    .rule-list li {
-      margin: 0.3rem 0;
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-      font-size: 0.75rem;
-      line-height: 1.3;
-    }
-    .rule-list li i { color: var(--terracotta); width: 16px; font-size: 0.7rem; margin-top: 2px; }
-
-    .play-button-home, .start-host-btn {
-      background: var(--gradient-terracotta);
-      border: none;
-      padding: 10px 28px;
-      border-radius: 50px;
-      font-weight: 700;
-      font-size: 0.95rem;
-      color: white;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 0.6rem;
-      transition: all 0.3s;
-      box-shadow: var(--shadow-terracotta);
-    }
-
-    /* Host Mode Styles */
-    .host-controls {
-      margin-top: 1rem;
-    }
-    .room-info {
-      background: rgba(198, 93, 59, 0.1);
-      border-radius: 16px;
-      padding: 1rem;
-      margin: 1rem 0;
-      text-align: center;
+      box-shadow: 0 4px 20px rgba(107, 45, 45, 0.1);
+      max-width: 500px;
+      margin: 0 auto;
     }
     .room-code {
       font-size: 2rem;
       font-weight: 800;
       font-family: monospace;
-      color: var(--terracotta);
+      color: #C65D3B;
       letter-spacing: 2px;
-      background: white;
-      padding: 8px;
+      background: #f5f5f5;
+      padding: 12px;
       border-radius: 12px;
-      display: inline-block;
       margin: 0.5rem 0;
     }
     .copy-btn {
-      background: var(--burgundy);
+      background: #6B2D2D;
       border: none;
-      padding: 4px 12px;
+      padding: 6px 16px;
       border-radius: 20px;
       color: white;
       cursor: pointer;
-      font-size: 0.7rem;
-      margin-right: 8px;
-    }
-    .viewers-list {
-      max-height: 150px;
-      overflow-y: auto;
-      margin: 0.5rem 0;
-      padding: 0.5rem;
-      background: rgba(0,0,0,0.02);
-      border-radius: 12px;
-    }
-    .viewer-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 4px 8px;
       font-size: 0.8rem;
-      border-bottom: 1px solid rgba(198,93,59,0.1);
+      margin: 0.5rem;
     }
-    .status-badge {
-      display: inline-block;
-      padding: 2px 8px;
-      border-radius: 20px;
-      font-size: 0.7rem;
-      font-weight: 600;
-    }
-    .status-host {
-      background: var(--terracotta);
+    .btn-primary {
+      background: linear-gradient(135deg, #C65D3B 0%, #A84A2F 100%);
+      border: none;
+      padding: 12px 24px;
+      border-radius: 50px;
       color: white;
+      font-weight: 700;
+      cursor: pointer;
+      margin: 0.5rem;
     }
-    .status-viewer {
-      background: rgba(198,93,59,0.2);
-      color: var(--terracotta-dark);
+    .instruction-box {
+      background: rgba(198, 93, 59, 0.1);
+      border-radius: 16px;
+      padding: 1rem;
+      margin: 1rem 0;
+      text-align: right;
     }
-
-    /* Game Viewer Mode */
-    .viewer-mode {
-      position: relative;
-    }
-    .viewer-banner {
-      background: linear-gradient(135deg, var(--burgundy), var(--terracotta));
-      color: white;
-      text-align: center;
-      padding: 6px;
-      font-size: 0.7rem;
-      border-radius: 12px;
+    .instruction-box h3 {
+      color: #C65D3B;
       margin-bottom: 0.5rem;
     }
-    .viewer-word {
-      font-size: 2rem;
-      font-weight: 800;
-      font-family: 'Amiri', serif;
-      color: var(--burgundy-dark);
-      text-align: center;
-      padding: 1rem;
-      background: rgba(198,93,59,0.05);
-      border-radius: 16px;
+    .instruction-box li {
+      margin: 0.5rem 0;
+      font-size: 0.85rem;
     }
-
-    /* Game Tab Styles */
-    .game-container {
-      max-width: 600px;
-      margin: 0 auto;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .game-card {
-      background: var(--card-bg);
-      border-radius: 28px;
-      border: 1px solid rgba(198, 93, 59, 0.2);
-      box-shadow: var(--shadow-soft);
-      overflow: hidden;
-    }
-
-    .game-header {
-      background: rgba(198, 93, 59, 0.08);
-      padding: 0.8rem;
-      text-align: center;
-      border-bottom: 1px solid rgba(198, 93, 59, 0.15);
-    }
-    .game-header h2 {
-      font-size: 1.1rem;
-      font-family: 'Amiri', serif;
-      color: var(--burgundy);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .game-body { padding: 1.2rem; }
     .word-card {
-      background: #FFFFFF;
+      background: white;
       border-radius: 20px;
-      padding: 1.5rem 1rem;
+      padding: 1.5rem;
       text-align: center;
-      margin-bottom: 1rem;
       border: 2px solid rgba(198, 93, 59, 0.2);
+      margin: 1rem 0;
     }
     .current-word {
       font-size: 1.8rem;
       font-weight: 800;
-      font-family: 'Amiri', serif;
-      color: var(--burgundy-dark);
-    }
-    .category-tag {
-      display: inline-block;
-      background: rgba(198, 93, 59, 0.1);
-      padding: 4px 14px;
-      border-radius: 20px;
-      margin-top: 8px;
-      font-size: 0.7rem;
-      color: var(--terracotta);
-      font-weight: 600;
-    }
-
-    .timer-area { text-align: center; margin: 1rem 0; }
-    .timer-circle {
-      display: inline-flex;
-      flex-direction: column;
-      align-items: center;
-      background: #FFFFFF;
-      padding: 0.6rem 1.5rem;
-      border-radius: 40px;
-      border: 2px solid rgba(198, 93, 59, 0.2);
-      min-width: 100px;
+      color: #4A1F1F;
     }
     .timer-number {
       font-size: 2.5rem;
       font-weight: 900;
-      font-family: 'Tajawal', monospace;
-      color: var(--terracotta);
-      line-height: 1;
+      color: #C65D3B;
     }
-    .timer-number.warning { color: var(--danger); animation: pulse 0.5s ease-in-out infinite; }
-    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-
     .action-buttons {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -414,1194 +145,484 @@
       margin: 1rem 0;
     }
     .btn-action {
-      background: #FFFFFF;
+      background: white;
       border: 1px solid rgba(198, 93, 59, 0.3);
-      padding: 10px 14px;
+      padding: 10px;
       border-radius: 12px;
       font-weight: 700;
       cursor: pointer;
-      font-family: 'Tajawal', sans-serif;
-      font-size: 0.8rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      transition: all 0.2s;
     }
-    .btn-success {
-      background: var(--success);
-      border-color: var(--success);
+    .btn-success { background: #2D6A4F; color: white; border: none; }
+    .btn-skip { background: #B83B3B; color: white; border: none; }
+    .viewer-banner {
+      background: linear-gradient(135deg, #6B2D2D, #C65D3B);
       color: white;
-    }
-    .btn-skip { background: var(--danger); border-color: var(--danger); color: white; }
-    .btn-primary { background: var(--terracotta); border-color: var(--terracotta); color: white; }
-    .btn-new-game {
-      background: var(--gradient-gold);
-      border-color: var(--gold);
-      color: var(--burgundy-dark);
-    }
-    .btn-category {
-      background: var(--burgundy);
-      border-color: var(--burgundy);
-      color: white;
-    }
-
-    .stats-row {
-      display: flex;
-      justify-content: space-between;
-      background: rgba(198, 93, 59, 0.05);
-      padding: 0.6rem 1rem;
-      border-radius: 16px;
-      margin-top: 0.8rem;
-    }
-    .stat-item { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: var(--text-secondary); }
-    .stat-value { font-size: 1.3rem; font-weight: 800; color: var(--terracotta); }
-
-    /* Team Tab Styles */
-    .team-panel {
-      max-width: 600px;
-      margin: 0 auto;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-    .team-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-      margin-bottom: 1rem;
-      max-height: 350px;
-      overflow-y: auto;
-    }
-    .team-card {
-      background: #FFFFFF;
-      border-radius: 16px;
-      padding: 0.8rem 1rem;
-      border: 1px solid rgba(198, 93, 59, 0.15);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .team-card.winner {
-      border-color: var(--gold);
-      background: linear-gradient(135deg, rgba(212, 168, 75, 0.1) 0%, #FFFFFF 100%);
-    }
-    .team-info { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-    .team-name { font-size: 0.9rem; font-weight: 700; color: var(--text-primary); }
-    .team-score { font-size: 1.4rem; font-weight: 800; color: var(--terracotta); }
-    .team-actions { display: flex; gap: 6px; }
-    .team-btn {
-      background: rgba(198, 93, 59, 0.1);
-      border: none;
-      padding: 6px 12px;
-      border-radius: 8px;
-      color: var(--terracotta);
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 0.7rem;
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 3px;
-    }
-    .team-btn.delete:hover { background: var(--danger); color: white; }
-    .winner-badge {
-      background: var(--gradient-gold);
-      color: var(--burgundy-dark);
-      padding: 2px 8px;
+      padding: 8px;
       border-radius: 12px;
-      font-size: 0.6rem;
-      font-weight: 800;
-    }
-    .add-team-form {
-      display: flex;
-      gap: 8px;
-      margin-top: 0.5rem;
-      background: #FFFFFF;
-      padding: 0.8rem;
-      border-radius: 16px;
-      border: 1px solid rgba(198, 93, 59, 0.15);
-    }
-    .add-team-input {
-      flex: 1;
-      padding: 8px 14px;
-      border-radius: 50px;
-      border: 1px solid rgba(198, 93, 59, 0.2);
-      font-family: 'Tajawal', sans-serif;
-    }
-    .add-team-btn {
-      background: var(--gradient-terracotta);
-      border: none;
-      padding: 8px 18px;
-      border-radius: 50px;
-      color: white;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(44, 24, 16, 0.7);
-      backdrop-filter: blur(4px);
-      z-index: 1000;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .modal-content {
-      background: #FFFFFF;
-      border-radius: 24px;
-      padding: 1.5rem;
-      max-width: 320px;
-      width: 85%;
       text-align: center;
-    }
-    .team-option, .category-option {
-      background: #FFFFFF;
-      padding: 10px;
-      margin: 8px 0;
-      border-radius: 12px;
-      cursor: pointer;
-      border: 1px solid rgba(198, 93, 59, 0.15);
-      font-weight: 600;
-      transition: all 0.2s;
-    }
-    .sound-toggle-inline {
-      position: fixed;
-      bottom: 15px;
-      left: 15px;
-      background: #FFFFFF;
-      padding: 8px 14px;
-      border-radius: 50px;
-      border: 1px solid rgba(198, 93, 59, 0.2);
-      cursor: pointer;
-      z-index: 200;
-      font-size: 0.75rem;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-weight: 600;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-    .empty-state { text-align: center; padding: 2rem; color: var(--text-secondary); }
-    .victory-message {
-      background: var(--gradient-gold);
-      color: var(--burgundy-dark);
-      padding: 10px;
-      border-radius: 12px;
       margin-bottom: 1rem;
-      text-align: center;
-      font-weight: bold;
-    }
-    .current-category-badge {
-      display: inline-block;
-      background: var(--terracotta);
-      color: white;
-      padding: 2px 10px;
-      border-radius: 20px;
-      font-size: 0.7rem;
-      margin-right: 8px;
     }
     @media (max-width: 640px) {
-      .current-word { font-size: 1.5rem; }
+      .current-word { font-size: 1.3rem; }
       .action-buttons { grid-template-columns: 1fr; }
-      .timer-number { font-size: 2rem; }
-      .tab-navigation { gap: 0.2rem; }
-      .tab-btn { padding: 4px 12px; font-size: 0.7rem; }
     }
   </style>
 </head>
 <body>
 <div class="app-container">
   <div class="tab-navigation">
-    <button class="tab-btn active" data-tab="home"><i class="fas fa-home"></i> الرئيسية</button>
+    <button class="tab-btn" data-tab="home"><i class="fas fa-home"></i> الرئيسية</button>
     <button class="tab-btn" data-tab="host"><i class="fas fa-chalkboard-user"></i> استضافة</button>
     <button class="tab-btn" data-tab="game"><i class="fas fa-mask"></i> اللعبة</button>
     <button class="tab-btn" data-tab="teams"><i class="fas fa-users"></i> الفرق</button>
-    <button class="tab-btn" data-tab="invite"><i class="fab fa-whatsapp"></i> دعوة</button>
   </div>
 
   <div class="tab-content">
+    <!-- Home Tab -->
     <div class="tab-pane active-pane" id="homeTab">
-      <div class="home-container">
-        <div class="hero-card">
-          <div class="hero-icon"><i class="fas fa-theater-masks"></i></div>
-          <h1 class="hero-title">لعبة التمثيل</h1>
-          <div class="designer-credit"><i class="fas fa-pen-fancy"></i> تصميم سعود <i class="fas fa-pen-fancy"></i></div>
-          <div class="categories-badge">
-            <span class="cat-badge"><i class="fas fa-running"></i> أفعال</span>
-            <span class="cat-badge"><i class="fas fa-paw"></i> حيوانات</span>
-            <span class="cat-badge"><i class="fas fa-quote-right"></i> أمثال</span>
-            <span class="cat-badge"><i class="fas fa-mobile-alt"></i> أشياء</span>
-          </div>
-          <div class="game-description">
-            <h3><i class="fas fa-info-circle"></i> طريقة اللعب</h3>
-            <ul class="rule-list">
-              <li><i class="fas fa-chalkboard-user"></i> <strong>وضع الاستضافة:</strong> أنشئ غرفة وشارك الرابط مع الأصدقاء</li>
-              <li><i class="fas fa-eye"></i> <strong>المشاهدون:</strong> يدخلون كمشاهدين ويرون نفس الكلمة والمؤقت</li>
-              <li><i class="fas fa-hourglass-start"></i> <strong>المضيف:</strong> يتحكم ببدء المؤقت والتخطي والتخمين</li>
-              <li><i class="fas fa-trophy"></i> أول فريق يصل <strong>10 نقاط</strong> هو البطل!</li>
-            </ul>
-          </div>
-          <button class="play-button-home" id="hostModeBtn"><i class="fas fa-chalkboard-user"></i> ابدأ استضافة</button>
+      <div class="card">
+        <i class="fas fa-theater-masks" style="font-size: 2rem; color: #C65D3B;"></i>
+        <h1 style="color: #6B2D2D; margin: 0.5rem 0;">لعبة التمثيل</h1>
+        <div class="instruction-box">
+          <h3><i class="fas fa-info-circle"></i> كيف تلعب؟</h3>
+          <ul style="list-style: none;">
+            <li><i class="fas fa-chalkboard-user"></i> <strong>المضيف:</strong> اضغط "استضافة" → أنشئ غرفة → انسخ الرابط وأرسله للأصدقاء</li>
+            <li><i class="fas fa-eye"></i> <strong>المشاهد:</strong> افتح الرابط أو أدخل رمز الغرفة في تبويب اللعبة</li>
+            <li><i class="fas fa-hourglass-start"></i> <strong>المضيف</strong> يتحكم ببدء المؤقت والتخطي والتخمين</li>
+            <li><i class="fas fa-trophy"></i> أول فريق يصل 10 نقاط يفوز</li>
+          </ul>
         </div>
+        <button class="btn-primary" id="startHostBtn"><i class="fas fa-chalkboard-user"></i> استضافة لعبة</button>
       </div>
     </div>
-    
+
+    <!-- Host Tab -->
     <div class="tab-pane" id="hostTab">
-      <div class="host-container">
-        <div class="host-card" id="hostContent">
-          <!-- Dynamic content for host mode -->
-        </div>
-      </div>
+      <div class="card" id="hostContent"></div>
     </div>
-    
+
+    <!-- Game Tab -->
     <div class="tab-pane" id="gameTab">
-      <div class="game-container">
-        <div class="game-card">
-          <div class="game-header"><h2><i class="fas fa-theater-masks"></i> <span id="gameModeTitle">حان وقت التمثيل</span></h2></div>
-          <div class="game-body" id="gameDynamicContent"></div>
-        </div>
-      </div>
+      <div class="card" id="gameContent"></div>
     </div>
-    
+
+    <!-- Teams Tab -->
     <div class="tab-pane" id="teamsTab">
-      <div class="team-panel">
-        <div id="teamListContainer" class="team-list"></div>
-        <div class="add-team-form">
-          <input type="text" id="teamNameInput" class="add-team-input" placeholder="اسم الفريق الجديد...">
-          <button id="addTeamBtn" class="add-team-btn"><i class="fas fa-plus"></i> إضافة</button>
-        </div>
-        <button id="goToGameBtn" class="add-team-btn" style="margin-top: 0.8rem; width: 100%; justify-content: center;"><i class="fas fa-mask"></i> الذهاب إلى اللعبة</button>
-      </div>
-    </div>
-    
-    <div class="tab-pane" id="inviteTab">
-      <div class="invite-container">
-        <div class="invite-card">
-          <div class="invite-header">
-            <i class="fab fa-whatsapp"></i>
-            <h2>دعوة الأصدقاء</h2>
-            <p>أرسل رابط الغرفة لدعوة الأصدقاء كمشاهدين</p>
-          </div>
-          <div id="inviteRoomInfo" class="room-info" style="display: none;">
-            <div>🔑 رمز الغرفة:</div>
-            <div class="room-code" id="inviteRoomCode">---</div>
-            <button id="copyInviteLinkBtn" class="copy-btn"><i class="fas fa-copy"></i> نسخ الرابط</button>
-          </div>
-          <div id="contactsList" class="contact-list"></div>
-          <div class="add-contact-form">
-            <input type="text" id="contactNameInput" class="add-contact-input" placeholder="الاسم (اختياري)">
-            <input type="tel" id="contactNumberInput" class="add-contact-input" placeholder="رقم الجوال (مثال: 9665xxxxxxxx)">
-            <button id="addContactBtn" class="add-contact-btn"><i class="fas fa-plus"></i> إضافة</button>
-          </div>
-          <button id="inviteAllBtn" class="invite-all-btn" style="background: var(--gradient-terracotta); width: 100%; padding: 10px; border-radius: 50px; margin-top: 0.5rem;">
-            <i class="fab fa-whatsapp"></i> دعوة الجميع عبر واتساب
-          </button>
+      <div class="card">
+        <h3><i class="fas fa-users"></i> الفرق</h3>
+        <div id="teamList"></div>
+        <div style="display: flex; gap: 8px; margin-top: 1rem;">
+          <input type="text" id="teamName" placeholder="اسم الفريق" style="flex: 1; padding: 8px; border-radius: 50px; border: 1px solid #ddd;">
+          <button id="addTeam" style="background: #C65D3B; border: none; padding: 8px 16px; border-radius: 50px; color: white;">إضافة</button>
         </div>
       </div>
     </div>
   </div>
 </div>
-<div class="sound-toggle-inline" id="soundToggle"><i class="fas fa-volume-mute"></i> الصوت</div>
 
 <script>
-  // ==================== SOUND SYSTEM ====================
-  let soundEnabled = false;
-  let audioContext = null;
-  function initAudio() { 
-    if (!audioContext) {
-      try {
-        audioContext = new (window.AudioContext || window.webkitAudioContext)();
-      } catch(e) { console.log('Web Audio not supported'); }
-    }
-  }
-  function playTone(freq, dur, type='sine') {
-    if(!soundEnabled || !audioContext) return;
-    try {
-      const osc = audioContext.createOscillator();
-      const gain = audioContext.createGain();
-      osc.connect(gain); 
-      gain.connect(audioContext.destination);
-      osc.frequency.value = freq; 
-      osc.type = type;
-      gain.gain.setValueAtTime(0.3, audioContext.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + dur);
-      osc.start(); 
-      osc.stop(audioContext.currentTime + dur);
-    } catch(e) {}
-  }
-  function play(sound) {
-    if(!soundEnabled) return;
-    initAudio();
-    if(sound === 'click' || sound === 'tabSwitch') playTone(600, 0.05, 'square');
-    else if(sound === 'success') { playTone(1200,0.15); setTimeout(()=>playTone(1600,0.2),100); }
-    else if(sound === 'start') { playTone(400,0.1); setTimeout(()=>playTone(600,0.1),100); setTimeout(()=>playTone(800,0.2),200); }
-    else if(sound === 'timesUp') { playTone(200,0.3); setTimeout(()=>playTone(200,0.3),200); setTimeout(()=>playTone(200,0.3),400); }
-    else if(sound === 'scoreUp') playTone(1200,0.12);
-    else if(sound === 'scoreDown') playTone(300,0.15);
-    else if(sound === 'winner') { playTone(1000,0.1); setTimeout(()=>playTone(1300,0.2),100); setTimeout(()=>playTone(1600,0.25),250); }
-    else if(sound === 'newWord') playTone(700,0.08);
-    else playTone(600,0.05);
-  }
-  
-  const soundBtn = document.getElementById('soundToggle');
-  soundBtn.addEventListener('click', () => {
-    soundEnabled = !soundEnabled;
-    soundBtn.classList.toggle('active', soundEnabled);
-    soundBtn.innerHTML = soundEnabled ? '<i class="fas fa-volume-up"></i> الصوت' : '<i class="fas fa-volume-mute"></i> الصوت';
-    if(soundEnabled) {
-      initAudio();
-      if(audioContext && audioContext.state === 'suspended') audioContext.resume();
-      setTimeout(()=>play('click'),100);
-    }
-  });
-
-  // ==================== HOST/VIEWER SYSTEM ====================
-  let isHost = false;
-  let roomId = null;
-  let viewers = [];
-  let gameState = {
-    currentWord: "",
-    currentCategory: "أفعال",
-    timeLeft: 60,
-    timerRunning: false,
-    roundCount: 0,
-    gameActive: true,
-    gameWinner: null
-  };
-  
-  // Generate random room ID
-  function generateRoomId() {
-    return Math.random().toString(36).substring(2, 8).toUpperCase();
-  }
-  
-  // Start hosting
-  function startHosting() {
-    isHost = true;
-    roomId = generateRoomId();
-    localStorage.setItem('host_room_id', roomId);
-    localStorage.setItem('is_host', 'true');
-    
-    // Initialize game state for host
-    currentWordObj = getRandomWord();
-    gameState.currentWord = currentWordObj.word;
-    gameState.currentCategory = currentWordObj.category;
-    
-    renderHostUI();
-    switchToTab('host');
-    updateInviteRoomInfo();
-    play('click');
-  }
-  
-  // Join as viewer
-  function joinAsViewer(enteredRoomId) {
-    if(!enteredRoomId) {
-      enteredRoomId = prompt("🔑 أدخل رمز الغرفة:", localStorage.getItem('host_room_id') || "");
-      if(!enteredRoomId) return false;
-    }
-    
-    // In this simplified version, viewers can see the same game state via localStorage sync
-    // In a real implementation, you'd use WebSockets. Here we simulate with localStorage events.
-    roomId = enteredRoomId.toUpperCase();
-    isHost = false;
-    localStorage.setItem('viewer_room_id', roomId);
-    localStorage.setItem('is_viewer', 'true');
-    
-    // Load game state from host if available
-    loadGameStateFromStorage();
-    
-    switchToTab('game');
-    document.getElementById('gameModeTitle').innerHTML = '<i class="fas fa-eye"></i> وضع المشاهد';
-    renderViewerMode();
-    play('click');
-    return true;
-  }
-  
-  function loadGameStateFromStorage() {
-    const savedState = localStorage.getItem(`game_state_${roomId}`);
-    if(savedState) {
-      const state = JSON.parse(savedState);
-      currentWordObj = { word: state.currentWord, category: state.currentCategory };
-      timeLeft = state.timeLeft;
-      timerRunning = state.timerRunning;
-      roundCount = state.roundCount;
-      gameActive = state.gameActive;
-      gameWinner = state.gameWinner;
-      currentCategory = state.currentCategory;
-    }
-  }
-  
-  function saveGameState() {
-    if(isHost && roomId) {
-      const state = {
-        currentWord: currentWordObj.word,
-        currentCategory: currentWordObj.category,
-        timeLeft: timeLeft,
-        timerRunning: timerRunning,
-        roundCount: roundCount,
-        gameActive: gameActive,
-        gameWinner: gameWinner
-      };
-      localStorage.setItem(`game_state_${roomId}`, JSON.stringify(state));
-    }
-  }
-  
-  function renderHostUI() {
-    const container = document.getElementById('hostContent');
-    if(!container) return;
-    
-    container.innerHTML = `
-      <div style="text-align: center;">
-        <i class="fas fa-chalkboard-user" style="font-size: 2rem; color: var(--terracotta);"></i>
-        <h2 style="margin: 0.5rem 0;">وضع الاستضافة</h2>
-        <p style="color: var(--text-secondary);">أنت المضيف - يمكنك التحكم باللعبة</p>
-      </div>
-      
-      <div class="room-info">
-        <div>🔑 رمز الغرفة</div>
-        <div class="room-code" id="hostRoomCode">${roomId}</div>
-        <button id="copyHostLinkBtn" class="copy-btn"><i class="fas fa-copy"></i> نسخ رابط الدعوة</button>
-      </div>
-      
-      <div class="viewers-list" id="viewersList">
-        <div style="text-align: center; padding: 0.5rem; color: var(--text-secondary);">
-          <i class="fas fa-users"></i> المشاهدون سيظهرون هنا
-        </div>
-      </div>
-      
-      <div class="host-controls">
-        <div class="word-card" style="margin: 0.5rem 0;">
-          <div class="current-word">${escapeHtml(currentWordObj.word)}</div>
-          <div class="category-tag">📂 ${currentWordObj.category}</div>
-        </div>
-        
-        <div class="timer-area">
-          <div class="timer-circle">
-            <div class="timer-number">${timeLeft}</div>
-            <div class="timer-label">ثانية</div>
-          </div>
-        </div>
-        
-        <div class="action-buttons" style="grid-template-columns: 1fr 1fr;">
-          <button class="btn-action btn-primary" id="hostStartTimer"><i class="fas fa-hourglass-start"></i> بدء المؤقت</button>
-          <button class="btn-action btn-category" id="hostChooseCategory"><i class="fas fa-layer-group"></i> الفئة</button>
-          <button class="btn-action btn-skip" id="hostSkip"><i class="fas fa-forward"></i> تخطي</button>
-          <button class="btn-action btn-success" id="hostGuess"><i class="fas fa-check-circle"></i> تم التخمين!</button>
-        </div>
-        
-        <div class="stats-row">
-          <div class="stat-item"><i class="fas fa-redo-alt"></i> <span class="stat-value" id="hostRounds">${roundCount}</span> <span>جولة</span></div>
-          <div class="stat-item"><i class="fas fa-flag-checkered"></i> <span>الهدف: 10 نقاط</span></div>
-        </div>
-      </div>
-    `;
-    
-    // Attach event listeners
-    document.getElementById('hostStartTimer')?.addEventListener('click', () => {
-      if(!timerRunning && timeLeft > 0 && gameActive && !gameWinner) {
-        startTimer();
-        saveGameState();
-      }
-    });
-    document.getElementById('hostChooseCategory')?.addEventListener('click', () => showCategorySelectionModal());
-    document.getElementById('hostSkip')?.addEventListener('click', () => {
-      skipWord();
-      saveGameState();
-    });
-    document.getElementById('hostGuess')?.addEventListener('click', () => {
-      guessedCorrect();
-      saveGameState();
-    });
-    document.getElementById('copyHostLinkBtn')?.addEventListener('click', () => copyInviteLink());
-  }
-  
-  function renderViewerMode() {
-    const container = document.getElementById('gameDynamicContent');
-    if(!container) return;
-    
-    const victoryMessageHTML = gameWinner ? 
-      `<div class="victory-message">
-        <i class="fas fa-trophy"></i> 🏆 الفائز: ${escapeHtml(teams.find(t=>t.id===gameWinner)?.name || '')} 🏆 <i class="fas fa-trophy"></i>
-      </div>` : '';
-    
-    container.innerHTML = `
-      <div class="viewer-banner">
-        <i class="fas fa-eye"></i> أنت في وضع المشاهد - تشاهد اللعبة مباشرة
-      </div>
-      ${victoryMessageHTML}
-      <div class="word-card">
-        <div class="current-word" id="viewerWord">${escapeHtml(currentWordObj?.word || '---')}</div>
-        <div class="category-tag" id="viewerCategory">📂 ${currentWordObj?.category || '---'}</div>
-      </div>
-      <div class="timer-area">
-        <div class="timer-circle">
-          <div class="timer-number" id="viewerTimer">${timeLeft}</div>
-          <div class="timer-label">ثانية</div>
-        </div>
-      </div>
-      <div class="stats-row">
-        <div class="stat-item"><i class="fas fa-redo-alt"></i> <span class="stat-value" id="viewerRounds">${roundCount}</span> <span>جولة</span></div>
-        <div class="stat-item"><i class="fas fa-flag-checkered"></i> <span>الهدف: 10 نقاط</span></div>
-      </div>
-      <div style="text-align: center; margin-top: 1rem; color: var(--text-secondary); font-size: 0.7rem;">
-        <i class="fas fa-info-circle"></i> أنت تشاهد اللعبة. المضيف هو من يتحكم بالتحديثات.
-      </div>
-    `;
-  }
-  
-  function updateViewerDisplay() {
-    const wordEl = document.getElementById('viewerWord');
-    const catEl = document.getElementById('viewerCategory');
-    const timerEl = document.getElementById('viewerTimer');
-    const roundsEl = document.getElementById('viewerRounds');
-    
-    if(wordEl) wordEl.innerText = currentWordObj?.word || '---';
-    if(catEl) catEl.innerText = `📂 ${currentWordObj?.category || '---'}`;
-    if(timerEl) timerEl.innerText = timeLeft;
-    if(roundsEl) roundsEl.innerText = roundCount;
-  }
-  
-  function copyInviteLink() {
-    const link = window.location.href.split('?')[0] + `?room=${roomId}`;
-    navigator.clipboard.writeText(link);
-    alert('✅ تم نسخ رابط الغرفة!\nأرسله لأصدقائك ليدخلوا كمشاهدين.');
-    play('click');
-  }
-  
-  function updateInviteRoomInfo() {
-    const inviteInfo = document.getElementById('inviteRoomInfo');
-    const inviteCode = document.getElementById('inviteRoomCode');
-    if(inviteInfo && inviteCode && roomId) {
-      inviteInfo.style.display = 'block';
-      inviteCode.innerText = roomId;
-    }
-  }
-  
-  // Sync game state for viewers (periodic check)
-  function syncGameState() {
-    if(!isHost && roomId) {
-      const savedState = localStorage.getItem(`game_state_${roomId}`);
-      if(savedState) {
-        const state = JSON.parse(savedState);
-        let needsUpdate = false;
-        
-        if(currentWordObj?.word !== state.currentWord) {
-          currentWordObj = { word: state.currentWord, category: state.currentCategory };
-          needsUpdate = true;
-        }
-        if(timeLeft !== state.timeLeft) {
-          timeLeft = state.timeLeft;
-          needsUpdate = true;
-        }
-        if(roundCount !== state.roundCount) {
-          roundCount = state.roundCount;
-          needsUpdate = true;
-        }
-        if(gameWinner !== state.gameWinner) {
-          gameWinner = state.gameWinner;
-          needsUpdate = true;
-        }
-        
-        if(needsUpdate) {
-          updateViewerDisplay();
-          if(gameWinner) renderViewerMode();
-        }
-      }
-    }
-  }
-  
-  // Check URL for room parameter
-  function checkRoomFromURL() {
-    const params = new URLSearchParams(window.location.search);
-    const roomParam = params.get('room');
-    if(roomParam && !localStorage.getItem('is_host')) {
-      joinAsViewer(roomParam);
-    }
-  }
-  
-  // Override timer functions to save state
-  const originalStartTimer = startTimer;
-  const originalSkipWord = skipWord;
-  const originalGuessedCorrect = guessedCorrect;
-  
-  // Modify timer and game functions to save state
-  function startTimerWithSave() {
-    originalStartTimer();
-    if(isHost) saveGameState();
-  }
-  
-  function skipWordWithSave() {
-    originalSkipWord();
-    if(isHost) saveGameState();
-  }
-  
-  function guessedCorrectWithSave() {
-    originalGuessedCorrect();
-    if(isHost) saveGameState();
-  }
-  
-  // Override
-  window.startTimer = startTimerWithSave;
-  window.skipWord = skipWordWithSave;
-  window.guessedCorrect = guessedCorrectWithSave;
-  
   // ==================== GAME DATA ====================
-  const gameCategories = {
-    "أفعال": ["يرقص العرضة","يغني","يطبخ منسف","يشرب قهوة","يركب جمل","يلعب كرة قدم","يؤذن","يلقي شعر","يرسم","يضحك","يبكي","ينام","يأكل تمر"],
-    "حيوانات": ["جمل","صقر","حصان عربي","غزال","نمر","ذئب","ثعلب","وعل","نعامة","قط","كلب","نسر","فهد"],
-    "أمثال شعبية": ["اطلع من جلدك", "اللي ما يعرف الصقر يشويه", "اللي راح ما يرجع", "الجار قبل الدار", "الصبر مفتاح الفرج"],
-    "أشياء": ["تلفون", "سيارة", "طائرة", "ساعة", "نظارة", "كتاب", "قلم", "مقص", "مفتاح", "باب", "كرسي"]
+  const categories = {
+    "أفعال": ["يرقص","يغني","يأكل","يشرب","يركض","يقفز","يضحك","يبكي","ينام","يقرأ","يكتب","يرسم"],
+    "حيوانات": ["جمل","صقر","حصان","نمر","أسد","فيل","زرافة","قط","كلب","ثعبان","عقاب","دolphin"],
+    "أمثال": ["الجار قبل الدار", "الصبر مفتاح الفرج", "العين بصيرة", "القناعة كنز", "الكذب ملح الرجال"],
+    "أشياء": ["تلفون","سيارة","كتاب","قلم","كرسي","طاولة","مفتاح","ساعة","نظارة","حقيبة"]
   };
   
-  let currentCategory = "أفعال";
-  let allWords = [];
-  
-  function updateAllWords() {
-    allWords = [];
-    for(let cat in gameCategories) {
-      gameCategories[cat].forEach(w => allWords.push({ word: w, category: cat }));
-    }
-  }
-  updateAllWords();
-  
-  function getRandomWordFromCategory(category) {
-    const wordsList = gameCategories[category];
-    if(!wordsList || wordsList.length === 0) return { word: "خطأ", category: category };
-    const randomIndex = Math.floor(Math.random() * wordsList.length);
-    return { word: wordsList[randomIndex], category: category };
-  }
-  
-  function getRandomWord() {
-    return getRandomWordFromCategory(currentCategory);
-  }
-
-  // ==================== TEAMS (same as before) ====================
-  let teams = [];
-  function loadTeams() {
-    const saved = localStorage.getItem('charades_teams_v9');
-    if(saved) {
-      teams = JSON.parse(saved);
-    } else {
-      teams = [
-        { id: 1, name: "الفريق الأحمر", score: 0 },
-        { id: 2, name: "الفريق الأزرق", score: 0 }
-      ];
-    }
-    renderTeamList();
-  }
-  function saveTeams() { localStorage.setItem('charades_teams_v9', JSON.stringify(teams)); }
-  function addTeam(name) {
-    if(!name.trim()) return;
-    teams.push({ id: Date.now(), name: name.trim(), score: 0 });
-    saveTeams(); 
-    renderTeamList(); 
-    play('click');
-  }
-  function updateTeamScore(teamId, newScore) {
-    const team = teams.find(t=>t.id === teamId);
-    if(team) { 
-      team.score = Math.max(0, newScore); 
-      saveTeams(); 
-      renderTeamList(); 
-    }
-  }
-  function deleteTeam(teamId) {
-    if(confirm('هل أنت متأكد من حذف هذا الفريق؟')) {
-      teams = teams.filter(t=>t.id !== teamId);
-      saveTeams(); 
-      renderTeamList(); 
-      play('click');
-    }
-  }
-  
-  function resetAllScores() {
-    if(confirm('🔄 هل تريد بدء لعبة جديدة؟\nسيتم تصفير جميع نقاط الفرق.')) {
-      teams.forEach(team => { team.score = 0; });
-      saveTeams();
-      renderTeamList();
-      stopTimer();
-      roundCount = 0;
-      timeLeft = 60;
-      timerRunning = false;
-      gameActive = true;
-      gameWinner = null;
-      currentWordObj = getRandomWord();
-      updateRoundUI();
-      updateTimerUI();
-      refreshWordUI();
-      renderGameUI();
-      if(isHost) saveGameState();
-      play('click');
-      alert('✨ تم بدء لعبة جديدة! جميع الفرق تبدأ من الصفر. ✨');
-    }
-  }
-  
-  function renderTeamList() {
-    const container = document.getElementById('teamListContainer');
-    if(!container) return;
-    if(teams.length === 0) { 
-      container.innerHTML = '<div class="empty-state"><i class="fas fa-users-slash"></i><div>لا توجد فرق. أضف فريقاً!</div></div>'; 
-      return; 
-    }
-    container.innerHTML = teams.map(team => `
-      <div class="team-card ${gameWinner === team.id ? 'winner' : ''}">
-        <div class="team-info">
-          <div class="team-name">
-            ${escapeHtml(team.name)}
-            ${gameWinner === team.id ? '<span class="winner-badge"><i class="fas fa-crown"></i> بطل</span>' : ''}
-          </div>
-          <div class="team-score">${team.score}</div>
-        </div>
-        <div class="team-actions">
-          <button class="team-btn" onclick="window.adjustScore(${team.id}, -1)"><i class="fas fa-minus"></i></button>
-          <button class="team-btn" onclick="window.adjustScore(${team.id}, 1)"><i class="fas fa-plus"></i></button>
-          <button class="team-btn delete" onclick="window.deleteTeam(${team.id})"><i class="fas fa-trash"></i></button>
-        </div>
-      </div>
-    `).join('');
-  }
-  
-  window.adjustScore = (teamId, delta) => {
-    if(gameWinner) {
-      alert('🎉 اللعبة انتهت! اضغط على "لعبة جديدة" للبدء من جديد.');
-      return;
-    }
-    const team = teams.find(t=>t.id===teamId);
-    if(team) {
-      let newScore = team.score + delta;
-      if(newScore < 0) newScore = 0;
-      updateTeamScore(teamId, newScore);
-      play(delta > 0 ? 'scoreUp' : 'scoreDown');
-      
-      if(newScore >= 10) {
-        gameWinner = team.id;
-        gameActive = false;
-        stopTimer();
-        play('winner');
-        alert(`🏆 مبروك! الفريق ${team.name} وصل إلى 10 نقاط وفاز باللعبة! 🏆\n\nاضغط على "لعبة جديدة" لبدء جولة جديدة.`);
-        renderGameUI();
-        if(isHost) saveGameState();
-      }
-    }
-  };
-  window.deleteTeam = (teamId) => deleteTeam(teamId);
-  function escapeHtml(str) { 
-    if(!str) return '';
-    return str.replace(/[&<>]/g, m => m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); 
-  }
-
-  // ==================== GAME STATE VARIABLES ====================
-  let currentWordObj = null;
-  let timerInterval = null;
+  let currentWord = { word: "ابدأ اللعبة", category: "أفعال" };
   let timeLeft = 60;
+  let timerRunning = false;
+  let timerInterval = null;
   let roundCount = 0;
   let gameActive = true;
-  let timerRunning = false;
-  let timesUpPlayed = false;
   let gameWinner = null;
-
-  function stopTimer() { 
-    if(timerInterval) { 
-      clearInterval(timerInterval); 
-      timerInterval = null; 
-    } 
-    timerRunning = false; 
-    timesUpPlayed=false; 
+  let teams = [{ id: 1, name: "الفريق الأحمر", score: 0 }, { id: 2, name: "الفريق الأزرق", score: 0 }];
+  
+  // Room system
+  let roomId = null;
+  let isHost = false;
+  
+  function getRandomWord() {
+    const cats = Object.keys(categories);
+    const randomCat = cats[Math.floor(Math.random() * cats.length)];
+    const words = categories[randomCat];
+    return { word: words[Math.floor(Math.random() * words.length)], category: randomCat };
+  }
+  
+  // Save game state to localStorage for viewers
+  function saveGameState() {
+    if (roomId) {
+      const state = {
+        word: currentWord.word,
+        category: currentWord.category,
+        timeLeft: timeLeft,
+        roundCount: roundCount,
+        gameActive: gameActive,
+        gameWinner: gameWinner,
+        teams: teams
+      };
+      localStorage.setItem(`room_${roomId}`, JSON.stringify(state));
+    }
+  }
+  
+  // Load game state for viewers
+  function loadGameState() {
+    if (!isHost && roomId) {
+      const saved = localStorage.getItem(`room_${roomId}`);
+      if (saved) {
+        const state = JSON.parse(saved);
+        currentWord = { word: state.word, category: state.category };
+        timeLeft = state.timeLeft;
+        roundCount = state.roundCount;
+        gameActive = state.gameActive;
+        gameWinner = state.gameWinner;
+        teams = state.teams;
+        renderGameUI();
+        renderTeamList();
+      }
+    }
+  }
+  
+  // Sync periodically for viewers
+  setInterval(() => {
+    if (!isHost && roomId) {
+      loadGameState();
+    }
+  }, 1000);
+  
+  // Timer functions
+  function stopTimer() {
+    if (timerInterval) clearInterval(timerInterval);
+    timerRunning = false;
   }
   
   function startTimer() {
-    if(timerRunning) return;
-    if(!gameActive || gameWinner) {
-      alert('اللعبة انتهت! اضغط على "لعبة جديدة" للبدء.');
-      return;
-    }
-    if(timeLeft <= 0) { 
-      timeLeft = 60; 
-      updateTimerUI(); 
-    }
+    if (timerRunning || !gameActive || gameWinner) return;
+    if (timeLeft <= 0) timeLeft = 60;
     stopTimer();
     timerRunning = true;
-    timesUpPlayed = false;
-    play('start');
-    
     timerInterval = setInterval(() => {
-      if(timeLeft <= 0) {
+      if (timeLeft <= 0) {
         stopTimer();
-        if(!timesUpPlayed) { 
-          play('timesUp'); 
-          timesUpPlayed=true; 
-        }
-        updateTimerUI();
       } else {
         timeLeft--;
-        updateTimerUI();
-        if(timeLeft <=5 && timeLeft>0) { 
-          play('tick'); 
-        }
+        if (isHost) saveGameState();
+        updateTimerDisplay();
       }
-      if(isHost) saveGameState();
     }, 1000);
   }
   
-  function updateTimerUI() { 
-    const els = document.querySelectorAll('#gameTimerNumber, #hostRounds, #viewerTimer');
-    els.forEach(el => {
-      if(el && el.id === 'gameTimerNumber') el.innerText = timeLeft;
-      if(el && el.id === 'viewerTimer') el.innerText = timeLeft;
-    });
-    if(isHost) {
-      const hostTimer = document.querySelector('#hostContent .timer-number');
-      if(hostTimer) hostTimer.innerText = timeLeft;
-    }
+  function updateTimerDisplay() {
+    document.querySelectorAll('.timer-display').forEach(el => el.innerText = timeLeft);
   }
   
-  function refreshWordUI() {
-    const wordEl = document.getElementById('gameCurrentWord');
-    const catEl = document.getElementById('gameCategory');
-    if(wordEl) { 
-      wordEl.style.opacity='0'; 
-      setTimeout(()=>{ 
-        wordEl.innerText=currentWordObj.word; 
-        wordEl.style.opacity='1'; 
-      },150); 
-    }
-    if(catEl) catEl.innerHTML = `📂 ${currentWordObj.category}`;
-    
-    if(isHost) {
-      const hostWord = document.querySelector('#hostContent .current-word');
-      const hostCat = document.querySelector('#hostContent .category-tag');
-      if(hostWord) hostWord.innerText = currentWordObj.word;
-      if(hostCat) hostCat.innerHTML = `📂 ${currentWordObj.category}`;
-    }
-    
-    if(!isHost && roomId) {
-      updateViewerDisplay();
-    }
-    
-    if(gameActive && !gameWinner) play('newWord');
+  // Word refresh
+  function refreshWord() {
+    currentWord = getRandomWord();
+    document.querySelectorAll('.word-display').forEach(el => el.innerText = currentWord.word);
+    document.querySelectorAll('.cat-display').forEach(el => el.innerText = `📂 ${currentWord.category}`);
+    if (isHost) saveGameState();
   }
   
-  function updateRoundUI() { 
-    const els = document.querySelectorAll('#gameRounds, #hostRounds, #viewerRounds');
-    els.forEach(el => {
-      if(el) el.innerText = roundCount;
-    });
-  }
-
-  function showTeamSelectionModal(onSelect) {
-    if(gameWinner) {
-      alert('🎉 اللعبة انتهت! اضغط على "لعبة جديدة" للبدء.');
-      onSelect(null);
-      return;
-    }
-    if(teams.length === 0) { 
-      alert('⚠️ لا توجد فرق! أضف فريقاً أولاً'); 
-      onSelect(null); 
-      return; 
-    }
-    const modal = document.createElement('div');
-    modal.className = 'modal-overlay';
-    modal.innerHTML = `<div class="modal-content"><h3><i class="fas fa-trophy"></i> اختر الفريق الفائز</h3>
-      ${teams.map(team => `<div class="team-option" data-team-id="${team.id}"><i class="fas fa-users" style="margin-left:8px;"></i> ${escapeHtml(team.name)}</div>`).join('')}
-      <button class="team-btn" style="margin-top:1rem; width:100%; background:transparent; border:1px solid #ccc;" id="cancelModal"><i class="fas fa-times"></i> إلغاء</button></div>`;
-    document.body.appendChild(modal);
-    modal.querySelectorAll('.team-option').forEach(opt => {
-      opt.addEventListener('click', () => {
-        const teamId = parseInt(opt.dataset.teamId);
-        const team = teams.find(t=>t.id===teamId);
-        modal.remove();
-        onSelect(team);
-      });
-    });
-    modal.querySelector('#cancelModal').addEventListener('click', () => { modal.remove(); onSelect(null); });
-  }
-
-  function guessedCorrect() {
-    if(!gameActive || gameWinner) {
-      alert('اللعبة انتهت! اضغط على "لعبة جديدة" للبدء.');
-      return;
-    }
-    stopTimer();
-    play('success');
-    showTeamSelectionModal((selectedTeam) => {
-      if(selectedTeam && !gameWinner) {
-        let newScore = selectedTeam.score + 1;
-        updateTeamScore(selectedTeam.id, newScore);
-        
-        if(newScore >= 10) {
-          gameWinner = selectedTeam.id;
-          gameActive = false;
-          stopTimer();
-          play('winner');
-          alert(`🏆 مبروك! الفريق ${selectedTeam.name} وصل إلى 10 نقاط وفاز باللعبة! 🏆\n\nاضغط على "لعبة جديدة" لبدء جولة جديدة.`);
-          renderGameUI();
-          if(isHost) saveGameState();
-          return;
-        }
-      }
-      if(!gameWinner) {
-        roundCount++;
-        updateRoundUI();
-        timeLeft = 60;
-        updateTimerUI();
-        currentWordObj = getRandomWord();
-        refreshWordUI();
-        timerRunning = false;
-        gameActive = true;
-        if(isHost) saveGameState();
-      }
-    });
-  }
-
   function skipWord() {
-    if(!gameActive || gameWinner) {
-      alert('اللعبة انتهت! اضغط على "لعبة جديدة" للبدء.');
-      return;
-    }
-    play('skip');
+    if (!gameActive || gameWinner) return;
     roundCount++;
-    updateRoundUI();
-    currentWordObj = getRandomWord();
-    refreshWordUI();
+    refreshWord();
     stopTimer();
-    timerRunning = false;
-    timeLeft = 60;
-    updateTimerUI();
-    if(isHost) saveGameState();
-  }
-
-  function showCategorySelectionModal() {
-    if(gameWinner) {
-      alert('اللعبة انتهت! اضغط على "لعبة جديدة" للبدء.');
-      return;
-    }
-    const modal = document.createElement('div');
-    modal.className = 'modal-overlay';
-    const categories = Object.keys(gameCategories);
-    modal.innerHTML = `<div class="modal-content">
-      <h3><i class="fas fa-layer-group"></i> اختر الفئة</h3>
-      <div style="font-size: 0.8rem; margin-bottom: 0.5rem;">الفئة الحالية: <strong style="color: var(--terracotta);">${currentCategory}</strong></div>
-      ${categories.map(cat => {
-        let icon = '';
-        if(cat === 'أفعال') icon = '🏃';
-        else if(cat === 'حيوانات') icon = '🐪';
-        else if(cat === 'أمثال شعبية') icon = '📜';
-        else if(cat === 'أشياء') icon = '📱';
-        return `<div class="category-option" data-category="${cat}">${icon} ${cat}</div>`;
-      }).join('')}
-      <button class="team-btn" style="margin-top:1rem; width:100%; background:transparent; border:1px solid #ccc;" id="cancelModal"><i class="fas fa-times"></i> إلغاء</button>
-    </div>`;
-    document.body.appendChild(modal);
-    
-    modal.querySelectorAll('.category-option').forEach(opt => {
-      opt.addEventListener('click', () => {
-        const newCategory = opt.dataset.category;
-        if(newCategory !== currentCategory) {
-          currentCategory = newCategory;
-          currentWordObj = getRandomWord();
-          refreshWordUI();
-          play('click');
-          if(isHost) saveGameState();
-        }
-        modal.remove();
-      });
-    });
-    modal.querySelector('#cancelModal').addEventListener('click', () => { modal.remove(); });
-  }
-
-  function renderGameUI() {
-    if(!currentWordObj) currentWordObj = getRandomWord();
-    const victoryMessageHTML = gameWinner ? 
-      `<div class="victory-message">
-        <i class="fas fa-trophy"></i> 🏆 الفائز: ${escapeHtml(teams.find(t=>t.id===gameWinner)?.name || '')} 🏆 <i class="fas fa-trophy"></i>
-      </div>` : '';
-    
-    const html = `
-      ${victoryMessageHTML}
-      <div class="word-card"><div class="current-word" id="gameCurrentWord">${escapeHtml(currentWordObj.word)}</div><div class="category-tag" id="gameCategory">📂 ${currentWordObj.category}</div></div>
-      <div class="timer-area"><div class="timer-circle"><div class="timer-number" id="gameTimerNumber">${timeLeft}</div><div class="timer-label">ثانية</div></div></div>
-      <div class="action-buttons">
-        <button class="btn-action btn-primary" id="startTimerBtn"><i class="fas fa-hourglass-start"></i> بدء المؤقت</button>
-        <button class="btn-action btn-category" id="chooseCategoryBtn"><i class="fas fa-layer-group"></i> اختر الفئة</button>
-        <button class="btn-action btn-skip" id="gameSkipBtn"><i class="fas fa-forward"></i> تخطي</button>
-        <button class="btn-action btn-success" id="gameGuessBtn"><i class="fas fa-check-circle"></i> تم التخمين!</button>
-        <button class="btn-action btn-new-game" id="newGameBtn"><i class="fas fa-redo-alt"></i> لعبة جديدة</button>
-        <button class="btn-action" id="showTeamsBtn"><i class="fas fa-users"></i> عرض الفرق</button>
-      </div>
-      <div class="stats-row"><div class="stat-item"><i class="fas fa-redo-alt"></i> <span class="stat-value" id="gameRounds">${roundCount}</span> <span>جولة</span></div><div class="stat-item"><i class="fas fa-flag-checkered"></i> <span>الهدف: 10 نقاط</span></div></div>
-    `;
-    const container = document.getElementById('gameDynamicContent');
-    if(container && !isHost) {
-      container.innerHTML = html;
-    } else if(container && isHost) {
-      // For host, use the host UI instead
-      renderHostUI();
-      return;
-    }
-    
-    if(!isHost) {
-      document.getElementById('startTimerBtn')?.addEventListener('click', () => { 
-        alert('⚠️ أنت في وضع المشاهد. المضيف هو من يتحكم باللعبة.');
-      });
-      document.getElementById('chooseCategoryBtn')?.addEventListener('click', () => { 
-        alert('⚠️ أنت في وضع المشاهد. المضيف هو من يختار الفئة.');
-      });
-      document.getElementById('gameSkipBtn')?.addEventListener('click', () => { 
-        alert('⚠️ أنت في وضع المشاهد. المضيف هو من يتحكم بالتخطي.');
-      });
-      document.getElementById('gameGuessBtn')?.addEventListener('click', () => { 
-        alert('⚠️ أنت في وضع المشاهد. المضيف هو من يسجل النقاط.');
-      });
-      document.getElementById('showTeamsBtn')?.addEventListener('click', () => { 
-        switchToTab('teams'); 
-        play('click'); 
-      });
-      document.getElementById('newGameBtn')?.addEventListener('click', () => { 
-        alert('⚠️ أنت في وضع المشاهد. المضيف هو من يبدأ لعبة جديدة.');
-      });
-    } else {
-      document.getElementById('startTimerBtn')?.addEventListener('click', () => { 
-        if(!timerRunning && timeLeft>0 && gameActive && !gameWinner) { 
-          startTimer(); 
-          play('click'); 
-          if(isHost) saveGameState();
-        } 
-      });
-      document.getElementById('chooseCategoryBtn')?.addEventListener('click', () => showCategorySelectionModal());
-      document.getElementById('gameSkipBtn')?.addEventListener('click', () => { skipWord(); if(isHost) saveGameState(); });
-      document.getElementById('gameGuessBtn')?.addEventListener('click', () => { guessedCorrect(); if(isHost) saveGameState(); });
-      document.getElementById('showTeamsBtn')?.addEventListener('click', () => { 
-        switchToTab('teams'); 
-        play('click'); 
-      });
-      document.getElementById('newGameBtn')?.addEventListener('click', () => resetAllScores());
-    }
-  }
-
-  function initGame() {
-    stopTimer();
-    roundCount = 0;
     timeLeft = 60;
     timerRunning = false;
-    currentWordObj = getRandomWord();
-    gameActive = true;
-    gameWinner = null;
-    renderGameUI();
+    updateTimerDisplay();
+    document.querySelectorAll('.round-display').forEach(el => el.innerText = roundCount);
+    if (isHost) saveGameState();
   }
-
-  // ==================== CONTACTS & INVITE ====================
-  let contacts = [];
-  function loadContacts() {
-    const saved = localStorage.getItem('whatsapp_contacts');
-    if(saved) contacts = JSON.parse(saved);
-    else contacts = [];
-    renderContacts();
+  
+  // Team functions
+  function addTeam(name) {
+    if (!name.trim()) return;
+    teams.push({ id: Date.now(), name: name.trim(), score: 0 });
+    renderTeamList();
+    saveTeams();
   }
-  function saveContacts() { localStorage.setItem('whatsapp_contacts', JSON.stringify(contacts)); }
-  function addContact(name, number) {
-    if(!number.trim()) { alert('الرجاء إدخال رقم الجوال'); return false; }
-    let cleanNumber = number.replace(/[^\d]/g, '');
-    if(cleanNumber.length < 9) { alert('الرجاء إدخال رقم صحيح'); return false; }
-    if(!cleanNumber.startsWith('966') && cleanNumber.length === 9) cleanNumber = '966' + cleanNumber;
-    contacts.push({ id: Date.now(), name: name.trim() || `صديق ${contacts.length + 1}`, number: cleanNumber });
-    saveContacts();
-    renderContacts();
-    play('click');
-    return true;
-  }
-  function deleteContact(contactId) {
-    if(confirm('هل تريد حذف هذا الاتصال؟')) {
-      contacts = contacts.filter(c => c.id !== contactId);
-      saveContacts();
-      renderContacts();
-      play('click');
+  
+  function updateTeamScore(teamId, delta) {
+    const team = teams.find(t => t.id === teamId);
+    if (team) {
+      team.score = Math.max(0, team.score + delta);
+      renderTeamList();
+      saveTeams();
+      if (team.score >= 10 && !gameWinner) {
+        gameWinner = team.id;
+        gameActive = false;
+        stopTimer();
+        alert(`🏆 الفائز: ${team.name} 🏆`);
+        if (isHost) saveGameState();
+        renderGameUI();
+      }
+      if (isHost) saveGameState();
     }
   }
-  function sendWhatsAppInvite(number, name) {
-    const link = window.location.href.split('?')[0] + (roomId ? `?room=${roomId}` : '');
-    const message = `🎭 *لعبة التمثيل* 🎭\n\nمرحباً ${name || 'صديقي'}!\n\nتمت دعوتك لمشاهدة واللعب في لعبة التمثيل!\n\n🎮 *رابط اللعبة:*\n${link}\n\nادخل كمشاهد وشاهد اللعبة مباشرة! 🎉`;
-    const encodedMessage = encodeURIComponent(message);
-    window.open(`https://wa.me/${number}?text=${encodedMessage}`, '_blank');
-    play('click');
+  
+  function saveTeams() {
+    localStorage.setItem('teams', JSON.stringify(teams));
   }
-  function sendInviteToAll() {
-    if(contacts.length === 0) { alert('لا توجد جهات اتصال'); return; }
-    if(confirm(`إرسال دعوة إلى ${contacts.length} شخص؟`)) {
-      contacts.forEach(contact => setTimeout(() => sendWhatsAppInvite(contact.number, contact.name), 500));
-    }
-  }
-  function renderContacts() {
-    const container = document.getElementById('contactsList');
-    if(!container) return;
-    if(contacts.length === 0) {
-      container.innerHTML = `<div class="empty-contacts"><i class="fas fa-address-book" style="font-size: 2rem;"></i><p>لا توجد جهات اتصال</p></div>`;
-      return;
-    }
-    container.innerHTML = contacts.map(contact => `
-      <div class="contact-item">
-        <div class="contact-info">
-          <div class="contact-avatar"><i class="fas fa-user-circle"></i></div>
-          <div class="contact-details"><div class="contact-name">${escapeHtml(contact.name)}</div><div class="contact-number">${contact.number}</div></div>
-        </div>
-        <div style="display: flex; gap: 6px;">
-          <button class="invite-btn" onclick="window.sendInviteToContact(${contact.id})"><i class="fab fa-whatsapp"></i> دعوة</button>
-          <button class="team-btn delete" onclick="window.deleteContact(${contact.id})"><i class="fas fa-trash"></i></button>
+  
+  function renderTeamList() {
+    const container = document.getElementById('teamList');
+    if (!container) return;
+    container.innerHTML = teams.map(team => `
+      <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px; border-bottom: 1px solid #eee;">
+        <div><strong>${team.name}</strong> <span style="color: #C65D3B; font-weight: bold;">${team.score}</span></div>
+        <div>
+          <button onclick="updateTeamScore(${team.id}, -1)" style="background: #eee; border: none; padding: 4px 8px; border-radius: 8px;">-</button>
+          <button onclick="updateTeamScore(${team.id}, 1)" style="background: #C65D3B; border: none; padding: 4px 8px; border-radius: 8px; color: white;">+</button>
+          <button onclick="deleteTeam(${team.id})" style="background: #B83B3B; border: none; padding: 4px 8px; border-radius: 8px; color: white;">🗑</button>
         </div>
       </div>
     `).join('');
   }
-  window.sendInviteToContact = (contactId) => { const c = contacts.find(c => c.id === contactId); if(c) sendWhatsAppInvite(c.number, c.name); };
-  window.deleteContact = (contactId) => deleteContact(contactId);
-
-  // ==================== TAB SWITCHING ====================
-  function switchToTab(tabId) {
-    document.querySelectorAll('.tab-btn').forEach(t=>t.classList.remove('active'));
-    document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active-pane'));
-    const targetBtn = Array.from(document.querySelectorAll('.tab-btn')).find(t => t.dataset.tab === tabId);
-    if(targetBtn) targetBtn.classList.add('active');
-    document.getElementById(`${tabId}Tab`).classList.add('active-pane');
-    if(tabId === 'teams') renderTeamList();
-    if(tabId === 'invite') { renderContacts(); if(roomId) updateInviteRoomInfo(); }
-    if(tabId === 'game' && !isHost) renderViewerMode();
-    if(tabId === 'host' && isHost) renderHostUI();
-    play('tabSwitch');
+  
+  function deleteTeam(id) {
+    teams = teams.filter(t => t.id !== id);
+    renderTeamList();
+    saveTeams();
   }
   
-  // Event listeners
-  document.querySelectorAll('.tab-btn').forEach(tab => {
-    tab.addEventListener('click', () => switchToTab(tab.dataset.tab));
+  function resetGame() {
+    teams.forEach(t => t.score = 0);
+    roundCount = 0;
+    timeLeft = 60;
+    timerRunning = false;
+    gameActive = true;
+    gameWinner = null;
+    stopTimer();
+    refreshWord();
+    updateTimerDisplay();
+    document.querySelectorAll('.round-display').forEach(el => el.innerText = roundCount);
+    renderTeamList();
+    saveTeams();
+    if (isHost) saveGameState();
+  }
+  
+  // Team selection modal for scoring
+  function showTeamSelection(callback) {
+    const modal = document.createElement('div');
+    modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 1000;';
+    modal.innerHTML = `
+      <div style="background: white; border-radius: 24px; padding: 1.5rem; width: 80%; max-width: 300px; text-align: center;">
+        <h3 style="margin-bottom: 1rem;">اختر الفريق الفائز</h3>
+        ${teams.map(team => `<div style="padding: 10px; margin: 5px 0; background: #f5f5f5; border-radius: 12px; cursor: pointer;" onclick="window.selectTeam(${team.id})">${team.name}</div>`).join('')}
+        <button onclick="closeModal()" style="margin-top: 1rem; padding: 8px 16px; background: #ddd; border: none; border-radius: 20px;">إلغاء</button>
+      </div>
+    `;
+    document.body.appendChild(modal);
+    window.selectTeam = (teamId) => {
+      callback(teamId);
+      modal.remove();
+    };
+    window.closeModal = () => modal.remove();
+  }
+  
+  function guessCorrect() {
+    if (!gameActive || gameWinner) return;
+    stopTimer();
+    showTeamSelection((teamId) => {
+      const team = teams.find(t => t.id === teamId);
+      if (team) {
+        team.score++;
+        renderTeamList();
+        saveTeams();
+        if (team.score >= 10) {
+          gameWinner = team.id;
+          gameActive = false;
+          alert(`🏆 الفائز: ${team.name} 🏆`);
+          if (isHost) saveGameState();
+          renderGameUI();
+          return;
+        }
+      }
+      roundCount++;
+      document.querySelectorAll('.round-display').forEach(el => el.innerText = roundCount);
+      refreshWord();
+      timeLeft = 60;
+      timerRunning = false;
+      updateTimerDisplay();
+      if (isHost) saveGameState();
+    });
+  }
+  
+  // ==================== UI RENDERING ====================
+  function renderHostUI() {
+    const container = document.getElementById('hostContent');
+    const inviteLink = `${window.location.href.split('?')[0]}?room=${roomId}`;
+    container.innerHTML = `
+      <h3><i class="fas fa-chalkboard-user"></i> أنت المضيف</h3>
+      <div class="instruction-box" style="background: #2D6A4F; color: white;">
+        <i class="fas fa-info-circle"></i> شارك هذا الرابط مع أصدقائك
+      </div>
+      <div class="room-code">${roomId}</div>
+      <button class="copy-btn" id="copyLinkBtn"><i class="fas fa-copy"></i> نسخ رابط الدعوة</button>
+      <button class="copy-btn" id="copyCodeBtn" style="background: #C65D3B;"><i class="fas fa-key"></i> نسخ الرمز</button>
+      
+      <div class="word-card">
+        <div class="current-word word-display">${currentWord.word}</div>
+        <div class="cat-display" style="margin-top: 8px; font-size: 0.8rem; color: #C65D3B;">📂 ${currentWord.category}</div>
+      </div>
+      
+      <div class="timer-area">
+        <div class="timer-number timer-display">${timeLeft}</div>
+        <div>ثانية</div>
+      </div>
+      
+      <div class="action-buttons">
+        <button class="btn-action" id="hostStartTimer"><i class="fas fa-hourglass-start"></i> بدء المؤقت</button>
+        <button class="btn-action btn-skip" id="hostSkip"><i class="fas fa-forward"></i> تخطي</button>
+        <button class="btn-action btn-success" id="hostGuess"><i class="fas fa-check-circle"></i> تم التخمين</button>
+        <button class="btn-action" id="hostReset"><i class="fas fa-redo-alt"></i> لعبة جديدة</button>
+      </div>
+      
+      <div class="stats-row" style="display: flex; justify-content: space-between; margin-top: 1rem;">
+        <span><i class="fas fa-redo-alt"></i> جولة: <strong class="round-display">${roundCount}</strong></span>
+        <span><i class="fas fa-flag-checkered"></i> الهدف: 10 نقاط</span>
+      </div>
+    `;
+    
+    document.getElementById('copyLinkBtn')?.addEventListener('click', () => {
+      navigator.clipboard.writeText(inviteLink);
+      alert('✅ تم نسخ الرابط! أرسله لأصدقائك عبر واتساب أو أي تطبيق.');
+    });
+    document.getElementById('copyCodeBtn')?.addEventListener('click', () => {
+      navigator.clipboard.writeText(roomId);
+      alert('✅ تم نسخ الرمز: ' + roomId);
+    });
+    document.getElementById('hostStartTimer')?.addEventListener('click', () => startTimer());
+    document.getElementById('hostSkip')?.addEventListener('click', () => skipWord());
+    document.getElementById('hostGuess')?.addEventListener('click', () => guessCorrect());
+    document.getElementById('hostReset')?.addEventListener('click', () => resetGame());
+  }
+  
+  function renderViewerUI() {
+    const container = document.getElementById('gameContent');
+    container.innerHTML = `
+      <div class="viewer-banner">
+        <i class="fas fa-eye"></i> أنت في وضع المشاهد | غرفة: <strong>${roomId}</strong>
+      </div>
+      <div class="word-card">
+        <div class="current-word word-display">${currentWord.word}</div>
+        <div class="cat-display" style="margin-top: 8px; font-size: 0.8rem; color: #C65D3B;">📂 ${currentWord.category}</div>
+      </div>
+      <div class="timer-area">
+        <div class="timer-number timer-display">${timeLeft}</div>
+        <div>ثانية</div>
+      </div>
+      <div class="stats-row" style="display: flex; justify-content: space-between; margin-top: 1rem;">
+        <span><i class="fas fa-redo-alt"></i> جولة: <strong class="round-display">${roundCount}</strong></span>
+        <span><i class="fas fa-flag-checkered"></i> الهدف: 10 نقاط</span>
+      </div>
+      <div class="instruction-box" style="margin-top: 1rem; text-align: center;">
+        <i class="fas fa-info-circle"></i> أنت تشاهد اللعبة. المضيف هو من يتحكم بالمؤقت والكلمات.
+      </div>
+    `;
+  }
+  
+  function renderGameUI() {
+    if (isHost) {
+      renderHostUI();
+    } else {
+      renderViewerUI();
+    }
+  }
+  
+  // ==================== ROOM MANAGEMENT ====================
+  function createRoom() {
+    roomId = Math.random().toString(36).substring(2, 8).toUpperCase();
+    isHost = true;
+    localStorage.setItem('host_room', roomId);
+    localStorage.setItem('is_host', 'true');
+    currentWord = getRandomWord();
+    roundCount = 0;
+    timeLeft = 60;
+    gameActive = true;
+    gameWinner = null;
+    teams.forEach(t => t.score = 0);
+    saveGameState();
+    renderHostUI();
+    switchToTab('host');
+  }
+  
+  function joinRoom(code) {
+    if (!code) {
+      code = prompt("🔑 أدخل رمز الغرفة:", "");
+    }
+    if (code) {
+      roomId = code.toUpperCase();
+      isHost = false;
+      localStorage.setItem('viewer_room', roomId);
+      loadGameState();
+      renderViewerUI();
+      switchToTab('game');
+    }
+  }
+  
+  function checkRoomFromURL() {
+    const params = new URLSearchParams(window.location.search);
+    const room = params.get('room');
+    if (room) {
+      roomId = room.toUpperCase();
+      isHost = false;
+      loadGameState();
+      renderViewerUI();
+      switchToTab('game');
+    }
+  }
+  
+  // ==================== TAB SWITCHING ====================
+  function switchToTab(tabId) {
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active-pane'));
+    document.querySelector(`.tab-btn[data-tab="${tabId}"]`).classList.add('active');
+    document.getElementById(`${tabId}Tab`).classList.add('active-pane');
+    
+    if (tabId === 'teams') renderTeamList();
+    if (tabId === 'game') renderGameUI();
+    if (tabId === 'host' && isHost) renderHostUI();
+  }
+  
+  // Event Listeners
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => switchToTab(btn.dataset.tab));
   });
   
-  document.getElementById('hostModeBtn')?.addEventListener('click', () => startHosting());
-  document.getElementById('addTeamBtn')?.addEventListener('click', () => { 
-    const inp = document.getElementById('teamNameInput'); 
-    if(inp && inp.value.trim()) { addTeam(inp.value.trim()); inp.value = ''; }
+  document.getElementById('startHostBtn')?.addEventListener('click', () => {
+    createRoom();
   });
-  document.getElementById('goToGameBtn')?.addEventListener('click', () => switchToTab('game'));
-  document.getElementById('addContactBtn')?.addEventListener('click', () => {
-    const name = document.getElementById('contactNameInput')?.value || '';
-    const number = document.getElementById('contactNumberInput')?.value || '';
-    if(number) { addContact(name, number); if(document.getElementById('contactNameInput')) document.getElementById('contactNameInput').value = ''; if(document.getElementById('contactNumberInput')) document.getElementById('contactNumberInput').value = ''; }
+  
+  document.getElementById('addTeam')?.addEventListener('click', () => {
+    const input = document.getElementById('teamName');
+    if (input.value.trim()) {
+      addTeam(input.value.trim());
+      input.value = '';
+    }
   });
-  document.getElementById('inviteAllBtn')?.addEventListener('click', () => sendInviteToAll());
-  document.getElementById('copyInviteLinkBtn')?.addEventListener('click', () => copyInviteLink());
   
-  const teamNameInput = document.getElementById('teamNameInput');
-  if(teamNameInput) teamNameInput.addEventListener('keypress', (e) => { if(e.key==='Enter') document.getElementById('addTeamBtn')?.click(); });
-  
-  // Start sync interval for viewers
-  setInterval(() => syncGameState(), 500);
+  // Expose functions globally
+  window.updateTeamScore = updateTeamScore;
+  window.deleteTeam = deleteTeam;
+  window.selectTeam = null;
   
   // Initialize
-  loadTeams();
-  loadContacts();
-  initGame();
+  const savedTeams = localStorage.getItem('teams');
+  if (savedTeams) teams = JSON.parse(savedTeams);
+  renderTeamList();
   checkRoomFromURL();
+  
+  // Check if user is a host from previous session
+  const savedHostRoom = localStorage.getItem('host_room');
+  if (savedHostRoom && !roomId) {
+    roomId = savedHostRoom;
+    isHost = true;
+    loadGameState();
+    renderHostUI();
+  }
 </script>
 </body>
 </html>
