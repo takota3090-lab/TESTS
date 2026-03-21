@@ -258,6 +258,14 @@
       font-weight: bold;
       cursor: pointer;
     }
+    .error-message {
+      background: #ffebee;
+      color: #B83B3B;
+      padding: 10px;
+      border-radius: 12px;
+      margin: 10px 0;
+      text-align: center;
+    }
     @media (max-width: 640px) {
       .current-word { font-size: 1.3rem; }
       .action-buttons { grid-template-columns: 1fr; }
@@ -307,6 +315,8 @@
         <button class="btn-primary" id="createRoomBtn" style="background: #2D6A4F; width: 100%; margin: 0.5rem 0;">
           <i class="fas fa-plus-circle"></i> إنشاء غرفة جديدة
         </button>
+        
+        <div id="errorDisplay" style="margin-top: 1rem;"></div>
       </div>
     </div>
 
@@ -353,8 +363,20 @@
   };
 
   // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const database = getDatabase(app);
+  let app, database;
+  try {
+    app = initializeApp(firebaseConfig);
+    database = getDatabase(app);
+    console.log("✅ Firebase connected successfully!");
+  } catch (error) {
+    console.error("❌ Firebase initialization error:", error);
+    document.getElementById('errorDisplay').innerHTML = `
+      <div class="error-message">
+        <i class="fas fa-exclamation-triangle"></i> خطأ في الاتصال بقاعدة البيانات<br>
+        يرجى التحقق من اتصال الإنترنت
+      </div>
+    `;
+  }
   
   // Game variables
   let roomId = null;
@@ -375,10 +397,10 @@
   
   // Categories
   const categories = {
-    "أفعال": ["يرقص العرضة", "يغني", "يطبخ منسف", "يشرب قهوة", "يركب جمل", "يلعب كرة قدم", "يؤذن", "يلقي شعر", "يرسم", "يضحك", "يبكي", "ينام", "يأكل تمر", "يركض", "يقفز", "يسبح", "يقرأ", "يكتب", "يقود سيارة", "يصلح كمبيوتر", "يغسل يديه", "يصفق", "يصفير"],
-    "حيوانات": ["جمل", "صقر", "حصان عربي", "غزال", "نمر", "ذئب", "ثعلب", "وعل", "نعامة", "قط", "كلب", "نسر", "فهد", "أرنب", "حمام", "أسد", "فيل", "زرافة", "دلفين", "سلحفاة"],
-    "أمثال شعبية": ["اطلع من جلدك", "اللي ما يعرف الصقر يشويه", "الجار قبل الدار", "الصبر مفتاح الفرج", "العين بصيرة واليد قصيرة", "القناعة كنز لا يفنى", "الكذب ملح الرجال", "باب النجار مخلع", "حبل الكذب قصير", "عصفور في اليد ولا عشرة على الشجرة"],
-    "أشياء": ["تلفون", "سيارة", "طائرة", "ساعة", "نظارة", "كتاب", "قلم", "مقص", "مفتاح", "باب", "كرسي", "طاولة", "سرير", "ثلاجة", "غسالة", "حقيبة", "مظلة", "مرآة", "مشط", "خاتم"]
+    "أفعال": ["يرقص العرضة", "يغني", "يطبخ منسف", "يشرب قهوة", "يركب جمل", "يلعب كرة قدم", "يؤذن", "يلقي شعر", "يرسم", "يضحك", "يبكي", "ينام", "يأكل تمر", "يركض", "يقفز", "يسبح", "يقرأ", "يكتب", "يقود سيارة"],
+    "حيوانات": ["جمل", "صقر", "حصان عربي", "غزال", "نمر", "ذئب", "ثعلب", "وعل", "نعامة", "قط", "كلب", "نسر", "فهد", "أرنب", "حمام", "أسد", "فيل", "زرافة", "دلفين"],
+    "أمثال شعبية": ["اطلع من جلدك", "اللي ما يعرف الصقر يشويه", "الجار قبل الدار", "الصبر مفتاح الفرج", "العين بصيرة واليد قصيرة", "القناعة كنز لا يفنى"],
+    "أشياء": ["تلفون", "سيارة", "طائرة", "ساعة", "نظارة", "كتاب", "قلم", "مقص", "مفتاح", "باب", "كرسي", "طاولة", "سرير", "ثلاجة", "غسالة"]
   };
   
   function getRandomWord() {
@@ -394,23 +416,28 @@
   
   currentUserId = generateUserId();
   
-  // Show loading message
-  function showLoading(message = "جاري الاتصال...") {
-    const container = document.getElementById('gameContent');
-    if (container && !roomId) {
-      container.innerHTML = `
-        <div class="loading">
-          <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: #C65D3B;"></i>
-          <p style="margin-top: 1rem;">${message}</p>
-        </div>
-      `;
+  function showError(message) {
+    const errorDiv = document.getElementById('errorDisplay');
+    if (errorDiv) {
+      errorDiv.innerHTML = `<div class="error-message"><i class="fas fa-exclamation-triangle"></i> ${message}</div>`;
+      setTimeout(() => {
+        errorDiv.innerHTML = '';
+      }, 5000);
     }
+    alert(message);
   }
   
   // Create new room
   window.createRoom = async function() {
+    if (!database) {
+      showError('❌ لم يتم الاتصال بقاعدة البيانات. يرجى تحديث الصفحة.');
+      return;
+    }
+    
     try {
-      showLoading("جاري إنشاء الغرفة...");
+      const loadingDiv = document.getElementById('errorDisplay');
+      if (loadingDiv) loadingDiv.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> جاري إنشاء الغرفة...</div>';
+      
       roomId = Math.random().toString(36).substring(2, 8).toUpperCase();
       isHost = true;
       
@@ -432,6 +459,7 @@
         { id: 2, name: "الفريق الأزرق", score: 0 }
       ];
       
+      console.log("Creating room:", roomId);
       await set(ref(database, 'rooms/' + roomId + '/game'), gameData);
       await set(ref(database, 'rooms/' + roomId + '/teams'), initialTeams);
       await set(ref(database, 'rooms/' + roomId + '/host'), currentUserId);
@@ -440,20 +468,27 @@
       localStorage.setItem('isHost', 'true');
       listenToRoom(roomId);
       
+      if (loadingDiv) loadingDiv.innerHTML = '';
       alert('✅ تم إنشاء الغرفة بنجاح!\n\nرمز الغرفة: ' + roomId + '\n\nشارك هذا الرمز مع أصدقائك');
       switchToTab('game');
     } catch (error) {
       console.error("Error creating room:", error);
-      alert('❌ حدث خطأ في إنشاء الغرفة. تأكد من اتصال الإنترنت.');
+      showError('❌ حدث خطأ في إنشاء الغرفة: ' + error.message);
     }
   };
   
   // Join existing room
   window.joinRoom = async function(code) {
-    const roomCode = (code || prompt("🔑 أدخل رمز الغرفة:", "")).trim().toUpperCase();
+    if (!database) {
+      showError('❌ لم يتم الاتصال بقاعدة البيانات. يرجى تحديث الصفحة.');
+      return;
+    }
+    
+    const roomCode = (code || document.getElementById('quickJoinCode')?.value || prompt("🔑 أدخل رمز الغرفة:", "")).trim().toUpperCase();
     if (!roomCode) return;
     
-    showLoading(`جاري البحث عن الغرفة ${roomCode}...`);
+    const loadingDiv = document.getElementById('errorDisplay');
+    if (loadingDiv) loadingDiv.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> جاري البحث عن الغرفة...</div>';
     
     try {
       const roomRef = ref(database, 'rooms/' + roomCode);
@@ -466,18 +501,16 @@
         localStorage.removeItem('isHost');
         listenToRoom(roomId);
         switchToTab('game');
+        if (loadingDiv) loadingDiv.innerHTML = '';
         alert('✅ تم الانضمام إلى الغرفة بنجاح!');
       } else {
-        alert('❌ غرفة غير موجودة! تأكد من الرقم وأعد المحاولة.');
-        showLoading("لم يتم العثور على الغرفة");
-        setTimeout(() => {
-          if (!roomId) switchToTab('home');
-        }, 1500);
+        showError('❌ غرفة غير موجودة! تأكد من الرقم وأعد المحاولة.');
+        if (loadingDiv) loadingDiv.innerHTML = '';
       }
     } catch (error) {
       console.error("Error joining room:", error);
-      alert('❌ حدث خطأ في الاتصال. تأكد من اتصال الإنترنت.');
-      showLoading("خطأ في الاتصال");
+      showError('❌ حدث خطأ في الاتصال: ' + error.message);
+      if (loadingDiv) loadingDiv.innerHTML = '';
     }
   };
   
@@ -502,21 +535,20 @@
         // Handle timer countdown for host
         if (isHost && timerRunning && gameActive && !gameWinner) {
           if (timerInterval) clearInterval(timerInterval);
-          timerInterval = setInterval(() => {
+          timerInterval = setInterval(async () => {
             const currentGameRef = ref(database, 'rooms/' + roomId + '/game');
-            get(currentGameRef).then((snap) => {
-              const current = snap.val();
-              if (current && current.timerRunning && current.timeLeft > 0 && current.gameActive && !current.gameWinner) {
-                const newTime = current.timeLeft - 1;
-                update(ref(database, 'rooms/' + roomId + '/game'), { timeLeft: newTime });
-                if (newTime <= 0) {
-                  update(ref(database, 'rooms/' + roomId + '/game'), { timerRunning: false });
-                  clearInterval(timerInterval);
-                }
-              } else {
+            const snap = await get(currentGameRef);
+            const current = snap.val();
+            if (current && current.timerRunning && current.timeLeft > 0 && current.gameActive && !current.gameWinner) {
+              const newTime = current.timeLeft - 1;
+              update(ref(database, 'rooms/' + roomId + '/game'), { timeLeft: newTime });
+              if (newTime <= 0) {
+                update(ref(database, 'rooms/' + roomId + '/game'), { timerRunning: false });
                 clearInterval(timerInterval);
               }
-            });
+            } else {
+              clearInterval(timerInterval);
+            }
           }, 1000);
         } else if (timerInterval && !timerRunning) {
           clearInterval(timerInterval);
@@ -545,19 +577,28 @@
   
   // Update game data
   function updateGameData(updates) {
-    if (isHost && roomId) {
-      update(ref(database, 'rooms/' + roomId + '/game'), updates);
+    if (isHost && roomId && database) {
+      update(ref(database, 'rooms/' + roomId + '/game'), updates).catch(err => {
+        console.error("Error updating game data:", err);
+        showError("حدث خطأ في تحديث البيانات");
+      });
     }
   }
   
   function updateTeams(teamsData) {
-    if (isHost && roomId) {
-      set(ref(database, 'rooms/' + roomId + '/teams'), teamsData);
+    if (isHost && roomId && database) {
+      set(ref(database, 'rooms/' + roomId + '/teams'), teamsData).catch(err => {
+        console.error("Error updating teams:", err);
+        showError("حدث خطأ في تحديث الفرق");
+      });
     }
   }
   
   window.startTimer = function() {
-    if (!isHost) return;
+    if (!isHost) {
+      showError('⚠️ فقط المضيف يمكنه بدء المؤقت');
+      return;
+    }
     if (timerRunning || !gameActive || gameWinner) return;
     if (timeLeft <= 0) {
       updateGameData({ timeLeft: 60, timerRunning: true });
@@ -567,7 +608,10 @@
   };
   
   window.skipWord = function() {
-    if (!isHost) return;
+    if (!isHost) {
+      showError('⚠️ فقط المضيف يمكنه تخطي الكلمة');
+      return;
+    }
     if (!gameActive || gameWinner) return;
     const newWord = getRandomWord();
     updateGameData({
@@ -580,7 +624,10 @@
   };
   
   window.guessCorrect = function() {
-    if (!isHost) return;
+    if (!isHost) {
+      showError('⚠️ فقط المضيف يمكنه تسجيل النقاط');
+      return;
+    }
     if (!gameActive || gameWinner) return;
     showTeamSelectionModal();
   };
@@ -611,7 +658,10 @@
   }
   
   window.resetGame = function() {
-    if (!isHost) return;
+    if (!isHost) {
+      showError('⚠️ فقط المضيف يمكنه بدء لعبة جديدة');
+      return;
+    }
     const newWord = getRandomWord();
     const resetTeams = teams.map(t => ({ ...t, score: 0 }));
     updateTeams(resetTeams);
@@ -627,7 +677,10 @@
   };
   
   window.changeCategory = function() {
-    if (!isHost) return;
+    if (!isHost) {
+      showError('⚠️ فقط المضيف يمكنه تغيير الفئة');
+      return;
+    }
     showCategorySelectionModal();
   };
   
@@ -787,16 +840,19 @@
   }
   
   window.addTeam = function() {
+    if (!isHost) {
+      alert('⚠️ فقط المضيف يمكنه إضافة فرق جديدة');
+      return;
+    }
     const input = document.getElementById('teamName');
     const name = input.value.trim();
-    if (name && isHost) {
+    if (name) {
       const newTeam = { id: Date.now(), name: name, score: 0 };
       const updatedTeams = [...teams, newTeam];
       updateTeams(updatedTeams);
       input.value = '';
-    } else if (!isHost) {
-      alert('⚠️ فقط المضيف يمكنه إضافة فرق جديدة');
-    } else if (!name) {
+      alert('✅ تم إضافة الفريق: ' + name);
+    } else {
       alert('الرجاء إدخال اسم الفريق');
     }
   };
@@ -841,7 +897,7 @@
   
   // Check if user is returning to a room
   const savedRoom = localStorage.getItem('myRoom') || localStorage.getItem('joinedRoom');
-  if (savedRoom) {
+  if (savedRoom && database) {
     const isHostSaved = localStorage.getItem('myRoom') === savedRoom;
     roomId = savedRoom;
     isHost = isHostSaved;
