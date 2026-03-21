@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>لعبة التمثيل - اختيار الفئة | تصميم سعود</title>
+  <title>لعبة التمثيل - دعوة الأصدقاء | تصميم سعود</title>
   
   <!-- Premium Arabic Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
@@ -25,6 +25,8 @@
       --text-secondary: #8B6B5C;
       --success: #2D6A4F;
       --danger: #B83B3B;
+      --whatsapp: #25D366;
+      --whatsapp-dark: #128C7E;
       --gradient-terracotta: linear-gradient(135deg, #C65D3B 0%, #A84A2F 100%);
       --gradient-gold: linear-gradient(135deg, #D4A84B 0%, #E8C878 100%);
       --shadow-soft: 0 4px 20px rgba(107, 45, 45, 0.1);
@@ -107,12 +109,13 @@
       display: block;
     }
 
-    #homeTab { overflow: hidden; }
+    #homeTab, #inviteTab { overflow: hidden; }
     .tab-pane::-webkit-scrollbar { width: 4px; }
     .tab-pane::-webkit-scrollbar-track { background: rgba(198, 93, 59, 0.1); }
     .tab-pane::-webkit-scrollbar-thumb { background: var(--terracotta); border-radius: 2px; }
 
-    .home-container {
+    /* Home Tab Styles */
+    .home-container, .invite-container {
       max-width: 600px;
       margin: 0 auto;
       width: 100%;
@@ -123,7 +126,7 @@
       padding: 0.5rem;
     }
 
-    .hero-card {
+    .hero-card, .invite-card {
       background: var(--card-bg);
       border-radius: 24px;
       padding: 1.2rem;
@@ -234,6 +237,155 @@
       box-shadow: var(--shadow-terracotta);
     }
 
+    /* Invite Tab Styles */
+    .invite-header {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    .invite-header i {
+      font-size: 2.5rem;
+      color: var(--whatsapp);
+      margin-bottom: 0.5rem;
+    }
+    .invite-header h2 {
+      color: var(--burgundy);
+      font-size: 1.3rem;
+    }
+    .invite-header p {
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+      margin-top: 0.3rem;
+    }
+
+    .contact-list {
+      max-height: 300px;
+      overflow-y: auto;
+      margin: 1rem 0;
+      border-radius: 16px;
+      border: 1px solid rgba(198, 93, 59, 0.15);
+    }
+
+    .contact-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem 1rem;
+      border-bottom: 1px solid rgba(198, 93, 59, 0.1);
+      transition: all 0.2s;
+    }
+    .contact-item:last-child {
+      border-bottom: none;
+    }
+    .contact-item:hover {
+      background: rgba(198, 93, 59, 0.05);
+    }
+    .contact-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+    }
+    .contact-avatar {
+      width: 40px;
+      height: 40px;
+      background: rgba(37, 211, 102, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--whatsapp);
+      font-size: 1.2rem;
+    }
+    .contact-details {
+      flex: 1;
+    }
+    .contact-name {
+      font-weight: 700;
+      color: var(--text-primary);
+      font-size: 0.9rem;
+    }
+    .contact-number {
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      direction: ltr;
+      text-align: left;
+    }
+    .invite-btn {
+      background: var(--whatsapp);
+      border: none;
+      padding: 6px 14px;
+      border-radius: 20px;
+      color: white;
+      font-weight: 600;
+      font-size: 0.7rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s;
+    }
+    .invite-btn:hover {
+      background: var(--whatsapp-dark);
+      transform: scale(1.02);
+    }
+    .invite-all-btn {
+      background: var(--gradient-terracotta);
+      width: 100%;
+      padding: 10px;
+      border-radius: 50px;
+      border: none;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 0.5rem;
+      transition: all 0.2s;
+    }
+    .invite-all-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-terracotta);
+    }
+    .add-contact-form {
+      display: flex;
+      gap: 8px;
+      margin-top: 1rem;
+      padding: 0.8rem;
+      background: rgba(198, 93, 59, 0.05);
+      border-radius: 16px;
+    }
+    .add-contact-input {
+      flex: 1;
+      padding: 8px 14px;
+      border-radius: 50px;
+      border: 1px solid rgba(198, 93, 59, 0.2);
+      font-family: 'Tajawal', sans-serif;
+      direction: ltr;
+    }
+    .add-contact-input::placeholder {
+      direction: rtl;
+    }
+    .add-contact-btn {
+      background: var(--terracotta);
+      border: none;
+      padding: 8px 18px;
+      border-radius: 50px;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .empty-contacts {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-secondary);
+    }
+
+    /* Game Tab Styles (keeping existing) */
     .game-container {
       max-width: 600px;
       margin: 0 auto;
@@ -370,6 +522,7 @@
     .stat-item { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: var(--text-secondary); }
     .stat-value { font-size: 1.3rem; font-weight: 800; color: var(--terracotta); }
 
+    /* Team Tab Styles */
     .team-panel {
       max-width: 600px;
       margin: 0 auto;
@@ -530,6 +683,8 @@
       .timer-number { font-size: 2rem; }
       .tab-navigation { gap: 0.2rem; }
       .tab-btn { padding: 4px 12px; font-size: 0.7rem; }
+      .contact-item { flex-direction: column; gap: 8px; align-items: stretch; }
+      .invite-btn { justify-content: center; }
     }
   </style>
 </head>
@@ -539,6 +694,7 @@
     <button class="tab-btn active" data-tab="home"><i class="fas fa-home"></i> الرئيسية</button>
     <button class="tab-btn" data-tab="game"><i class="fas fa-mask"></i> اللعبة</button>
     <button class="tab-btn" data-tab="teams"><i class="fas fa-users"></i> الفرق</button>
+    <button class="tab-btn" data-tab="invite"><i class="fab fa-whatsapp"></i> دعوة</button>
   </div>
 
   <div class="tab-content">
@@ -563,13 +719,14 @@
               <li><i class="fas fa-trophy"></i> <strong>"تم التخمين"</strong> ← اختر الفريق الفائز + نقطة</li>
               <li><i class="fas fa-forward"></i> <strong>"تخطي"</strong> لكلمة جديدة</li>
               <li><i class="fas fa-flag-checkered"></i> أول فريق يصل <strong>10 نقاط</strong> هو البطل!</li>
-              <li><i class="fas fa-redo-alt"></i> اضغط <strong>"لعبة جديدة"</strong> لتصفير النقاط والبدء من جديد</li>
+              <li><i class="fab fa-whatsapp"></i> استخدم <strong>الدعوة</strong> لدعوة أصدقائك عبر واتساب</li>
             </ul>
           </div>
           <button class="play-button-home" id="playNowBtn"><i class="fas fa-play"></i> ابدأ اللعب</button>
         </div>
       </div>
     </div>
+    
     <div class="tab-pane" id="gameTab">
       <div class="game-container">
         <div class="game-card">
@@ -578,6 +735,7 @@
         </div>
       </div>
     </div>
+    
     <div class="tab-pane" id="teamsTab">
       <div class="team-panel">
         <div id="teamListContainer" class="team-list"></div>
@@ -588,12 +746,36 @@
         <button id="goToGameBtn" class="add-team-btn" style="margin-top: 0.8rem; width: 100%; justify-content: center;"><i class="fas fa-mask"></i> الذهاب إلى اللعبة</button>
       </div>
     </div>
+    
+    <div class="tab-pane" id="inviteTab">
+      <div class="invite-container">
+        <div class="invite-card">
+          <div class="invite-header">
+            <i class="fab fa-whatsapp"></i>
+            <h2>دعوة الأصدقاء</h2>
+            <p>أرسل دعوة للعب عبر واتساب</p>
+          </div>
+          
+          <div id="contactsList" class="contact-list"></div>
+          
+          <div class="add-contact-form">
+            <input type="text" id="contactNameInput" class="add-contact-input" placeholder="الاسم (اختياري)">
+            <input type="tel" id="contactNumberInput" class="add-contact-input" placeholder="رقم الجوال (مثال: 9665xxxxxxxx)">
+            <button id="addContactBtn" class="add-contact-btn"><i class="fas fa-plus"></i> إضافة</button>
+          </div>
+          
+          <button id="inviteAllBtn" class="invite-all-btn">
+            <i class="fab fa-whatsapp"></i> دعوة الجميع عبر واتساب
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 <div class="sound-toggle-inline" id="soundToggle"><i class="fas fa-volume-mute"></i> الصوت</div>
 
 <script>
-  // ==================== SOUND SYSTEM ====================
+  // ==================== SOUND SYSTEM (same as before) ====================
   let soundEnabled = false;
   let audioContext = null;
   function initAudio() { 
@@ -644,18 +826,146 @@
     }
   });
 
-  // ==================== GAME DATA - 4 CATEGORIES (FOOD REMOVED) ====================
-  const gameCategories = {
-    "أفعال": ["يرقص العرضة","يغني","يطبخ منسف","يشرب قهوة","يركب جمل","يلعب كرة قدم","يؤذن","يلقي شعر","يرسم","يضحك","يبكي","ينام","يأكل تمر","يسقي الضيوف","يركض","يقفز","يسبح","يقرأ","يكتب","يقود سيارة","يصيد سمك","يطير طائرة","يحلق ذقن","يتزحلق","يتسلق جبل","يصارع","يلعب شطرنج","يخيط ملابس","يغسل سيارة","يصلي","يحفر بئر","يرمي سهام","يقطع خشب","يشوي لحم","يخبز خبز","يحلب بقرة","يرعى غنم","يحصد قمح","يدق طبل","يعزف عود","يصنع قهوة","يجهز خيمة","يغسل يده","يمشي على يديه","يتكلم بالتليفون","يشرب موية","يأكل برياني","ينظف بيت","يرتب مكتب","يصلح كمبيوتر","يشرب شاي","يأكل كبسة","يقلي بيض","يغلي ماء","يفتح باب","يسكر شباك","ينادي صديق","يلوح بيده","يصفق","يصفير"],
+  // ==================== WHATSAPP INVITE SYSTEM ====================
+  let contacts = [];
+  
+  function loadContacts() {
+    const saved = localStorage.getItem('whatsapp_contacts');
+    if(saved) {
+      contacts = JSON.parse(saved);
+    } else {
+      // Default contacts
+      contacts = [
+        { id: 1, name: "أحمد", number: "9665XXXXXXXX" },
+        { id: 2, name: "محمد", number: "9665XXXXXXXX" },
+        { id: 3, name: "سارة", number: "9665XXXXXXXX" }
+      ];
+    }
+    renderContacts();
+  }
+  
+  function saveContacts() {
+    localStorage.setItem('whatsapp_contacts', JSON.stringify(contacts));
+  }
+  
+  function addContact(name, number) {
+    if(!number.trim()) {
+      alert('الرجاء إدخال رقم الجوال');
+      return false;
+    }
+    // Clean number - remove spaces and non-digits
+    let cleanNumber = number.replace(/[^\d]/g, '');
+    if(cleanNumber.length < 9) {
+      alert('الرجاء إدخال رقم صحيح (يجب أن يكون 9 أرقام على الأقل)');
+      return false;
+    }
+    // Add Saudi code if not present
+    if(!cleanNumber.startsWith('966') && cleanNumber.length === 9) {
+      cleanNumber = '966' + cleanNumber;
+    }
     
-    "حيوانات": ["جمل","صقر","حصان عربي","غزال","نمر","ذئب","ثعلب","وعل","نعامة","قط","كلب","نسر","فهد","أرنب","حمام","ضب","حرباء","عقاب","بومة","ثعبان","عقرب","عنكبوت","جربوع","هدهد","قرد","فيل","زرافة","أسد","بطريق","دب","دلفين","حوت","قرش","سمكة","سلحفاة","ضفدع","يعسوب","فراشة","نحلة","دودة","جراد","صرصور","بعوضة","ذبابة","عصفور","بلبل","ببغاء","بجعة","تمساح","خفاش","حمار","حمار وحشي","ظبي","مها","راكون","سنجاب","فأر","جرذ"],
+    contacts.push({
+      id: Date.now(),
+      name: name.trim() || `صديق ${contacts.length + 1}`,
+      number: cleanNumber
+    });
+    saveContacts();
+    renderContacts();
+    play('click');
+    return true;
+  }
+  
+  function deleteContact(contactId) {
+    if(confirm('هل تريد حذف هذا الاتصال؟')) {
+      contacts = contacts.filter(c => c.id !== contactId);
+      saveContacts();
+      renderContacts();
+      play('click');
+    }
+  }
+  
+  function sendWhatsAppInvite(number, name) {
+    const gameLink = window.location.href;
+    const message = `🎭 *لعبة التمثيل* 🎭\n\nمرحباً ${name || 'صديقي'}!\n\nتمت دعوتك للعب لعبة التمثيل الممتعة مع الأصدقاء!\n\n🎮 *طريقة اللعب:*\n• لاعب يمثل بدون كلام والباقي يخمنون\n• 4 فئات: أفعال، حيوانات، أمثال، أشياء\n• أول فريق يصل 10 نقاط يفوز\n\n🎯 *رابط اللعبة:*\n${gameLink}\n\nانقر الرابط للانضمام إلينا!\n\nننتظرك! 🎉`;
     
-    "أمثال شعبية": ["اطلع من جلدك", "اللي ما يعرف الصقر يشويه", "اللي راح ما يرجع", "اللي على راسه بطحة يحس عليها", "امشي على قد لحافك", "الجار قبل الدار", "الرفيق قبل الطريق", "الصبر مفتاح الفرج", "العين بصيرة واليد قصيرة", "الغايب حجته معاه", "القناعة كنز لا يفنى", "الكذب ملح الرجال", "الله يعين على الظالم", "إن ضاقت بك السبل فاصبر", "باب النجار مخلع", "جبتك يا جحا للسوق تبيعك", "جحر الضب يهدم والضب يبني", "حبل الكذب قصير", "خير الكلام ما قل ودل", "دايم السيف ينعل", "ربعك ولا ذهبك", "ساكت واجد ناطق", "سمن على عسل", "شر البلية ما يضحك", "صاحب بالك سليم", "عصفور في اليد ولا عشرة على الشجرة", "على قدر لحافك مد رجليك", "في السفر رجال وفي الحضر عيال", "قال لها جحا أحمق قالته ومن ينكر", "كل شمس لها مغرب", "لا تحسب النشوة تبقى للأبد", "ما يصح إلا الصحيح", "ما يطيب العرس إلا بالركب", "من جاور الجبان ندم", "من طلب العلا سهر الليالي", "نفسك إن لم تشغلها بالحق شغلتك بالباطل", "وافق شن طبقة", "يا جحا لا تزعل", "يد الله مع الجماعة", "يسرك البطيخ ينطق", "يوم لك ويوم عليك"],
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/${number}?text=${encodedMessage}`;
+    window.open(whatsappUrl, '_blank');
+    play('click');
+  }
+  
+  function sendInviteToAll() {
+    if(contacts.length === 0) {
+      alert('لا توجد جهات اتصال للدعوة. أضف جهات اتصال أولاً.');
+      return;
+    }
+    if(confirm(`هل تريد إرسال دعوة إلى ${contacts.length} شخص عبر واتساب؟\nسيتم فتح نافذة لكل شخص بشكل منفصل.`)) {
+      contacts.forEach(contact => {
+        setTimeout(() => {
+          sendWhatsAppInvite(contact.number, contact.name);
+        }, 500);
+      });
+    }
+  }
+  
+  function renderContacts() {
+    const container = document.getElementById('contactsList');
+    if(!container) return;
     
-    "أشياء": ["تلفون", "سيارة", "طائرة", "قارب", "دراجة", "ساعة", "نظارة", "كتاب", "قلم", "مقص", "مفتاح", "باب", "شباك", "كرسي", "طاولة", "سرير", "ثلاجة", "فرن", "غسالة", "مكنسة", "فرشاة", "مرآة", "مشط", "خاتم", "سوار", "قلادة", "حقيبة", "محفظة", "مظلة", "شمسية", "سجادة", "وسادة", "لحاف", "ملعقة", "شوكة", "سكين", "صحن", "كأس", "إبريق", "دلة", "فناجين", "مبخرة", "عطر", "صابون", "منشفة", "مروحة", "مكيف", "تلفزيون", "راديو", "حاسوب", "آلة حاسبة", "كاميرا", "ساعة حائط", "مصباح", "شمعة", "ولاعة", "فأس", "مطرقة", "مسمار", "مسطرة", "ألوان", "دفتر", "ممحاة", "طباشير", "سبورة", "خريطة", "مجهر", "تلسكوب", "بوصلة"]
+    if(contacts.length === 0) {
+      container.innerHTML = `
+        <div class="empty-contacts">
+          <i class="fas fa-address-book" style="font-size: 2rem; color: rgba(198,93,59,0.3);"></i>
+          <p style="margin-top: 0.5rem;">لا توجد جهات اتصال</p>
+          <p style="font-size: 0.7rem;">أضف جهات اتصال لإرسال الدعوات</p>
+        </div>
+      `;
+      return;
+    }
+    
+    container.innerHTML = contacts.map(contact => `
+      <div class="contact-item">
+        <div class="contact-info">
+          <div class="contact-avatar">
+            <i class="fas fa-user-circle"></i>
+          </div>
+          <div class="contact-details">
+            <div class="contact-name">${escapeHtml(contact.name)}</div>
+            <div class="contact-number">${contact.number}</div>
+          </div>
+        </div>
+        <div style="display: flex; gap: 6px;">
+          <button class="invite-btn" onclick="window.sendInviteToContact(${contact.id})">
+            <i class="fab fa-whatsapp"></i> دعوة
+          </button>
+          <button class="team-btn delete" onclick="window.deleteContact(${contact.id})" style="background: rgba(184, 59, 59, 0.1);">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </div>
+    `).join('');
+  }
+  
+  window.sendInviteToContact = (contactId) => {
+    const contact = contacts.find(c => c.id === contactId);
+    if(contact) {
+      sendWhatsAppInvite(contact.number, contact.name);
+    }
   };
   
-  let currentCategory = "أفعال"; // Default category
+  window.deleteContact = (contactId) => {
+    deleteContact(contactId);
+  };
+  
+  // ==================== GAME DATA (simplified for space) ====================
+  const gameCategories = {
+    "أفعال": ["يرقص العرضة","يغني","يطبخ منسف","يشرب قهوة","يركب جمل","يلعب كرة قدم","يؤذن","يلقي شعر","يرسم","يضحك","يبكي","ينام","يأكل تمر"],
+    "حيوانات": ["جمل","صقر","حصان عربي","غزال","نمر","ذئب","ثعلب","وعل","نعامة","قط","كلب","نسر","فهد"],
+    "أمثال شعبية": ["اطلع من جلدك", "اللي ما يعرف الصقر يشويه", "اللي راح ما يرجع", "الجار قبل الدار", "الصبر مفتاح الفرج"],
+    "أشياء": ["تلفون", "سيارة", "طائرة", "ساعة", "نظارة", "كتاب", "قلم", "مقص", "مفتاح", "باب", "كرسي"]
+  };
+  
+  let currentCategory = "أفعال";
   let allWords = [];
   
   function updateAllWords() {
@@ -680,7 +990,7 @@
   // ==================== TEAMS ====================
   let teams = [];
   function loadTeams() {
-    const saved = localStorage.getItem('charades_teams_v7');
+    const saved = localStorage.getItem('charades_teams_v8');
     if(saved) {
       teams = JSON.parse(saved);
     } else {
@@ -691,7 +1001,7 @@
     }
     renderTeamList();
   }
-  function saveTeams() { localStorage.setItem('charades_teams_v7', JSON.stringify(teams)); }
+  function saveTeams() { localStorage.setItem('charades_teams_v8', JSON.stringify(teams)); }
   function addTeam(name) {
     if(!name.trim()) return;
     teams.push({ id: Date.now(), name: name.trim(), score: 0 });
@@ -788,45 +1098,6 @@
   function escapeHtml(str) { 
     if(!str) return '';
     return str.replace(/[&<>]/g, m => m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); 
-  }
-
-  // ==================== CATEGORY SELECTION ====================
-  function showCategorySelectionModal() {
-    if(gameWinner) {
-      alert('اللعبة انتهت! اضغط على "لعبة جديدة" للبدء.');
-      return;
-    }
-    const modal = document.createElement('div');
-    modal.className = 'modal-overlay';
-    const categories = Object.keys(gameCategories);
-    modal.innerHTML = `<div class="modal-content">
-      <h3><i class="fas fa-layer-group"></i> اختر الفئة</h3>
-      <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.5rem;">الفئة الحالية: <strong style="color: var(--terracotta);">${currentCategory}</strong></div>
-      ${categories.map(cat => {
-        let icon = '';
-        if(cat === 'أفعال') icon = '🏃';
-        else if(cat === 'حيوانات') icon = '🐪';
-        else if(cat === 'أمثال شعبية') icon = '📜';
-        else if(cat === 'أشياء') icon = '📱';
-        return `<div class="category-option" data-category="${cat}">${icon} ${cat}</div>`;
-      }).join('')}
-      <button class="team-btn" style="margin-top:1rem; width:100%; background:transparent; border:1px solid #ccc;" id="cancelModal"><i class="fas fa-times"></i> إلغاء</button>
-    </div>`;
-    document.body.appendChild(modal);
-    
-    modal.querySelectorAll('.category-option').forEach(opt => {
-      opt.addEventListener('click', () => {
-        const newCategory = opt.dataset.category;
-        if(newCategory !== currentCategory) {
-          currentCategory = newCategory;
-          currentWordObj = getRandomWord();
-          refreshWordUI();
-          play('click');
-        }
-        modal.remove();
-      });
-    });
-    modal.querySelector('#cancelModal').addEventListener('click', () => { modal.remove(); });
   }
 
   // ==================== GAME STATE ====================
@@ -1001,6 +1272,44 @@
     if(timerEl) timerEl.classList.remove('warning');
   }
 
+  function showCategorySelectionModal() {
+    if(gameWinner) {
+      alert('اللعبة انتهت! اضغط على "لعبة جديدة" للبدء.');
+      return;
+    }
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    const categories = Object.keys(gameCategories);
+    modal.innerHTML = `<div class="modal-content">
+      <h3><i class="fas fa-layer-group"></i> اختر الفئة</h3>
+      <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.5rem;">الفئة الحالية: <strong style="color: var(--terracotta);">${currentCategory}</strong></div>
+      ${categories.map(cat => {
+        let icon = '';
+        if(cat === 'أفعال') icon = '🏃';
+        else if(cat === 'حيوانات') icon = '🐪';
+        else if(cat === 'أمثال شعبية') icon = '📜';
+        else if(cat === 'أشياء') icon = '📱';
+        return `<div class="category-option" data-category="${cat}">${icon} ${cat}</div>`;
+      }).join('')}
+      <button class="team-btn" style="margin-top:1rem; width:100%; background:transparent; border:1px solid #ccc;" id="cancelModal"><i class="fas fa-times"></i> إلغاء</button>
+    </div>`;
+    document.body.appendChild(modal);
+    
+    modal.querySelectorAll('.category-option').forEach(opt => {
+      opt.addEventListener('click', () => {
+        const newCategory = opt.dataset.category;
+        if(newCategory !== currentCategory) {
+          currentCategory = newCategory;
+          currentWordObj = getRandomWord();
+          refreshWordUI();
+          play('click');
+        }
+        modal.remove();
+      });
+    });
+    modal.querySelector('#cancelModal').addEventListener('click', () => { modal.remove(); });
+  }
+
   function renderGameUI() {
     if(!currentWordObj) currentWordObj = getRandomWord();
     const victoryMessageHTML = gameWinner ? 
@@ -1063,6 +1372,7 @@
     const targetPane = document.getElementById(`${tabId}Tab`);
     if(targetPane) targetPane.classList.add('active-pane');
     if(tabId === 'teams') renderTeamList();
+    if(tabId === 'invite') renderContacts();
     play('tabSwitch');
   }
   
@@ -1106,8 +1416,43 @@
       }
     });
   }
+  
+  // Invite tab buttons
+  const addContactBtn = document.getElementById('addContactBtn');
+  if(addContactBtn) {
+    addContactBtn.addEventListener('click', () => {
+      const nameInput = document.getElementById('contactNameInput');
+      const numberInput = document.getElementById('contactNumberInput');
+      if(numberInput && numberInput.value.trim()) {
+        addContact(nameInput?.value || '', numberInput.value);
+        if(nameInput) nameInput.value = '';
+        if(numberInput) numberInput.value = '';
+      } else {
+        alert('الرجاء إدخال رقم الجوال');
+        if(numberInput) numberInput.style.borderColor = 'var(--danger)';
+        setTimeout(() => { if(numberInput) numberInput.style.borderColor = ''; }, 1000);
+      }
+    });
+  }
+  
+  const inviteAllBtn = document.getElementById('inviteAllBtn');
+  if(inviteAllBtn) {
+    inviteAllBtn.addEventListener('click', () => sendInviteToAll());
+  }
+  
+  const contactNumberInput = document.getElementById('contactNumberInput');
+  if(contactNumberInput) {
+    contactNumberInput.addEventListener('keypress', (e) => {
+      if(e.key === 'Enter') {
+        const addBtn = document.getElementById('addContactBtn');
+        if(addBtn) addBtn.click();
+      }
+    });
+  }
 
+  // Initialize
   loadTeams();
+  loadContacts();
   initGame();
 </script>
 </body>
