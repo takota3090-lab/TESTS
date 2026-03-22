@@ -2,1117 +2,579 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Draw & Guess - Multiplayer Game</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Tap Race - Multiplayer</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
         
         body {
-            font-family: 'Fredoka', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: white;
+            overflow: hidden;
         }
         
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+            width: 100%;
         }
         
-        .canvas-container {
-            cursor: crosshair;
-            background: white;
+        h1 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .subtitle {
+            text-align: center;
+            opacity: 0.9;
+            margin-bottom: 30px;
+            font-size: 0.9rem;
+        }
+        
+        .mode-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .mode-btn {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.1);
+            color: white;
             border-radius: 15px;
-            box-shadow: inset 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        .color-btn {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            border: 3px solid transparent;
-            transition: all 0.2s;
+            font-size: 1rem;
             cursor: pointer;
-        }
-        
-        .color-btn:hover {
-            transform: scale(1.2);
-        }
-        
-        .color-btn.active {
-            border-color: #333;
-            transform: scale(1.1);
-        }
-        
-        .chat-message {
-            animation: slideIn 0.3s ease-out;
-        }
-        
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-10px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-        
-        .pulse-ring {
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(255,255,255,0.7); }
-            70% { box-shadow: 0 0 0 20px rgba(255,255,255,0); }
-            100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); }
-        }
-        
-        .brush-size {
-            transition: all 0.2s;
-        }
-        
-        .brush-size.active {
-            background: #667eea;
-            color: white;
-        }
-        
-        .player-card {
             transition: all 0.3s;
+            backdrop-filter: blur(10px);
         }
         
-        .player-card.drawing {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
+        .mode-btn.active {
+            background: rgba(255,255,255,0.3);
+            border-color: white;
             transform: scale(1.05);
         }
         
-        #loginScreen, #gameScreen {
-            transition: opacity 0.5s, transform 0.5s;
+        .game-area {
+            flex: 1;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .game-area.active {
+            display: flex;
+        }
+        
+        .room-code {
+            background: rgba(0,0,0,0.3);
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+            font-family: monospace;
+        }
+        
+        .score-display {
+            font-size: 5rem;
+            font-weight: bold;
+            text-shadow: 0 0 30px rgba(255,255,255,0.5);
+            margin-bottom: 30px;
+        }
+        
+        .tap-btn {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(145deg, #ff6b6b, #ee5a5a);
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(238, 90, 90, 0.4);
+            transition: transform 0.1s, box-shadow 0.1s;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        
+        .tap-btn:active {
+            transform: scale(0.95);
+            box-shadow: 0 5px 15px rgba(238, 90, 90, 0.4);
+        }
+        
+        .tap-btn:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+        
+        .viewer-count {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .join-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            max-width: 300px;
+        }
+        
+        .code-input {
+            padding: 20px;
+            font-size: 1.5rem;
+            text-align: center;
+            border: 2px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border-radius: 15px;
+            outline: none;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            font-family: monospace;
+        }
+        
+        .code-input::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+        
+        .join-btn {
+            padding: 18px;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid white;
+            color: white;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .join-btn:active {
+            transform: scale(0.98);
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .viewer-game {
+            text-align: center;
+        }
+        
+        .host-name {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+        
+        .live-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,0,0,0.3);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+        }
+        
+        .pulse {
+            width: 10px;
+            height: 10px;
+            background: #ff4444;
+            border-radius: 50%;
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+        
+        .viewer-score {
+            font-size: 8rem;
+            font-weight: bold;
+            text-shadow: 0 0 50px rgba(255,255,255,0.3);
+        }
+        
+        .taps-per-sec {
+            font-size: 1.2rem;
+            margin-top: 10px;
+            opacity: 0.8;
+        }
+        
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .status {
+            text-align: center;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .status.error {
+            background: rgba(255,0,0,0.3);
+        }
+        
+        .status.success {
+            background: rgba(0,255,0,0.3);
+        }
+        
+        .instructions {
+            text-align: center;
+            opacity: 0.8;
+            font-size: 0.9rem;
+            margin-top: 20px;
+            line-height: 1.5;
+        }
+        
+        .leaderboard {
+            margin-top: 30px;
+            background: rgba(0,0,0,0.2);
+            padding: 20px;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 300px;
+        }
+        
+        .leaderboard h3 {
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
         
         .hidden {
             display: none !important;
         }
-        
-        .fade-out {
-            opacity: 0;
-            transform: scale(0.9);
-            pointer-events: none;
-        }
-        
-        .word-reveal {
-            animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
-        
-        @keyframes bounceIn {
-            0% { transform: scale(0); opacity: 0; }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        .connection-status {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 10px 20px;
-            border-radius: 30px;
-            font-weight: bold;
-            z-index: 1000;
-            transition: all 0.3s;
-        }
-
-        .connection-status.connected {
-            background: #22c55e;
-            color: white;
-        }
-
-        .connection-status.disconnected {
-            background: #ef4444;
-            color: white;
-            animation: pulse 1s infinite;
-        }
-
-        .connection-status.connecting {
-            background: #f59e0b;
-            color: white;
-        }
-
-        .room-code-display {
-            font-family: 'Courier New', monospace;
-            letter-spacing: 2px;
-            background: #f3f4f6;
-            padding: 10px 20px;
-            border-radius: 10px;
-            border: 2px dashed #667eea;
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #667eea;
-            display: inline-block;
-            margin: 10px 0;
-        }
-
-        .copy-btn {
-            background: #667eea;
-            color: white;
-            border: none;
-            padding: 5px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-left: 10px;
-            font-size: 0.9rem;
-        }
-
-        .copy-btn:hover {
-            background: #5a67d8;
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: #333;
-            color: white;
-            padding: 12px 24px;
-            border-radius: 30px;
-            opacity: 0;
-            transition: all 0.3s;
-            z-index: 1001;
-        }
-
-        .toast.show {
-            transform: translateX(-50%) translateY(0);
-            opacity: 1;
-        }
     </style>
 <base target="_blank">
 </head>
-<body class="p-4">
-    <!-- Connection Status -->
-    <div id="connectionStatus" class="connection-status connecting">
-        Connecting...
-    </div>
-
-    <!-- Toast Notification -->
-    <div id="toast" class="toast"></div>
-
-    <!-- Login Screen -->
-    <div id="loginScreen" class="flex items-center justify-center min-h-screen">
-        <div class="glass-panel p-8 max-w-md w-full text-center">
-            <div class="mb-6">
-                <div class="text-6xl mb-4">🎨</div>
-                <h1 class="text-4xl font-bold text-gray-800 mb-2">Draw & Guess</h1>
-                <p class="text-gray-600">Create or join a room to start playing!</p>
+<body>
+    <div class="container">
+        <h1>⚡ Tap Race</h1>
+        <p class="subtitle">Real-time Multiplayer Tapping Game</p>
+        
+        <div id="mainMenu" class="mode-selector">
+            <button class="mode-btn active" onclick="selectMode('host')">🎮 Host Game</button>
+            <button class="mode-btn" onclick="selectMode('viewer')">👀 View Game</button>
+        </div>
+        
+        <div id="statusMsg" class="status hidden"></div>
+        
+        <!-- Host Setup -->
+        <div id="hostSetup" class="game-area">
+            <div class="join-section">
+                <p class="instructions">Create a room and start tapping!<br>Share the code with friends.</p>
+                <button class="join-btn" onclick="createRoom()" style="margin-top: 20px;">Create Room</button>
             </div>
-            
-            <div class="space-y-4">
-                <input type="text" id="usernameInput" placeholder="Enter your name" 
-                    class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:outline-none text-lg">
-                
-                <div class="relative">
-                    <input type="text" id="roomInput" placeholder="Room code (e.g., ABC123)" 
-                        class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:outline-none text-lg uppercase"
-                        oninput="this.value = this.value.toUpperCase()">
-                </div>
-                
-                <div class="flex gap-3">
-                    <button onclick="createRoom()" 
-                        class="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all">
-                        Create Room
-                    </button>
-                    <button onclick="joinRoom()" 
-                        class="flex-1 bg-gradient-to-r from-blue-500 to-cyan-500 text-white py-3 rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all">
-                        Join Room
-                    </button>
-                </div>
-                
-                <button onclick="joinAsViewer()" 
-                    class="w-full bg-gray-200 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-300 transition-all">
-                    👁️ Join as Viewer Only
-                </button>
+        </div>
+        
+        <!-- Host Game -->
+        <div id="hostGame" class="game-area">
+            <button class="back-btn" onclick="resetGame()">← Back</button>
+            <div class="room-code" id="roomCodeDisplay">----</div>
+            <div class="score-display" id="hostScore">0</div>
+            <button class="tap-btn" id="tapBtn" onmousedown="handleTap()" ontouchstart="handleTap(event)">
+                TAP!
+            </button>
+            <div class="viewer-count" id="viewerCount">0 viewers watching</div>
+            <div class="instructions">Tap as fast as you can!</div>
+        </div>
+        
+        <!-- Viewer Setup -->
+        <div id="viewerSetup" class="game-area">
+            <div class="join-section">
+                <p class="instructions">Enter the 4-digit room code<br>to watch the game live</p>
+                <input type="text" class="code-input" id="codeInput" maxlength="4" placeholder="0000">
+                <button class="join-btn" onclick="joinRoom()">Join Room</button>
             </div>
-            
-            <div id="loginError" class="mt-4 text-red-500 hidden bg-red-50 p-3 rounded-lg"></div>
-            
-            <div class="mt-6 text-sm text-gray-500">
-                <p>💡 <strong>How to play:</strong></p>
-                <p>1. Create a room and share the code</p>
-                <p>2. Friends enter the same code to join</p>
-                <p>3. One person draws, others guess!</p>
+        </div>
+        
+        <!-- Viewer Game -->
+        <div id="viewerGame" class="game-area viewer-game">
+            <button class="back-btn" onclick="resetGame()">← Back</button>
+            <div class="live-indicator">
+                <span class="pulse"></span>
+                LIVE
             </div>
+            <div class="host-name" id="hostName">Host's Game</div>
+            <div class="viewer-score" id="viewerScore">0</div>
+            <div class="taps-per-sec" id="tapsPerSec">0 taps/sec</div>
+            <div class="instructions">Watching in real-time via Supabase</div>
         </div>
     </div>
 
-    <!-- Game Screen -->
-    <div id="gameScreen" class="hidden min-h-screen">
-        <div class="max-w-7xl mx-auto">
-            <!-- Header -->
-            <div class="glass-panel p-4 mb-4 flex justify-between items-center flex-wrap gap-4">
-                <div class="flex items-center gap-4 flex-wrap">
-                    <div>
-                        <div class="text-sm text-gray-600 mb-1">Room Code:</div>
-                        <div class="room-code-display" id="displayRoom"></div>
-                        <button class="copy-btn" onclick="copyRoomCode()">Copy</button>
-                    </div>
-                    <div class="bg-purple-100 px-3 py-1 rounded-full text-purple-700 font-semibold" id="roundDisplay">Round 1</div>
-                </div>
-                <div class="flex items-center gap-4">
-                    <div id="timer" class="text-2xl font-bold text-red-500">60</div>
-                    <button onclick="leaveRoom()" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all">Leave</button>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
-                <!-- Players Panel -->
-                <div class="glass-panel p-4 lg:col-span-1">
-                    <h3 class="font-bold text-gray-700 mb-3 text-lg">👥 Players (<span id="playerCount">0</span>)</h3>
-                    <div id="playersList" class="space-y-2 max-h-96 overflow-y-auto">
-                        <!-- Players will be inserted here -->
-                    </div>
-                    
-                    <div id="wordDisplay" class="mt-4 p-4 bg-yellow-100 rounded-xl hidden">
-                        <div class="text-sm text-yellow-700 font-semibold mb-1">Your word:</div>
-                        <div id="currentWord" class="text-2xl font-bold text-yellow-800 text-center"></div>
-                    </div>
-                    
-                    <div id="viewerBadge" class="mt-4 p-3 bg-blue-100 rounded-xl hidden text-center">
-                        <div class="text-blue-700 font-semibold">👁️ Viewer Mode</div>
-                        <div class="text-sm text-blue-600">You can only watch and chat</div>
-                    </div>
-
-                    <div class="mt-4 p-3 bg-green-50 rounded-xl text-center hidden" id="sharePrompt">
-                        <div class="text-green-800 text-sm font-semibold mb-2">👋 Waiting for friends...</div>
-                        <div class="text-green-600 text-xs">Share the room code above!</div>
-                    </div>
-                </div>
-
-                <!-- Canvas Area -->
-                <div class="lg:col-span-2">
-                    <div class="glass-panel p-4">
-                        <div id="drawingTools" class="mb-4 flex flex-wrap items-center gap-3 hidden">
-                            <!-- Colors -->
-                            <div class="flex gap-2">
-                                <button class="color-btn active bg-black" onclick="setColor('#000000')" data-color="#000000"></button>
-                                <button class="color-btn bg-red-500" onclick="setColor('#ef4444')" data-color="#ef4444"></button>
-                                <button class="color-btn bg-blue-500" onclick="setColor('#3b82f6')" data-color="#3b82f6"></button>
-                                <button class="color-btn bg-green-500" onclick="setColor('#22c55e')" data-color="#22c55e"></button>
-                                <button class="color-btn bg-yellow-400" onclick="setColor('#facc15')" data-color="#facc15"></button>
-                                <button class="color-btn bg-purple-500" onclick="setColor('#a855f7')" data-color="#a855f7"></button>
-                                <button class="color-btn bg-white border-2 border-gray-300" onclick="setColor('#ffffff')" data-color="#ffffff"></button>
-                            </div>
-                            
-                            <div class="w-px h-8 bg-gray-300"></div>
-                            
-                            <!-- Brush Sizes -->
-                            <div class="flex gap-2">
-                                <button class="brush-size active w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center text-xs" onclick="setBrushSize(3)">S</button>
-                                <button class="brush-size w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center text-xs" onclick="setBrushSize(8)">M</button>
-                                <button class="brush-size w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center text-xs" onclick="setBrushSize(15)">L</button>
-                            </div>
-                            
-                            <div class="w-px h-8 bg-gray-300"></div>
-                            
-                            <button onclick="clearCanvas()" class="px-4 py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-all font-semibold">
-                                Clear All
-                            </button>
-                        </div>
-                        
-                        <div class="relative">
-                            <canvas id="gameCanvas" width="600" height="450" class="canvas-container w-full border-2 border-gray-200"></canvas>
-                            <div id="waitingOverlay" class="absolute inset-0 bg-black bg-opacity-50 rounded-2xl flex items-center justify-center hidden">
-                                <div class="text-white text-center p-6">
-                                    <div class="text-2xl mb-2">Waiting for players...</div>
-                                    <div class="text-lg opacity-80 mb-4">Need at least 2 players to start</div>
-                                    <div class="room-code-display text-white border-white bg-white bg-opacity-20" id="waitingRoomCode"></div>
-                                    <button class="copy-btn mt-4" onclick="copyRoomCode()">Copy Code</button>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div id="turnIndicator" class="mt-4 text-center hidden">
-                            <div class="text-lg text-gray-600"><span id="currentDrawer" class="font-bold text-purple-600"></span> is drawing...</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Chat Panel -->
-                <div class="glass-panel p-4 lg:col-span-1 flex flex-col h-96 lg:h-auto">
-                    <h3 class="font-bold text-gray-700 mb-3 text-lg">💬 Chat & Guesses</h3>
-                    <div id="chatMessages" class="flex-1 overflow-y-auto space-y-2 mb-3 max-h-80 lg:max-h-none bg-gray-50 rounded-xl p-3">
-                        <div class="text-gray-400 text-sm text-center">Start guessing!</div>
-                    </div>
-                    <div class="flex gap-2">
-                        <input type="text" id="guessInput" placeholder="Type your guess..." 
-                            class="flex-1 px-3 py-2 rounded-lg border-2 border-gray-200 focus:border-purple-500 focus:outline-none"
-                            onkeypress="if(event.key==='Enter') submitGuess()">
-                        <button onclick="submitGuess()" 
-                            class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition-all font-semibold">
-                            Send
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script type="module">
-        // Import Firebase modules
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-        import { getDatabase, ref, set, onValue, onDisconnect, push, update, remove, get, child, serverTimestamp, onChildAdded, off } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
-
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyCjeedoaupI_MQnXWtVwOwdtEp7DzS5BzY",
-            authDomain: "testing-41cb1.firebaseapp.com",
-            projectId: "testing-41cb1",
-            storageBucket: "testing-41cb1.firebasestorage.app",
-            messagingSenderId: "295551167080",
-            appId: "1:295551167080:web:bcd69718e8d9e896ede9dd",
-            measurementId: "G-VZNNMWPPWN"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const database = getDatabase(app);
-
-        // Make functions available globally for HTML onclick handlers
-        window.createRoom = createRoom;
-        window.joinRoom = joinRoom;
-        window.joinAsViewer = joinAsViewer;
-        window.leaveRoom = leaveRoom;
-        window.copyRoomCode = copyRoomCode;
-        window.setColor = setColor;
-        window.setBrushSize = setBrushSize;
-        window.clearCanvas = clearCanvas;
-        window.submitGuess = submitGuess;
-
-        // Game State
-        let currentRoom = null;
-        let username = null;
-        let isViewer = false;
-        let isDrawing = false;
-        let currentColor = '#000000';
-        let currentBrushSize = 3;
-        let canvas, ctx;
-        let isMouseDown = false;
-        let lastX = 0;
-        let lastY = 0;
-        let userId = 'user_' + Math.random().toString(36).substr(2, 9);
-        let gameState = null;
-        let timerInterval = null;
-        let roomRef = null;
-        let playerRef = null;
-        let listeners = [];
-
-        // Word list for the game
-        const words = ['cat', 'dog', 'house', 'tree', 'car', 'sun', 'moon', 'star', 'fish', 'bird', 
-                      'apple', 'banana', 'flower', 'mountain', 'ocean', 'bicycle', 'airplane', 
-                      'computer', 'guitar', 'pizza', 'dragon', 'robot', 'rainbow', 'butterfly',
-                      'phone', 'book', 'chair', 'table', 'shoe', 'hat', 'ball', 'cake', 'ice cream'];
-
-        // Connection monitoring
-        const connectedRef = ref(database, ".info/connected");
-        onValue(connectedRef, (snap) => {
-            const status = document.getElementById('connectionStatus');
-            if (snap.val() === true) {
-                status.textContent = "Connected";
-                status.className = "connection-status connected";
-                setTimeout(() => status.style.opacity = '0', 2000);
-            } else {
-                status.style.opacity = '1';
-                status.textContent = "Disconnected - Check your internet";
-                status.className = "connection-status disconnected";
-            }
-        });
-
-        // Initialize Canvas
-        function initCanvas() {
-            canvas = document.getElementById('gameCanvas');
-            ctx = canvas.getContext('2d');
-            ctx.lineCap = 'round';
-            ctx.lineJoin = 'round';
-            
-            // Handle resizing
-            const rect = canvas.getBoundingClientRect();
-            canvas.width = rect.width;
-            canvas.height = rect.height;
-            
-            canvas.addEventListener('mousedown', startDrawing);
-            canvas.addEventListener('mousemove', draw);
-            canvas.addEventListener('mouseup', stopDrawing);
-            canvas.addEventListener('mouseout', stopDrawing);
-            
-            // Touch support
-            canvas.addEventListener('touchstart', handleTouch);
-            canvas.addEventListener('touchmove', handleTouch);
-            canvas.addEventListener('touchend', stopDrawing);
-        }
-
-        function handleTouch(e) {
-            e.preventDefault();
-            const touch = e.touches[0];
-            const rect = canvas.getBoundingClientRect();
-            const x = touch.clientX - rect.left;
-            const y = touch.clientY - rect.top;
-            
-            if (e.type === 'touchstart') {
-                isMouseDown = true;
-                lastX = x;
-                lastY = y;
-            } else if (e.type === 'touchmove' && isMouseDown) {
-                drawLine(lastX, lastY, x, y, currentColor, currentBrushSize);
-                lastX = x;
-                lastY = y;
-            }
-        }
-
-        function startDrawing(e) {
-            if (!isDrawing) return;
-            isMouseDown = true;
-            const rect = canvas.getBoundingClientRect();
-            lastX = e.clientX - rect.left;
-            lastY = e.clientY - rect.top;
-        }
-
-        function draw(e) {
-            if (!isMouseDown || !isDrawing) return;
-            const rect = canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            drawLine(lastX, lastY, x, y, currentColor, currentBrushSize);
-            
-            lastX = x;
-            lastY = y;
-        }
-
-        function drawLine(x1, y1, x2, y2, color, size) {
-            ctx.strokeStyle = color;
-            ctx.lineWidth = size;
-            ctx.beginPath();
-            ctx.moveTo(x1, y1);
-            ctx.lineTo(x2, y2);
-            ctx.stroke();
-            
-            // Sync to Firebase
-            if (currentRoom && isDrawing) {
-                push(ref(database, `rooms/${currentRoom}/drawings`), {
-                    x1, y1, x2, y2, color, size,
-                    timestamp: serverTimestamp()
-                });
-            }
-        }
-
-        function stopDrawing() {
-            isMouseDown = false;
-        }
-
-        function setColor(color) {
-            currentColor = color;
-            document.querySelectorAll('.color-btn').forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.dataset.color === color) btn.classList.add('active');
-            });
-        }
-
-        function setBrushSize(size) {
-            currentBrushSize = size;
-            document.querySelectorAll('.brush-size').forEach(btn => {
-                btn.classList.remove('active');
-            });
+    <script>
+        // Supabase Configuration - Replace with your own!
+        const SUPABASE_URL = 'https://your-project.supabase.co';
+        const SUPABASE_KEY = 'your-anon-key';
+        
+        // Initialize Supabase
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        
+        let currentMode = 'host';
+        let roomCode = null;
+        let score = 0;
+        let subscription = null;
+        let lastTapTime = Date.now();
+        let tapTimes = [];
+        
+        function selectMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
-        }
-
-        function clearCanvas() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            if (currentRoom && isDrawing) {
-                set(ref(database, `rooms/${currentRoom}/clear`), Date.now());
-            }
-        }
-
-        // Room Management
-        function generateRoomCode() {
-            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-            let result = '';
-            for (let i = 0; i < 6; i++) {
-                result += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            return result;
-        }
-
-        function createRoom() {
-            username = document.getElementById('usernameInput').value.trim();
-            if (!username) {
-                showError('Please enter your name');
-                return;
-            }
             
-            const roomCode = generateRoomCode();
-            document.getElementById('roomInput').value = roomCode;
+            document.getElementById('hostSetup').classList.remove('active');
+            document.getElementById('viewerSetup').classList.remove('active');
             
-            // Clear any previous errors
-            showError('');
-            
-            // First check if room exists (it shouldn't for new room)
-            get(ref(database, `rooms/${roomCode}`)).then(snapshot => {
-                if (snapshot.exists()) {
-                    // Very unlikely but possible, generate new code
-                    createRoom();
-                } else {
-                    joinRoomInternal(roomCode, false, true);
-                }
-            }).catch(err => {
-                showError('Error creating room: ' + err.message);
-            });
-        }
-
-        function joinRoom() {
-            username = document.getElementById('usernameInput').value.trim();
-            const roomCode = document.getElementById('roomInput').value.trim().toUpperCase();
-            
-            if (!username) {
-                showError('Please enter your name');
-                return;
-            }
-            if (!roomCode) {
-                showError('Please enter a room code');
-                return;
-            }
-            
-            if (roomCode.length !== 6) {
-                showError('Room code must be 6 characters');
-                return;
-            }
-            
-            showError('Joining room...');
-            
-            // Check if room exists first
-            get(ref(database, `rooms/${roomCode}`)).then(snapshot => {
-                if (!snapshot.exists()) {
-                    showError('Room not found! Check the code and try again.');
-                    return;
-                }
-                
-                const roomData = snapshot.val();
-                if (roomData.status === 'closed') {
-                    showError('This room has been closed.');
-                    return;
-                }
-                
-                joinRoomInternal(roomCode, false, false);
-            }).catch(err => {
-                showError('Error joining room: ' + err.message);
-                console.error('Join error:', err);
-            });
-        }
-
-        function joinAsViewer() {
-            username = document.getElementById('usernameInput').value.trim() || 'Viewer';
-            const roomCode = document.getElementById('roomInput').value.trim().toUpperCase();
-            
-            if (!roomCode) {
-                showError('Please enter a room code to view');
-                return;
-            }
-            
-            get(ref(database, `rooms/${roomCode}`)).then(snapshot => {
-                if (!snapshot.exists()) {
-                    showError('Room not found!');
-                    return;
-                }
-                joinRoomInternal(roomCode, true, false);
-            }).catch(err => {
-                showError('Error: ' + err.message);
-            });
-        }
-
-        function joinRoomInternal(roomCode, viewer, isCreator) {
-            isViewer = viewer;
-            currentRoom = roomCode;
-            
-            // Clean up any existing listeners first
-            cleanupListeners();
-            
-            roomRef = ref(database, `rooms/${roomCode}`);
-            playerRef = child(roomRef, `players/${userId}`);
-            
-            // Set player data
-            set(playerRef, {
-                name: username,
-                isViewer: viewer,
-                score: 0,
-                joinedAt: serverTimestamp(),
-                lastActive: serverTimestamp()
-            }).then(() => {
-                // Success - setup disconnect handler
-                onDisconnect(playerRef).remove();
-                
-                // Keep alive ping
-                const keepAliveInterval = setInterval(() => {
-                    if (playerRef) {
-                        set(child(playerRef, 'lastActive'), serverTimestamp());
-                    }
-                }, 30000);
-                
-                // Store interval for cleanup
-                window.keepAliveInterval = keepAliveInterval;
-                
-                // Initialize room if creator
-                if (isCreator) {
-                    update(roomRef, {
-                        createdAt: serverTimestamp(),
-                        createdBy: userId,
-                        status: 'waiting',
-                        round: 1,
-                        currentDrawer: null,
-                        word: null
-                    });
-                }
-                
-                showGameScreen(roomCode);
-                setupGameListeners(roomCode);
-                
-                // Add system message
-                if (!isCreator) {
-                    push(child(roomRef, 'messages'), {
-                        text: `${username} joined the room!`,
-                        isSystem: true,
-                        timestamp: serverTimestamp()
-                    });
-                }
-            }).catch(err => {
-                showError('Failed to join: ' + err.message);
-                console.error('Set error:', err);
-            });
-        }
-
-        function cleanupListeners() {
-            // Remove all Firebase listeners
-            listeners.forEach(unsub => unsub && unsub());
-            listeners = [];
-            
-            if (window.keepAliveInterval) {
-                clearInterval(window.keepAliveInterval);
-            }
-            
-            if (timerInterval) {
-                clearInterval(timerInterval);
-            }
-        }
-
-        function showGameScreen(roomCode) {
-            document.getElementById('loginScreen').classList.add('fade-out');
-            setTimeout(() => {
-                document.getElementById('loginScreen').classList.add('hidden');
-                document.getElementById('gameScreen').classList.remove('hidden');
-                document.getElementById('displayRoom').textContent = roomCode;
-                document.getElementById('waitingRoomCode').textContent = roomCode;
-                initCanvas();
-                
-                if (isViewer) {
-                    document.getElementById('viewerBadge').classList.remove('hidden');
-                }
-            }, 500);
-        }
-
-        function setupGameListeners(roomCode) {
-            // Listen to game state
-            const gameListener = onValue(roomRef, (snapshot) => {
-                gameState = snapshot.val();
-                updateGameUI();
-            });
-            listeners.push(() => off(roomRef, 'value', gameListener));
-            
-            // Listen to players with error handling
-            const playersRef = child(roomRef, 'players');
-            const playersListener = onValue(playersRef, (snapshot) => {
-                const players = snapshot.val() || {};
-                updatePlayersList(players);
-                checkGameStart(players);
-                
-                // Show share prompt if only one player
-                const realPlayers = Object.values(players).filter(p => !p.isViewer);
-                const sharePrompt = document.getElementById('sharePrompt');
-                if (realPlayers.length === 1 && !isViewer) {
-                    sharePrompt.classList.remove('hidden');
-                } else {
-                    sharePrompt.classList.add('hidden');
-                }
-            }, (err) => {
-                console.error('Players listener error:', err);
-                showToast('Connection error - trying to reconnect...');
-            });
-            listeners.push(() => off(playersRef, 'value', playersListener));
-            
-            // Listen to drawings
-            const drawingsRef = child(roomRef, 'drawings');
-            const drawingsListener = onChildAdded(drawingsRef, (snapshot) => {
-                const data = snapshot.val();
-                if (!data) return;
-                
-                // Don't redraw if we're the drawer (we already drew it locally)
-                if (gameState && gameState.currentDrawer === userId) return;
-                
-                ctx.strokeStyle = data.color;
-                ctx.lineWidth = data.size;
-                ctx.beginPath();
-                ctx.moveTo(data.x1, data.y1);
-                ctx.lineTo(data.x2, data.y2);
-                ctx.stroke();
-            });
-            listeners.push(() => off(drawingsRef, 'child_added', drawingsListener));
-            
-            // Listen to clear
-            const clearRef = child(roomRef, 'clear');
-            const clearListener = onValue(clearRef, (snapshot) => {
-                if (snapshot.val()) {
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                }
-            });
-            listeners.push(() => off(clearRef, 'value', clearListener));
-            
-            // Listen to chat/guesses
-            const messagesRef = child(roomRef, 'messages');
-            const messagesListener = onChildAdded(messagesRef, (snapshot) => {
-                const msg = snapshot.val();
-                if (!msg) return;
-                addChatMessage(msg);
-                
-                // Check if correct guess (only if we're the drawer or system)
-                if (gameState && gameState.word && msg.isGuess && 
-                    !msg.isCorrect && !msg.isSystem &&
-                    msg.userId !== gameState.currentDrawer) {
-                    
-                    const guess = msg.text.toLowerCase().trim();
-                    const targetWord = gameState.word.toLowerCase().trim();
-                    
-                    // Exact match or very close
-                    if (guess === targetWord || 
-                        (guess.length > 3 && targetWord.includes(guess)) ||
-                        (targetWord.length > 3 && guess.includes(targetWord))) {
-                        handleCorrectGuess(msg);
-                    }
-                }
-            });
-            listeners.push(() => off(messagesRef, 'child_added', messagesListener));
-        }
-
-        function updatePlayersList(players) {
-            const container = document.getElementById('playersList');
-            container.innerHTML = '';
-            
-            const playerArray = Object.entries(players);
-            document.getElementById('playerCount').textContent = playerArray.length;
-            
-            playerArray.forEach(([id, player]) => {
-                const div = document.createElement('div');
-                const isDrawer = id === gameState?.currentDrawer;
-                const isCurrentUser = id === userId;
-                
-                div.className = `player-card p-3 rounded-xl flex justify-between items-center ${isDrawer ? 'drawing' : 'bg-gray-100'}`;
-                
-                div.innerHTML = `
-                    <div class="flex items-center gap-2">
-                        <span class="text-lg">${isDrawer ? '✏️ ' : (player.isViewer ? '👁️ ' : '👤 ')}</span>
-                        <div>
-                            <div class="font-semibold ${isCurrentUser ? 'text-purple-600' : ''}">${player.name} ${isCurrentUser ? '(You)' : ''}</div>
-                            <div class="text-xs opacity-70">${player.isViewer ? 'Viewer' : (isDrawer ? 'Drawing now!' : 'Guessing')}</div>
-                        </div>
-                    </div>
-                    <span class="font-bold text-lg">${player.score || 0}</span>
-                `;
-                container.appendChild(div);
-            });
-        }
-
-        function checkGameStart(players) {
-            if (!players || !gameState) return;
-            
-            const realPlayers = Object.entries(players).filter(([id, p]) => !p.isViewer);
-            const playerCount = realPlayers.length;
-            
-            const waitingOverlay = document.getElementById('waitingOverlay');
-            
-            if (gameState.status === 'waiting') {
-                if (playerCount < 2) {
-                    waitingOverlay.classList.remove('hidden');
-                    return;
-                } else if (!gameState.currentDrawer && realPlayers[0][0] === userId) {
-                    // First player starts the game
-                    startNewRound(realPlayers.map(([id]) => id));
-                } else if (gameState.currentDrawer) {
-                    waitingOverlay.classList.add('hidden');
-                }
+            if (mode === 'host') {
+                document.getElementById('hostSetup').classList.add('active');
             } else {
-                waitingOverlay.classList.add('hidden');
+                document.getElementById('viewerSetup').classList.add('active');
             }
         }
-
-        function startNewRound(playerIds) {
-            // Clear previous timer
-            if (timerInterval) clearInterval(timerInterval);
-            
-            const drawer = playerIds[Math.floor(Math.random() * playerIds.length)];
-            const word = words[Math.floor(Math.random() * words.length)];
-            
-            update(roomRef, {
-                status: 'playing',
-                currentDrawer: drawer,
-                word: word,
-                roundStart: serverTimestamp(),
-                roundEnd: Date.now() + 60000
-            });
-            
-            // Clear canvas
-            set(child(roomRef, 'clear'), Date.now());
-            remove(child(roomRef, 'drawings'));
-            remove(child(roomRef, 'correctGuesses'));
-            
-            // Start timer locally for all players
-            startTimer(60);
-            
-            // Add system message
-            push(child(roomRef, 'messages'), {
-                text: `Round started! ${gameState.players[drawer]?.name || 'Someone'} is drawing...`,
-                isSystem: true,
-                timestamp: serverTimestamp()
-            });
+        
+        function showStatus(msg, type) {
+            const status = document.getElementById('statusMsg');
+            status.textContent = msg;
+            status.className = 'status ' + type;
+            status.classList.remove('hidden');
+            setTimeout(() => status.classList.add('hidden'), 3000);
         }
-
-        function startTimer(seconds) {
-            if (timerInterval) clearInterval(timerInterval);
+        
+        async function createRoom() {
+            roomCode = Math.floor(1000 + Math.random() * 9000).toString();
             
-            let timeLeft = seconds;
-            document.getElementById('timer').textContent = timeLeft;
-            
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                document.getElementById('timer').textContent = timeLeft;
-                
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    endRound();
-                }
-            }, 1000);
-        }
-
-        function updateGameUI() {
-            if (!gameState) return;
-            
-            const isCurrentDrawer = gameState.currentDrawer === userId;
-            isDrawing = isCurrentDrawer && !isViewer;
-            
-            // Update tools visibility
-            const tools = document.getElementById('drawingTools');
-            const wordDisplay = document.getElementById('wordDisplay');
-            const turnIndicator = document.getElementById('turnIndicator');
-            
-            if (isDrawing) {
-                tools.classList.remove('hidden');
-                wordDisplay.classList.remove('hidden');
-                document.getElementById('currentWord').textContent = gameState.word || '???';
-                turnIndicator.classList.add('hidden');
-            } else {
-                tools.classList.add('hidden');
-                wordDisplay.classList.add('hidden');
-                
-                if (gameState.currentDrawer && gameState.status === 'playing') {
-                    turnIndicator.classList.remove('hidden');
-                    const drawerName = gameState.players?.[gameState.currentDrawer]?.name || 'Someone';
-                    document.getElementById('currentDrawer').textContent = drawerName;
-                } else {
-                    turnIndicator.classList.add('hidden');
-                }
-            }
-            
-            // Update round display
-            document.getElementById('roundDisplay').textContent = `Round ${gameState.round || 1}`;
-        }
-
-        function submitGuess() {
-            const input = document.getElementById('guessInput');
-            const text = input.value.trim();
-            if (!text) return;
-            
-            // Don't allow drawer to guess
-            if (gameState && gameState.currentDrawer === userId && !isViewer) {
-                showToast("You can't guess while drawing!");
-                return;
-            }
-            
-            push(child(roomRef, 'messages'), {
-                userId: userId,
-                username: username,
-                text: text,
-                timestamp: serverTimestamp(),
-                isGuess: true
-            });
-            
-            input.value = '';
-        }
-
-        function addChatMessage(msg) {
-            const container = document.getElementById('chatMessages');
-            
-            // Remove "Start guessing!" message if it exists
-            if (container.children.length === 1 && container.children[0].textContent === 'Start guessing!') {
-                container.innerHTML = '';
-            }
-            
-            const div = document.createElement('div');
-            div.className = 'chat-message text-sm mb-2';
-            
-            if (msg.isSystem) {
-                div.className += ' text-center my-3';
-                div.innerHTML = `<span class="bg-purple-100 text-purple-700 px-4 py-2 rounded-full font-semibold text-xs">${msg.text}</span>`;
-            } else if (msg.isCorrect) {
-                div.className += ' text-center my-2';
-                div.innerHTML = `<span class="bg-green-100 text-green-700 px-3 py-2 rounded-lg font-bold">🎉 ${msg.username} guessed correctly!</span>`;
-            } else {
-                const isMe = msg.userId === userId;
-                div.className += isMe ? ' text-right' : ' text-left';
-                const bgClass = isMe ? 'bg-purple-500 text-white' : 'bg-gray-200 text-gray-800';
-                div.innerHTML = `
-                    <div class="inline-block max-w-[80%]">
-                        <div class="text-xs text-gray-500 mb-1 ${isMe ? 'text-right' : 'text-left'}">${msg.username}</div>
-                        <div class="${bgClass} px-3 py-2 rounded-2xl ${isMe ? 'rounded-br-sm' : 'rounded-bl-sm'} inline-block text-left">
-                            ${escapeHtml(msg.text)}
-                        </div>
-                    </div>
-                `;
-            }
-            
-            container.appendChild(div);
-            container.scrollTop = container.scrollHeight;
-        }
-
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        function handleCorrectGuess(msg) {
-            // Update message to mark as correct
-            const messagesRef = child(roomRef, 'messages');
-            get(messagesRef).then(snapshot => {
-                snapshot.forEach(child => {
-                    const childData = child.val();
-                    if (childData.timestamp === msg.timestamp && childData.userId === msg.userId) {
-                        update(child.ref, { isCorrect: true, isGuess: false });
-                    }
-                });
-            });
-            
-            // Update scores
-            const updates = {};
-            updates[`players/${msg.userId}/score`] = serverTimestamp(); // Use transaction in real app
-            updates[`players/${gameState.currentDrawer}/score`] = serverTimestamp();
-            
-            // Simple increment workaround
-            const currentGuesserScore = (gameState.players[msg.userId]?.score || 0) + 10;
-            const currentDrawerScore = (gameState.players[gameState.currentDrawer]?.score || 0) + 5;
-            
-            update(roomRef, {
-                [`players/${msg.userId}/score`]: currentGuesserScore,
-                [`players/${gameState.currentDrawer}/score`]: currentDrawerScore
-            });
-        }
-
-        function endRound() {
-            const word = gameState?.word;
-            if (!word) return;
-            
-            // Reveal word
-            push(child(roomRef, 'messages'), {
-                text: `⏰ Time's up! The word was: "${word}"`,
-                isSystem: true,
-                timestamp: serverTimestamp()
-            });
-            
-            // Clear canvas after delay
-            setTimeout(() => {
-                set(child(roomRef, 'clear'), Date.now());
-            }, 3000);
-            
-            // Start new round after delay if enough players
-            setTimeout(() => {
-                const players = gameState?.players || {};
-                const playerIds = Object.keys(players).filter(id => !players[id].isViewer);
-                
-                if (playerIds.length >= 2) {
-                    update(roomRef, {
-                        round: (gameState.round || 1) + 1,
-                        status: 'waiting',
-                        currentDrawer: null,
-                        word: null
-                    });
-                    
-                    // Auto-start after brief delay
-                    setTimeout(() => {
-                        if (gameState && gameState.status === 'waiting') {
-                            startNewRound(playerIds);
+            try {
+                // Create room in Supabase
+                const { error } = await supabase
+                    .from('tap_rooms')
+                    .insert([
+                        { 
+                            code: roomCode, 
+                            score: 0, 
+                            host_id: crypto.randomUUID(),
+                            updated_at: new Date().toISOString()
                         }
-                    }, 2000);
-                }
-            }, 5000);
-        }
-
-        function copyRoomCode() {
-            const code = currentRoom || document.getElementById('roomInput').value;
-            if (code) {
-                navigator.clipboard.writeText(code).then(() => {
-                    showToast('Room code copied to clipboard!');
-                });
+                    ]);
+                
+                if (error) throw error;
+                
+                document.getElementById('hostSetup').classList.remove('active');
+                document.getElementById('hostGame').classList.add('active');
+                document.getElementById('roomCodeDisplay').textContent = roomCode;
+                
+                // Subscribe to viewer count
+                subscribeToViewers();
+                
+                showStatus('Room created! Share code: ' + roomCode, 'success');
+                
+            } catch (err) {
+                showStatus('Error creating room: ' + err.message, 'error');
+                console.error(err);
             }
         }
-
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 3000);
-        }
-
-        function leaveRoom() {
-            if (currentRoom && playerRef) {
-                // Remove player
-                remove(playerRef);
-                
-                // Add leave message
-                push(child(roomRef, 'messages'), {
-                    text: `${username} left the room`,
-                    isSystem: true,
-                    timestamp: serverTimestamp()
-                });
-                
-                cleanupListeners();
+        
+        async function handleTap(e) {
+            if (e) e.preventDefault();
+            
+            score++;
+            document.getElementById('hostScore').textContent = score;
+            
+            // Calculate taps per second
+            const now = Date.now();
+            tapTimes.push(now);
+            tapTimes = tapTimes.filter(t => now - t < 1000);
+            
+            // Update in Supabase (throttled to every 100ms)
+            if (now - lastTapTime > 100) {
+                updateScore();
+                lastTapTime = now;
             }
-            location.reload();
+            
+            // Visual feedback
+            const btn = document.getElementById('tapBtn');
+            btn.style.transform = 'scale(0.9)';
+            setTimeout(() => btn.style.transform = 'scale(1)', 50);
         }
-
-        function showError(msg) {
-            const errorDiv = document.getElementById('loginError');
-            if (!msg) {
-                errorDiv.classList.add('hidden');
+        
+        async function updateScore() {
+            if (!roomCode) return;
+            
+            try {
+                await supabase
+                    .from('tap_rooms')
+                    .update({ 
+                        score: score,
+                        taps_per_sec: tapTimes.length,
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('code', roomCode);
+            } catch (err) {
+                console.error('Update error:', err);
+            }
+        }
+        
+        function subscribeToViewers() {
+            // Subscribe to changes to see viewer count (in real app, you'd track connections)
+            supabase
+                .channel('room-' + roomCode)
+                .on('postgres_changes', { 
+                    event: '*', 
+                    schema: 'public', 
+                    table: 'tap_rooms',
+                    filter: 'code=eq.' + roomCode
+                }, (payload) => {
+                    // Handle updates if needed
+                })
+                .subscribe();
+        }
+        
+        async function joinRoom() {
+            const code = document.getElementById('codeInput').value.toUpperCase();
+            
+            if (code.length !== 4) {
+                showStatus('Please enter a 4-digit code', 'error');
                 return;
             }
-            errorDiv.textContent = msg;
-            errorDiv.classList.remove('hidden');
+            
+            try {
+                // Check if room exists
+                const { data, error } = await supabase
+                    .from('tap_rooms')
+                    .select('*')
+                    .eq('code', code)
+                    .single();
+                
+                if (error || !data) {
+                    showStatus('Room not found!', 'error');
+                    return;
+                }
+                
+                roomCode = code;
+                
+                document.getElementById('viewerSetup').classList.remove('active');
+                document.getElementById('viewerGame').classList.add('active');
+                
+                // Start watching
+                watchGame();
+                
+                showStatus('Connected to room ' + code, 'success');
+                
+            } catch (err) {
+                showStatus('Error joining room', 'error');
+                console.error(err);
+            }
         }
-
-        // Cleanup on page unload
-        window.onbeforeunload = () => {
-            if (playerRef) {
-                remove(playerRef);
+        
+        function watchGame() {
+            // Subscribe to realtime updates
+            subscription = supabase
+                .channel('viewer-' + roomCode)
+                .on('postgres_changes', { 
+                    event: 'UPDATE', 
+                    schema: 'public', 
+                    table: 'tap_rooms',
+                    filter: 'code=eq.' + roomCode
+                }, (payload) => {
+                    const newScore = payload.new.score;
+                    const tps = payload.new.taps_per_sec || 0;
+                    
+                    document.getElementById('viewerScore').textContent = newScore;
+                    document.getElementById('tapsPerSec').textContent = tps + ' taps/sec';
+                    
+                    // Visual pulse on update
+                    const scoreEl = document.getElementById('viewerScore');
+                    scoreEl.style.transform = 'scale(1.1)';
+                    setTimeout(() => scoreEl.style.transform = 'scale(1)', 100);
+                })
+                .subscribe();
+            
+            // Get initial score
+            supabase
+                .from('tap_rooms')
+                .select('score')
+                .eq('code', roomCode)
+                .single()
+                .then(({ data }) => {
+                    if (data) {
+                        document.getElementById('viewerScore').textContent = data.score;
+                    }
+                });
+        }
+        
+        function resetGame() {
+            // Cleanup
+            if (subscription) {
+                supabase.removeChannel(subscription);
+                subscription = null;
             }
-        };
-
-        // Handle visibility change to reconnect if needed
-        document.addEventListener('visibilitychange', () => {
-            if (!document.hidden && currentRoom) {
-                // Re-ensure connection when tab becomes visible
-                get(ref(database, '.info/connected'));
+            
+            // Delete room if host
+            if (currentMode === 'host' && roomCode) {
+                supabase.from('tap_rooms').delete().eq('code', roomCode);
             }
-        });
+            
+            // Reset state
+            score = 0;
+            roomCode = null;
+            tapTimes = [];
+            
+            // Reset UI
+            document.getElementById('hostGame').classList.remove('active');
+            document.getElementById('viewerGame').classList.remove('active');
+            document.getElementById('hostSetup').classList.add('active');
+            document.getElementById('hostScore').textContent = '0';
+            document.getElementById('viewerScore').textContent = '0';
+            document.getElementById('codeInput').value = '';
+        }
+        
+        // Prevent zoom on double tap
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', (e) => {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) {
+                e.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
     </script>
 </body>
 </html>
