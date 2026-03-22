@@ -1,582 +1,171 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Click Battle - Simple Multiplayer</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multiplayer Charades</title>
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
-        .game-container {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 30px;
-            padding: 30px;
-            max-width: 500px;
-            width: 100%;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            text-align: center;
-        }
-
-        h1 {
-            color: #667eea;
-            margin-bottom: 10px;
-            font-size: 2em;
-        }
-
-        .sub {
-            color: #666;
-            margin-bottom: 30px;
-        }
-
-        .mode-buttons {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-
-        .mode-btn {
-            flex: 1;
-            padding: 12px;
-            border: 2px solid #667eea;
-            background: white;
-            color: #667eea;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .mode-btn.active {
-            background: #667eea;
-            color: white;
-        }
-
-        .room-section {
-            background: #f0f0f0;
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-        }
-
-        .room-code-display {
-            font-size: 48px;
-            font-weight: bold;
-            font-family: monospace;
-            letter-spacing: 10px;
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 15px 0;
-            color: #667eea;
-        }
-
-        input {
-            width: 100%;
-            padding: 15px;
-            font-size: 24px;
-            text-align: center;
-            font-family: monospace;
-            letter-spacing: 5px;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            margin: 10px 0;
-        }
-
-        button {
-            background: #667eea;
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 10px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.1s;
-        }
-
-        button:active {
-            transform: scale(0.98);
-        }
-
-        .click-button {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            background: linear-gradient(145deg, #ff6b6b, #ee5a5a);
-            font-size: 32px;
-            font-weight: bold;
-            margin: 20px auto;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        }
-
-        .score {
-            font-size: 72px;
-            font-weight: bold;
-            color: #667eea;
-            margin: 20px 0;
-        }
-
-        .back-btn {
-            background: #999;
-            margin-top: 20px;
-            padding: 10px 20px;
-            font-size: 14px;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .status {
-            padding: 10px;
-            border-radius: 10px;
-            margin: 10px 0;
-            font-size: 14px;
-        }
-
-        .status.error {
-            background: #fee;
-            color: #c33;
-            border: 1px solid #fcc;
-        }
-
-        .status.success {
-            background: #efe;
-            color: #3c3;
-            border: 1px solid #cfc;
-        }
-
-        .info {
-            color: #666;
-            font-size: 14px;
-            margin-top: 15px;
-        }
-    </style>
+<style>
+body { font-family: Arial; text-align: center; background:#f5f5f5; }
+input, button { padding:10px; margin:5px; border-radius:8px; }
+button { cursor:pointer; }
+#game { display:none; }
+</style>
 </head>
 <body>
-    <div class="game-container">
-        <h1>⚡ CLICK BATTLE ⚡</h1>
-        <p class="sub">Who can click the fastest?</p>
 
-        <div class="mode-buttons">
-            <button class="mode-btn active" onclick="setMode('host')">🎮 CREATE GAME</button>
-            <button class="mode-btn" onclick="setMode('player')">👥 JOIN GAME</button>
-        </div>
+<h2>🎮 Multiplayer Charades</h2>
 
-        <!-- Host Section -->
-        <div id="hostSection">
-            <div class="room-section">
-                <p>👇 Click below to create your battle room</p>
-                <button onclick="createGame()" style="background: #ff6b6b; margin-top: 15px;">🚀 CREATE NEW ROOM</button>
-            </div>
-        </div>
+<div id="menu">
+  <input id="name" placeholder="اسمك">
+  <br>
+  <button onclick="createRoom()">إنشاء غرفة</button>
+  <br>
+  <input id="room" placeholder="كود الغرفة">
+  <br>
+  <button onclick="joinRoom()">دخول</button>
+</div>
 
-        <!-- Player Join Section -->
-        <div id="playerSection" class="hidden">
-            <div class="room-section">
-                <p>Enter room code to join the battle</p>
-                <input type="text" id="roomCodeInput" maxlength="4" placeholder="1234" style="text-align: center; font-size: 32px;">
-                <button onclick="joinGame()">🔍 JOIN ROOM</button>
-            </div>
-        </div>
+<div id="game">
+  <h3 id="roomCode"></h3>
+  <h1 id="word">---</h1>
+  <button onclick="newWord()">كلمة جديدة (Host)</button>
 
-        <!-- Game Screen -->
-        <div id="gameScreen" class="hidden">
-            <div class="room-section">
-                <p>🎮 ROOM CODE</p>
-                <div class="room-code-display" id="gameRoomCode">----</div>
-                <p id="gameRole" style="color: #667eea; font-weight: bold;"></p>
-            </div>
+  <h3>اللاعبين:</h3>
+  <ul id="players"></ul>
+</div>
 
-            <div class="score" id="scoreDisplay">0</div>
-            
-            <button class="click-button" id="clickBtn" onclick="handleClick()">CLICK!</button>
-            
-            <div id="otherPlayers">
-                <p style="margin-top: 20px; color: #666;">👥 Other Players:</p>
-                <div id="playersList" style="margin-top: 10px;"></div>
-            </div>
+<script>
+// Avoid redeclaration issue
+let supabaseClient = window.supabase?.createClient(
+  "https://mwjdmbcdysvkzdoluyzw.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+);
 
-            <button class="back-btn" onclick="exitGame()">← EXIT GAME</button>
-        </div>
+let roomCode = null;
+let playerName = null;
+let isHost = false;
 
-        <div id="statusMsg" class="status hidden"></div>
-        <div class="info">💡 Tip: Share your room code with friends to battle!</div>
-    </div>
+const words = ["جمل","سيارة","طيارة","قلم","حصان","أسد"];
 
-    <script>
-        // Supabase setup
-        const SUPABASE_URL = 'https://ryipodpanddlukxezvjm.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ5aXBvZHBhbmRkbHVreGV6dmptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxNjY4MTMsImV4cCI6MjA4OTc0MjgxM30.kkZyToN7LrJZhf8zpzj_7hXSkyobjcfmYp-dV4b9aEY';
-        
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-        
-        let currentMode = 'host';
-        let currentRoom = null;
-        let currentScore = 0;
-        let playerId = null;
-        let clickChannel = null;
-        let clickCount = 0;
-        
-        // Show status message
-        function showMessage(msg, type = 'success') {
-            const statusDiv = document.getElementById('statusMsg');
-            statusDiv.textContent = msg;
-            statusDiv.className = `status ${type}`;
-            statusDiv.classList.remove('hidden');
-            setTimeout(() => statusDiv.classList.add('hidden'), 3000);
-        }
-        
-        // Switch between host and player mode
-        function setMode(mode) {
-            currentMode = mode;
-            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
-            if (mode === 'host') {
-                document.querySelector('.mode-btn').classList.add('active');
-                document.getElementById('hostSection').classList.remove('hidden');
-                document.getElementById('playerSection').classList.add('hidden');
-            } else {
-                document.querySelectorAll('.mode-btn')[1].classList.add('active');
-                document.getElementById('hostSection').classList.add('hidden');
-                document.getElementById('playerSection').classList.remove('hidden');
-            }
-            document.getElementById('gameScreen').classList.add('hidden');
-        }
-        
-        // Generate random room code
-        function generateRoomCode() {
-            return Math.floor(1000 + Math.random() * 9000).toString();
-        }
-        
-        // Create new game (host)
-        async function createGame() {
-            try {
-                const roomCode = generateRoomCode();
-                playerId = 'player_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
-                
-                // Create room in database
-                const { error } = await supabase
-                    .from('click_battles')
-                    .insert([{
-                        room_code: roomCode,
-                        players: [{
-                            id: playerId,
-                            score: 0,
-                            name: 'Host'
-                        }],
-                        status: 'waiting'
-                    }]);
-                
-                if (error) {
-                    // If table doesn't exist, create it
-                    if (error.message.includes('does not exist')) {
-                        showMessage('⚠️ Creating table... Please try again in a moment', 'error');
-                        await createTable();
-                        setTimeout(() => createGame(), 2000);
-                        return;
-                    }
-                    throw error;
-                }
-                
-                currentRoom = roomCode;
-                currentScore = 0;
-                
-                showMessage(`✅ Game created! Room Code: ${roomCode}`, 'success');
-                startGame('Host');
-                
-            } catch (error) {
-                console.error('Error creating game:', error);
-                showMessage('Error: ' + error.message, 'error');
-            }
-        }
-        
-        // Create the table if it doesn't exist
-        async function createTable() {
-            try {
-                const { error } = await supabase.rpc('create_click_battles_table');
-                if (error) {
-                    console.log('Please create table manually with SQL below');
-                    showManualSQLInstructions();
-                }
-            } catch(e) {
-                showManualSQLInstructions();
-            }
-        }
-        
-        function showManualSQLInstructions() {
-            const sql = `
--- Run this in Supabase SQL Editor:
-CREATE TABLE IF NOT EXISTS click_battles (
-    id BIGSERIAL PRIMARY KEY,
-    room_code TEXT UNIQUE NOT NULL,
-    players JSONB DEFAULT '[]'::jsonb,
-    status TEXT DEFAULT 'waiting',
-    created_at TIMESTAMP DEFAULT NOW()
-);`;
-            console.log(sql);
-            showMessage('⚠️ Please run SQL in Supabase editor (check console)', 'error');
-        }
-        
-        // Join existing game
-        async function joinGame() {
-            const roomCode = document.getElementById('roomCodeInput').value.trim();
-            if (!roomCode || roomCode.length !== 4) {
-                showMessage('Please enter a valid 4-digit room code', 'error');
-                return;
-            }
-            
-            try {
-                // Check if room exists
-                const { data, error } = await supabase
-                    .from('click_battles')
-                    .select('*')
-                    .eq('room_code', roomCode)
-                    .single();
-                
-                if (error || !data) {
-                    showMessage('Room not found!', 'error');
-                    return;
-                }
-                
-                playerId = 'player_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
-                let players = data.players || [];
-                
-                // Add new player
-                players.push({
-                    id: playerId,
-                    score: 0,
-                    name: 'Player ' + (players.length + 1)
-                });
-                
-                // Update room with new player
-                const { error: updateError } = await supabase
-                    .from('click_battles')
-                    .update({ players: players })
-                    .eq('room_code', roomCode);
-                
-                if (updateError) throw updateError;
-                
-                currentRoom = roomCode;
-                currentScore = 0;
-                
-                showMessage(`✅ Joined room ${roomCode}!`, 'success');
-                startGame('Player');
-                
-            } catch (error) {
-                console.error('Error joining game:', error);
-                showMessage('Error joining game: ' + error.message, 'error');
-            }
-        }
-        
-        // Start the game screen
-        function startGame(role) {
-            document.getElementById('hostSection').classList.add('hidden');
-            document.getElementById('playerSection').classList.add('hidden');
-            document.getElementById('gameScreen').classList.remove('hidden');
-            document.getElementById('gameRoomCode').textContent = currentRoom;
-            document.getElementById('gameRole').textContent = `You are the ${role}`;
-            document.getElementById('scoreDisplay').textContent = '0';
-            
-            // Subscribe to realtime updates
-            subscribeToRoom();
-            
-            // Load current players
-            loadPlayers();
-        }
-        
-        // Subscribe to room updates
-        function subscribeToRoom() {
-            if (clickChannel) {
-                supabase.removeChannel(clickChannel);
-            }
-            
-            clickChannel = supabase
-                .channel(`room_${currentRoom}`)
-                .on('postgres_changes', {
-                    event: 'UPDATE',
-                    schema: 'public',
-                    table: 'click_battles',
-                    filter: `room_code=eq.${currentRoom}`
-                }, (payload) => {
-                    updateScores(payload.new.players);
-                })
-                .subscribe();
-        }
-        
-        // Update scores display
-        function updateScores(players) {
-            const playersList = document.getElementById('playersList');
-            playersList.innerHTML = '';
-            
-            let sortedPlayers = [...(players || [])].sort((a, b) => b.score - a.score);
-            
-            sortedPlayers.forEach((player, index) => {
-                const isMe = player.id === playerId;
-                const playerDiv = document.createElement('div');
-                playerDiv.style.cssText = `
-                    display: flex;
-                    justify-content: space-between;
-                    padding: 10px;
-                    margin: 5px 0;
-                    background: ${isMe ? '#e3f2fd' : '#f5f5f5'};
-                    border-radius: 8px;
-                    font-weight: ${isMe ? 'bold' : 'normal'};
-                `;
-                playerDiv.innerHTML = `
-                    <span>${index === 0 ? '👑 ' : ''}${player.name} ${isMe ? '(You)' : ''}</span>
-                    <span style="color: #667eea; font-weight: bold;">${player.score} clicks</span>
-                `;
-                playersList.appendChild(playerDiv);
-            });
-        }
-        
-        // Load current players
-        async function loadPlayers() {
-            try {
-                const { data, error } = await supabase
-                    .from('click_battles')
-                    .select('players')
-                    .eq('room_code', currentRoom)
-                    .single();
-                
-                if (!error && data) {
-                    updateScores(data.players);
-                }
-            } catch (error) {
-                console.error('Error loading players:', error);
-            }
-        }
-        
-        // Handle click
-        async function handleClick() {
-            if (!currentRoom) return;
-            
-            currentScore++;
-            document.getElementById('scoreDisplay').textContent = currentScore;
-            
-            // Visual feedback
-            const btn = document.getElementById('clickBtn');
-            btn.style.transform = 'scale(0.95)';
-            setTimeout(() => btn.style.transform = '', 100);
-            
-            // Update score in database
-            try {
-                // Get current room data
-                const { data, error } = await supabase
-                    .from('click_battles')
-                    .select('players')
-                    .eq('room_code', currentRoom)
-                    .single();
-                
-                if (error) throw error;
-                
-                let players = data.players || [];
-                const playerIndex = players.findIndex(p => p.id === playerId);
-                
-                if (playerIndex !== -1) {
-                    players[playerIndex].score = currentScore;
-                    
-                    // Update database
-                    const { error: updateError } = await supabase
-                        .from('click_battles')
-                        .update({ players: players })
-                        .eq('room_code', currentRoom);
-                    
-                    if (updateError) throw updateError;
-                }
-                
-            } catch (error) {
-                console.error('Error updating score:', error);
-            }
-        }
-        
-        // Exit game
-        async function exitGame() {
-            if (currentRoom && playerId) {
-                try {
-                    // Remove player from room
-                    const { data, error } = await supabase
-                        .from('click_battles')
-                        .select('players')
-                        .eq('room_code', currentRoom)
-                        .single();
-                    
-                    if (!error && data) {
-                        let players = data.players || [];
-                        players = players.filter(p => p.id !== playerId);
-                        
-                        if (players.length === 0) {
-                            // Delete empty room
-                            await supabase
-                                .from('click_battles')
-                                .delete()
-                                .eq('room_code', currentRoom);
-                        } else {
-                            // Update room without this player
-                            await supabase
-                                .from('click_battles')
-                                .update({ players: players })
-                                .eq('room_code', currentRoom);
-                        }
-                    }
-                } catch (error) {
-                    console.error('Error exiting:', error);
-                }
-            }
-            
-            // Cleanup
-            if (clickChannel) {
-                supabase.removeChannel(clickChannel);
-                clickChannel = null;
-            }
-            
-            // Reset state
-            currentRoom = null;
-            currentScore = 0;
-            playerId = null;
-            
-            // Go back to menu
-            setMode('host');
-        }
-        
-        // Create table on load if needed
-        async function init() {
-            try {
-                // Test if table exists
-                const { error } = await supabase
-                    .from('click_battles')
-                    .select('count')
-                    .limit(1);
-                
-                if (error && error.message.includes('does not exist')) {
-                    console.log('Table not found, please create it');
-                    showManualSQLInstructions();
-                }
-            } catch(e) {
-                console.log('Initialization check:', e);
-            }
-        }
-        
-        // Start the app
-        init();
-    </script>
+function randomWord(){
+ return words[Math.floor(Math.random()*words.length)];
+}
+
+function generateCode(){
+ return Math.random().toString(36).substring(2,7).toUpperCase();
+}
+
+async function createRoom(){
+ playerName = document.getElementById("name").value;
+ if(!playerName) return alert("اكتب اسمك");
+
+ roomCode = generateCode();
+ isHost = true;
+
+ await supabaseClient.from("rooms").insert({
+  code: roomCode,
+  host_name: playerName,
+  current_word: ""
+ });
+
+ await supabaseClient.from("players").insert({
+  room_code: roomCode,
+  name: playerName,
+  is_host: true
+ });
+
+ startGame();
+}
+
+async function joinRoom(){
+ playerName = document.getElementById("name").value;
+ roomCode = document.getElementById("room").value.toUpperCase();
+
+ if(!playerName || !roomCode) return alert("أكمل البيانات");
+
+ const { data } = await supabaseClient
+ .from("rooms")
+ .select("*")
+ .eq("code", roomCode)
+ .single();
+
+ if(!data) return alert("الغرفة غير موجودة");
+
+ await supabaseClient.from("players").insert({
+  room_code: roomCode,
+  name: playerName,
+  is_host: false
+ });
+
+ startGame();
+}
+
+function startGame(){
+ document.getElementById("menu").style.display="none";
+ document.getElementById("game").style.display="block";
+ document.getElementById("roomCode").innerText="Room: "+roomCode;
+
+ listenRoom();
+ listenPlayers();
+}
+
+function listenRoom(){
+ supabaseClient.channel("room-"+roomCode)
+ .on("postgres_changes",{
+  event:"*",
+  schema:"public",
+  table:"rooms",
+  filter:`code=eq.${roomCode}`
+ },payload=>{
+  if(payload.new.current_word){
+   document.getElementById("word").innerText = payload.new.current_word;
+  }
+ })
+ .subscribe();
+}
+
+function listenPlayers(){
+ supabaseClient.channel("players-"+roomCode)
+ .on("postgres_changes",{
+  event:"*",
+  schema:"public",
+  table:"players",
+  filter:`room_code=eq.${roomCode}`
+ },loadPlayers)
+ .subscribe();
+
+ loadPlayers();
+}
+
+async function loadPlayers(){
+ const { data } = await supabaseClient
+ .from("players")
+ .select("*")
+ .eq("room_code", roomCode);
+
+ const list = document.getElementById("players");
+ list.innerHTML = "";
+
+ data.forEach(p=>{
+  const li = document.createElement("li");
+  li.innerText = p.name + " ("+p.score+")";
+  list.appendChild(li);
+ });
+}
+
+async function newWord(){
+ if(!isHost) return alert("فقط الهوست يغير الكلمة");
+
+ const w = randomWord();
+
+ await supabaseClient.from("rooms").update({
+  current_word: w
+ }).eq("code", roomCode);
+}
+</script>
+
 </body>
 </html>
