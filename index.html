@@ -2,778 +2,581 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Tap Race · Real‑time Multiplayer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Click Battle - Simple Multiplayer</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            user-select: none;
             -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            font-family: system-ui, -apple-system, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
-            background: radial-gradient(circle at 30% 10%, #1e2b6e, #0f172a);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
-            color: white;
-            overflow-x: hidden;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
 
-        .container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            padding: 20px 16px 32px;
-            max-width: 550px;
-            margin: 0 auto;
+        .game-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            padding: 30px;
+            max-width: 500px;
             width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
         }
 
         h1 {
-            text-align: center;
-            font-size: 2.2rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            background: linear-gradient(135deg, #fff, #e0c3ff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2em;
         }
 
-        .subtitle {
-            text-align: center;
-            opacity: 0.8;
-            margin-bottom: 28px;
-            font-size: 0.85rem;
-            font-weight: 500;
+        .sub {
+            color: #666;
+            margin-bottom: 30px;
         }
 
-        .mode-selector {
+        .mode-buttons {
             display: flex;
-            gap: 12px;
-            margin-bottom: 32px;
-            background: rgba(255,255,255,0.08);
-            padding: 6px;
-            border-radius: 60px;
-            backdrop-filter: blur(8px);
+            gap: 15px;
+            margin-bottom: 30px;
         }
 
         .mode-btn {
             flex: 1;
-            padding: 12px 8px;
-            border: none;
-            background: transparent;
-            color: rgba(255,255,255,0.7);
-            border-radius: 40px;
-            font-size: 1rem;
-            font-weight: 600;
+            padding: 12px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s;
         }
 
         .mode-btn.active {
-            background: rgba(255,255,255,0.2);
+            background: #667eea;
             color: white;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-            backdrop-filter: blur(4px);
         }
 
-        .game-area {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            animation: fadeIn 0.25s ease;
+        .room-section {
+            background: #f0f0f0;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
         }
 
-        .game-area.active {
-            display: flex;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px);}
-            to { opacity: 1; transform: translateY(0);}
-        }
-
-        .room-code {
-            background: rgba(0,0,0,0.55);
-            backdrop-filter: blur(12px);
-            padding: 12px 28px;
-            border-radius: 60px;
-            font-size: 2rem;
-            font-weight: 800;
-            letter-spacing: 6px;
-            font-family: 'SF Mono', 'Fira Code', monospace;
-            margin-bottom: 24px;
-            border: 1px solid rgba(255,255,255,0.25);
-        }
-
-        .score-display {
-            font-size: 5.8rem;
-            font-weight: 900;
-            text-shadow: 0 0 20px rgba(255,255,200,0.5);
-            margin-bottom: 28px;
-            background: linear-gradient(145deg, #FFE6B0, #FFB347);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .tap-btn {
-            width: 210px;
-            height: 210px;
-            border-radius: 50%;
-            border: none;
-            background: radial-gradient(circle at 35% 35%, #ff8c5a, #e63e2e);
-            color: white;
-            font-size: 2rem;
-            font-weight: 800;
-            cursor: pointer;
-            box-shadow: 0 20px 35px rgba(0,0,0,0.4), 0 0 0 8px rgba(255,255,255,0.2);
-            transition: transform 0.08s linear, box-shadow 0.1s;
-            user-select: none;
-            touch-action: manipulation;
-        }
-
-        .tap-btn:active {
-            transform: scale(0.94);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
-        }
-
-        .tap-btn:disabled {
-            opacity: 0.5;
-            transform: none;
-            cursor: not-allowed;
-        }
-
-        .viewer-count {
-            margin-top: 28px;
-            font-size: 0.9rem;
-            background: rgba(0,0,0,0.4);
-            padding: 8px 20px;
-            border-radius: 40px;
-            backdrop-filter: blur(4px);
-        }
-
-        .join-section {
-            display: flex;
-            flex-direction: column;
-            gap: 18px;
-            width: 100%;
-            max-width: 320px;
-        }
-
-        .code-input {
-            padding: 18px 16px;
-            font-size: 1.7rem;
-            text-align: center;
-            border: 2px solid rgba(255,255,255,0.4);
-            background: rgba(255,255,255,0.1);
-            color: white;
-            border-radius: 60px;
-            outline: none;
-            text-transform: uppercase;
-            letter-spacing: 8px;
+        .room-code-display {
+            font-size: 48px;
+            font-weight: bold;
             font-family: monospace;
-            font-weight: 700;
-            backdrop-filter: blur(8px);
+            letter-spacing: 10px;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            color: #667eea;
         }
 
-        .code-input::placeholder {
-            letter-spacing: 2px;
-            font-size: 1rem;
-            color: rgba(255,255,255,0.5);
-        }
-
-        .join-btn {
-            padding: 16px;
-            background: rgba(255,255,255,0.18);
-            border: 1.5px solid white;
-            color: white;
-            border-radius: 60px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-            backdrop-filter: blur(8px);
-        }
-
-        .join-btn:active {
-            transform: scale(0.97);
-            background: rgba(255,255,255,0.3);
-        }
-
-        .viewer-game {
+        input {
+            width: 100%;
+            padding: 15px;
+            font-size: 24px;
             text-align: center;
+            font-family: monospace;
+            letter-spacing: 5px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            margin: 10px 0;
         }
 
-        .live-indicator {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(220, 38, 38, 0.75);
-            backdrop-filter: blur(8px);
-            padding: 8px 20px;
-            border-radius: 60px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 28px;
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.1s;
         }
 
-        .pulse {
-            width: 10px;
-            height: 10px;
-            background: #ff5e5e;
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .click-button {
+            width: 200px;
+            height: 200px;
             border-radius: 50%;
-            animation: pulse 1s infinite;
-            box-shadow: 0 0 0 0 rgba(255,80,80,0.7);
+            background: linear-gradient(145deg, #ff6b6b, #ee5a5a);
+            font-size: 32px;
+            font-weight: bold;
+            margin: 20px auto;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
 
-        @keyframes pulse {
-            0% { opacity: 0.6; transform: scale(0.9);}
-            100% { opacity: 1; transform: scale(1.3);}
-        }
-
-        .viewer-score {
-            font-size: 7rem;
-            font-weight: 900;
-            text-shadow: 0 0 35px rgba(255,200,100,0.6);
-            background: linear-gradient(135deg, #FFE5B4, #FFB347);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .taps-per-sec {
-            font-size: 1.3rem;
-            font-weight: 600;
-            margin-top: 12px;
-            background: rgba(0,0,0,0.4);
-            display: inline-block;
-            padding: 6px 20px;
-            border-radius: 60px;
-            backdrop-filter: blur(4px);
+        .score {
+            font-size: 72px;
+            font-weight: bold;
+            color: #667eea;
+            margin: 20px 0;
         }
 
         .back-btn {
-            position: absolute;
-            top: 20px;
-            left: 18px;
-            background: rgba(0,0,0,0.5);
-            backdrop-filter: blur(8px);
-            border: none;
-            color: white;
-            padding: 8px 18px;
-            border-radius: 40px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: 500;
-            transition: 0.2s;
-            z-index: 20;
-        }
-
-        .back-btn:active {
-            transform: scale(0.96);
-        }
-
-        .status {
-            text-align: center;
-            padding: 12px 18px;
-            border-radius: 60px;
-            margin-bottom: 20px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            backdrop-filter: blur(12px);
-        }
-
-        .status.error {
-            background: rgba(220, 38, 38, 0.8);
-        }
-
-        .status.success {
-            background: rgba(34, 197, 94, 0.8);
-        }
-
-        .instructions {
-            text-align: center;
-            opacity: 0.8;
-            font-size: 0.85rem;
-            margin-top: 12px;
+            background: #999;
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 14px;
         }
 
         .hidden {
-            display: none !important;
+            display: none;
         }
 
-        .leaderboard-preview {
-            margin-top: 28px;
-            font-size: 0.8rem;
-            background: rgba(0,0,0,0.3);
-            padding: 10px 16px;
-            border-radius: 28px;
+        .status {
+            padding: 10px;
+            border-radius: 10px;
+            margin: 10px 0;
+            font-size: 14px;
         }
 
-        @media (max-width: 480px) {
-            .tap-btn {
-                width: 170px;
-                height: 170px;
-                font-size: 1.5rem;
-            }
-            .score-display {
-                font-size: 4.5rem;
-            }
-            .viewer-score {
-                font-size: 5.5rem;
-            }
-            .room-code {
-                font-size: 1.6rem;
-                letter-spacing: 4px;
-            }
+        .status.error {
+            background: #fee;
+            color: #c33;
+            border: 1px solid #fcc;
+        }
+
+        .status.success {
+            background: #efe;
+            color: #3c3;
+            border: 1px solid #cfc;
+        }
+
+        .info {
+            color: #666;
+            font-size: 14px;
+            margin-top: 15px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>⚡ TAP RACE</h1>
-        <p class="subtitle">real‑time multiplayer · host vs viewers</p>
+    <div class="game-container">
+        <h1>⚡ CLICK BATTLE ⚡</h1>
+        <p class="sub">Who can click the fastest?</p>
 
-        <div id="mainMenu" class="mode-selector">
-            <button class="mode-btn active" data-mode="host">🎮 HOST GAME</button>
-            <button class="mode-btn" data-mode="viewer">👀 WATCH GAME</button>
+        <div class="mode-buttons">
+            <button class="mode-btn active" onclick="setMode('host')">🎮 CREATE GAME</button>
+            <button class="mode-btn" onclick="setMode('player')">👥 JOIN GAME</button>
+        </div>
+
+        <!-- Host Section -->
+        <div id="hostSection">
+            <div class="room-section">
+                <p>👇 Click below to create your battle room</p>
+                <button onclick="createGame()" style="background: #ff6b6b; margin-top: 15px;">🚀 CREATE NEW ROOM</button>
+            </div>
+        </div>
+
+        <!-- Player Join Section -->
+        <div id="playerSection" class="hidden">
+            <div class="room-section">
+                <p>Enter room code to join the battle</p>
+                <input type="text" id="roomCodeInput" maxlength="4" placeholder="1234" style="text-align: center; font-size: 32px;">
+                <button onclick="joinGame()">🔍 JOIN ROOM</button>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="gameScreen" class="hidden">
+            <div class="room-section">
+                <p>🎮 ROOM CODE</p>
+                <div class="room-code-display" id="gameRoomCode">----</div>
+                <p id="gameRole" style="color: #667eea; font-weight: bold;"></p>
+            </div>
+
+            <div class="score" id="scoreDisplay">0</div>
+            
+            <button class="click-button" id="clickBtn" onclick="handleClick()">CLICK!</button>
+            
+            <div id="otherPlayers">
+                <p style="margin-top: 20px; color: #666;">👥 Other Players:</p>
+                <div id="playersList" style="margin-top: 10px;"></div>
+            </div>
+
+            <button class="back-btn" onclick="exitGame()">← EXIT GAME</button>
         </div>
 
         <div id="statusMsg" class="status hidden"></div>
-
-        <!-- Host Setup (create room) -->
-        <div id="hostSetup" class="game-area active">
-            <div class="join-section">
-                <p class="instructions" style="margin-bottom: 8px;">✨ Create a private room & tap like crazy<br>Share the 4‑digit code with friends</p>
-                <button class="join-btn" id="createRoomBtn" style="margin-top: 12px;">🚀 CREATE ROOM</button>
-            </div>
-        </div>
-
-        <!-- Host active game -->
-        <div id="hostGame" class="game-area">
-            <button class="back-btn" id="hostBackBtn">← Exit</button>
-            <div class="room-code" id="roomCodeDisplay">----</div>
-            <div class="score-display" id="hostScore">0</div>
-            <button class="tap-btn" id="tapBtn">⚡ TAP ⚡</button>
-            <div class="viewer-count" id="viewerCount">👁️ 0 watching</div>
-            <div class="instructions">🔥 tap as fast as possible — viewers see every tap live</div>
-        </div>
-
-        <!-- Viewer Setup (join with code) -->
-        <div id="viewerSetup" class="game-area">
-            <div class="join-section">
-                <p class="instructions">Enter 4‑digit room code from host</p>
-                <input type="text" class="code-input" id="codeInput" maxlength="4" placeholder="0000" inputmode="numeric">
-                <button class="join-btn" id="joinRoomBtn">🔍 JOIN & WATCH</button>
-            </div>
-        </div>
-
-        <!-- Viewer Game (spectate) -->
-        <div id="viewerGame" class="game-area viewer-game">
-            <button class="back-btn" id="viewerBackBtn">← Leave</button>
-            <div class="live-indicator">
-                <span class="pulse"></span>
-                LIVE SYNC
-            </div>
-            <div class="host-name" id="hostName">🏆 HOST SCORE</div>
-            <div class="viewer-score" id="viewerScore">0</div>
-            <div class="taps-per-sec" id="tapsPerSec">0 taps/sec</div>
-            <div class="leaderboard-preview">📡 realtime via Supabase · taps update instantly</div>
-        </div>
+        <div class="info">💡 Tip: Share your room code with friends to battle!</div>
     </div>
 
     <script>
-        // ======================== SUPABASE CONFIG ========================
+        // Supabase setup
         const SUPABASE_URL = 'https://ryipodpanddlukxezvjm.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ5aXBvZHBhbmRkbHVreGV6dmptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxNjY4MTMsImV4cCI6MjA4OTc0MjgxM30.kkZyToN7LrJZhf8zpzj_7hXSkyobjcfmYp-dV4b9aEY';
         
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-        // ---------- GLOBAL STATE ----------
-        let currentMode = 'host';           // 'host' or 'viewer'
-        let activeRoomCode = null;           // current room code
-        let hostScore = 0;
-        let tapTimes = [];                   // for tps calculation
-        let lastSyncTimestamp = 0;
-        let realtimeChannel = null;          // subscription channel
-        let hostUpdateThrottle = false;
-        let isHostGameActive = false;
-
-        // DOM elements
-        const hostSetupDiv = document.getElementById('hostSetup');
-        const hostGameDiv = document.getElementById('hostGame');
-        const viewerSetupDiv = document.getElementById('viewerSetup');
-        const viewerGameDiv = document.getElementById('viewerGame');
-        const hostScoreSpan = document.getElementById('hostScore');
-        const viewerScoreSpan = document.getElementById('viewerScore');
-        const roomCodeDisplaySpan = document.getElementById('roomCodeDisplay');
-        const viewerCountSpan = document.getElementById('viewerCount');
-        const tapsPerSecSpan = document.getElementById('tapsPerSec');
-        const tapBtn = document.getElementById('tapBtn');
-        const statusDiv = document.getElementById('statusMsg');
-        const codeInput = document.getElementById('codeInput');
-
-        // Helper: show toast status
-        function showStatusMessage(msg, type = 'error') {
+        
+        let currentMode = 'host';
+        let currentRoom = null;
+        let currentScore = 0;
+        let playerId = null;
+        let clickChannel = null;
+        let clickCount = 0;
+        
+        // Show status message
+        function showMessage(msg, type = 'success') {
+            const statusDiv = document.getElementById('statusMsg');
             statusDiv.textContent = msg;
             statusDiv.className = `status ${type}`;
             statusDiv.classList.remove('hidden');
-            setTimeout(() => statusDiv.classList.add('hidden'), 3200);
+            setTimeout(() => statusDiv.classList.add('hidden'), 3000);
         }
-
-        // Helper: cleanup realtime subscriptions
-        function cleanupRealtime() {
-            if (realtimeChannel) {
-                supabase.removeChannel(realtimeChannel);
-                realtimeChannel = null;
-            }
-        }
-
-        // Reset all UI to main menu
-        function fullReset(keepModeSelection = false) {
-            cleanupRealtime();
-            
-            // Delete room from DB if we were a host and room exists (avoid orphan rooms)
-            if (currentMode === 'host' && activeRoomCode && isHostGameActive) {
-                supabase.from('tap_rooms').delete().eq('code', activeRoomCode).then(() => {
-                    console.log('Room deleted:', activeRoomCode);
-                }).catch(e => console.warn);
-            }
-            
-            hostScore = 0;
-            tapTimes = [];
-            activeRoomCode = null;
-            isHostGameActive = false;
-            
-            // UI visibility reset
-            hostSetupDiv.classList.remove('active');
-            hostGameDiv.classList.remove('active');
-            viewerSetupDiv.classList.remove('active');
-            viewerGameDiv.classList.remove('active');
-            
-            if (!keepModeSelection || currentMode === 'host') {
-                currentMode = 'host';
-                document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
-                document.querySelector('.mode-btn[data-mode="host"]').classList.add('active');
-                hostSetupDiv.classList.add('active');
+        
+        // Switch between host and player mode
+        function setMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+            if (mode === 'host') {
+                document.querySelector('.mode-btn').classList.add('active');
+                document.getElementById('hostSection').classList.remove('hidden');
+                document.getElementById('playerSection').classList.add('hidden');
             } else {
-                // viewer mode reset to join panel
-                document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
-                document.querySelector('.mode-btn[data-mode="viewer"]').classList.add('active');
-                viewerSetupDiv.classList.add('active');
+                document.querySelectorAll('.mode-btn')[1].classList.add('active');
+                document.getElementById('hostSection').classList.add('hidden');
+                document.getElementById('playerSection').classList.remove('hidden');
             }
-            
-            // reset numeric displays
-            if (hostScoreSpan) hostScoreSpan.textContent = '0';
-            if (viewerScoreSpan) viewerScoreSpan.textContent = '0';
-            if (tapsPerSecSpan) tapsPerSecSpan.textContent = '0 taps/sec';
-            if (viewerCountSpan) viewerCountSpan.textContent = '👁️ 0 watching';
-            if (codeInput) codeInput.value = '';
+            document.getElementById('gameScreen').classList.add('hidden');
         }
-
-        // ==================== HOST: CREATE ROOM ====================
-        async function createRoom() {
+        
+        // Generate random room code
+        function generateRoomCode() {
+            return Math.floor(1000 + Math.random() * 9000).toString();
+        }
+        
+        // Create new game (host)
+        async function createGame() {
             try {
-                const newRoomCode = Math.floor(1000 + Math.random() * 9000).toString();
-                const hostId = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36);
+                const roomCode = generateRoomCode();
+                playerId = 'player_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
                 
+                // Create room in database
                 const { error } = await supabase
-                    .from('tap_rooms')
-                    .insert([{ 
-                        code: newRoomCode, 
-                        score: 0, 
-                        host_id: hostId,
-                        taps_per_sec: 0,
-                        updated_at: new Date().toISOString()
+                    .from('click_battles')
+                    .insert([{
+                        room_code: roomCode,
+                        players: [{
+                            id: playerId,
+                            score: 0,
+                            name: 'Host'
+                        }],
+                        status: 'waiting'
                     }]);
                 
-                if (error) throw error;
+                if (error) {
+                    // If table doesn't exist, create it
+                    if (error.message.includes('does not exist')) {
+                        showMessage('⚠️ Creating table... Please try again in a moment', 'error');
+                        await createTable();
+                        setTimeout(() => createGame(), 2000);
+                        return;
+                    }
+                    throw error;
+                }
                 
-                activeRoomCode = newRoomCode;
-                hostScore = 0;
-                tapTimes = [];
-                isHostGameActive = true;
+                currentRoom = roomCode;
+                currentScore = 0;
                 
-                // Switch UI to host game view
-                hostSetupDiv.classList.remove('active');
-                hostGameDiv.classList.add('active');
-                roomCodeDisplaySpan.textContent = activeRoomCode;
-                hostScoreSpan.textContent = '0';
-                viewerCountSpan.textContent = '👁️ 0 watching';
+                showMessage(`✅ Game created! Room Code: ${roomCode}`, 'success');
+                startGame('Host');
                 
-                // Subscribe to room updates (for viewer count and own score sync)
-                setupHostRealtimeSubscription();
-                
-                showStatusMessage(`🎉 Room ${activeRoomCode} created! Share code.`, 'success');
-            } catch (err) {
-                console.error(err);
-                showStatusMessage('Failed to create room: ' + err.message, 'error');
+            } catch (error) {
+                console.error('Error creating game:', error);
+                showMessage('Error: ' + error.message, 'error');
             }
         }
         
-        // Host subscription: get updates when viewers join? Actually we track "viewers" by presence? 
-        // We'll show a static viewer counter that increments whenever a viewer subscribes (we simulate via a separate channel)
-        // For simplicity: we will show number of active watchers using a separate presence-like tracking.
-        // We'll also listen for changes to know if someone else is watching? Since no "viewers" table, we broadcast.
-        // Enhance: Use a separate "viewers" counter table? but simpler: increment when viewer joins and decrement on leave.
-        // We'll implement a lightweight viewer heartbeat using a separate "room_viewers" channel.
-        // But to keep consistent and not overcomplicate, we will show "Live" badge and use a supabase realtime presence? 
-        // Instead, we will store a "viewer_count" in tap_rooms and increment when viewer connects, decrement on disconnect.
-        // Since client-side can't easily detect all disconnects, we will manage with heartbeat + cleanup on leave.
-        // Simpler: We'll just show '👥 live' and not exact count, but users expect "0 viewers watching". 
-        // I'll implement a basic viewer counter using a separate table "room_presence".
-        // But due to time, I'll implement a smart but functional counter: each viewer registers itself and sends periodic keepalive.
-        // For brevity, we will show a simulated viewer count based on active subscriptions (we'll update DB each time viewer joins/leaves).
-        // Actually we will update the room's viewer_count via RPC? Not needed, I'll add direct update on join/leave.
-        
-        function setupHostRealtimeSubscription() {
-            if (realtimeChannel) supabase.removeChannel(realtimeChannel);
-            
-            realtimeChannel = supabase
-                .channel(`host-room-${activeRoomCode}`)
-                .on('postgres_changes', { 
-                    event: 'UPDATE', 
-                    schema: 'public', 
-                    table: 'tap_rooms',
-                    filter: `code=eq.${activeRoomCode}`
-                }, (payload) => {
-                    // update viewer count if present
-                    if (payload.new && typeof payload.new.viewer_count !== 'undefined') {
-                        viewerCountSpan.textContent = `👁️ ${payload.new.viewer_count || 0} watching`;
-                    }
-                    // also sync score in case of conflict (but host is source of truth, but just in case)
-                    if (payload.new && payload.new.score !== hostScore && !hostUpdateThrottle) {
-                        // sync if external change? ignore for host, but ensure UI consistency
-                    }
-                })
-                .subscribe();
-        }
-        
-        // Host update score to Supabase (throttled)
-        async function pushHostScore() {
-            if (!activeRoomCode || !isHostGameActive) return;
-            const nowTps = tapTimes.length;
-            hostUpdateThrottle = true;
+        // Create the table if it doesn't exist
+        async function createTable() {
             try {
-                await supabase
-                    .from('tap_rooms')
-                    .update({ 
-                        score: hostScore,
-                        taps_per_sec: nowTps,
-                        updated_at: new Date().toISOString()
-                    })
-                    .eq('code', activeRoomCode);
-            } catch (err) {
-                console.warn('score update error', err);
+                const { error } = await supabase.rpc('create_click_battles_table');
+                if (error) {
+                    console.log('Please create table manually with SQL below');
+                    showManualSQLInstructions();
+                }
+            } catch(e) {
+                showManualSQLInstructions();
             }
-            setTimeout(() => { hostUpdateThrottle = false; }, 90);
         }
         
-        function handleTap(e) {
-            if (e) e.preventDefault();
-            if (!isHostGameActive || !activeRoomCode) return;
-            
-            hostScore++;
-            hostScoreSpan.textContent = hostScore;
-            
-            const now = Date.now();
-            tapTimes.push(now);
-            tapTimes = tapTimes.filter(t => now - t < 1000);
-            
-            // throttle updates to every 70ms for smoothness but not overload
-            if (now - lastSyncTimestamp > 70) {
-                pushHostScore();
-                lastSyncTimestamp = now;
-            }
-            
-            // visual bump
-            tapBtn.style.transform = 'scale(0.92)';
-            setTimeout(() => { if(tapBtn) tapBtn.style.transform = ''; }, 70);
+        function showManualSQLInstructions() {
+            const sql = `
+-- Run this in Supabase SQL Editor:
+CREATE TABLE IF NOT EXISTS click_battles (
+    id BIGSERIAL PRIMARY KEY,
+    room_code TEXT UNIQUE NOT NULL,
+    players JSONB DEFAULT '[]'::jsonb,
+    status TEXT DEFAULT 'waiting',
+    created_at TIMESTAMP DEFAULT NOW()
+);`;
+            console.log(sql);
+            showMessage('⚠️ Please run SQL in Supabase editor (check console)', 'error');
         }
         
-        // ==================== VIEWER: JOIN ROOM & WATCH ====================
-        async function joinRoomAsViewer() {
-            let code = codeInput.value.trim().toUpperCase();
-            if (code.length !== 4 || isNaN(Number(code))) {
-                showStatusMessage('Enter a valid 4-digit code', 'error');
+        // Join existing game
+        async function joinGame() {
+            const roomCode = document.getElementById('roomCodeInput').value.trim();
+            if (!roomCode || roomCode.length !== 4) {
+                showMessage('Please enter a valid 4-digit room code', 'error');
                 return;
             }
             
             try {
+                // Check if room exists
                 const { data, error } = await supabase
-                    .from('tap_rooms')
-                    .select('code, score, taps_per_sec, viewer_count')
-                    .eq('code', code)
+                    .from('click_battles')
+                    .select('*')
+                    .eq('room_code', roomCode)
                     .single();
                 
                 if (error || !data) {
-                    showStatusMessage('Room not found. Check the code.', 'error');
+                    showMessage('Room not found!', 'error');
                     return;
                 }
                 
-                activeRoomCode = code;
+                playerId = 'player_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+                let players = data.players || [];
                 
-                // Increment viewer count in room (simple counter)
-                const newViewerCount = (data.viewer_count || 0) + 1;
-                await supabase
-                    .from('tap_rooms')
-                    .update({ viewer_count: newViewerCount })
-                    .eq('code', activeRoomCode);
+                // Add new player
+                players.push({
+                    id: playerId,
+                    score: 0,
+                    name: 'Player ' + (players.length + 1)
+                });
                 
-                // Switch UI
-                viewerSetupDiv.classList.remove('active');
-                viewerGameDiv.classList.add('active');
+                // Update room with new player
+                const { error: updateError } = await supabase
+                    .from('click_battles')
+                    .update({ players: players })
+                    .eq('room_code', roomCode);
                 
-                // set initial values
-                viewerScoreSpan.textContent = data.score || 0;
-                if (data.taps_per_sec) tapsPerSecSpan.textContent = `${data.taps_per_sec} taps/sec`;
-                else tapsPerSecSpan.textContent = `0 taps/sec`;
+                if (updateError) throw updateError;
                 
-                // Setup realtime subscription for viewer
-                setupViewerSubscription();
+                currentRoom = roomCode;
+                currentScore = 0;
                 
-                showStatusMessage(`✅ Watching room ${activeRoomCode}`, 'success');
+                showMessage(`✅ Joined room ${roomCode}!`, 'success');
+                startGame('Player');
                 
-                // handle cleanup on page unload or explicit leave: decrement viewer count
-                window.addEventListener('beforeunload', () => decrementViewerCount());
-            } catch (err) {
-                console.error(err);
-                showStatusMessage('Error joining room', 'error');
+            } catch (error) {
+                console.error('Error joining game:', error);
+                showMessage('Error joining game: ' + error.message, 'error');
             }
         }
         
-        async function decrementViewerCount() {
-            if (!activeRoomCode) return;
-            try {
-                const { data } = await supabase
-                    .from('tap_rooms')
-                    .select('viewer_count')
-                    .eq('code', activeRoomCode)
-                    .single();
-                if (data && data.viewer_count > 0) {
-                    await supabase
-                        .from('tap_rooms')
-                        .update({ viewer_count: data.viewer_count - 1 })
-                        .eq('code', activeRoomCode);
-                }
-            } catch (e) { console.warn(e); }
+        // Start the game screen
+        function startGame(role) {
+            document.getElementById('hostSection').classList.add('hidden');
+            document.getElementById('playerSection').classList.add('hidden');
+            document.getElementById('gameScreen').classList.remove('hidden');
+            document.getElementById('gameRoomCode').textContent = currentRoom;
+            document.getElementById('gameRole').textContent = `You are the ${role}`;
+            document.getElementById('scoreDisplay').textContent = '0';
+            
+            // Subscribe to realtime updates
+            subscribeToRoom();
+            
+            // Load current players
+            loadPlayers();
         }
         
-        function setupViewerSubscription() {
-            if (realtimeChannel) supabase.removeChannel(realtimeChannel);
+        // Subscribe to room updates
+        function subscribeToRoom() {
+            if (clickChannel) {
+                supabase.removeChannel(clickChannel);
+            }
             
-            realtimeChannel = supabase
-                .channel(`viewer-${activeRoomCode}`)
-                .on('postgres_changes', { 
-                    event: 'UPDATE', 
-                    schema: 'public', 
-                    table: 'tap_rooms',
-                    filter: `code=eq.${activeRoomCode}`
+            clickChannel = supabase
+                .channel(`room_${currentRoom}`)
+                .on('postgres_changes', {
+                    event: 'UPDATE',
+                    schema: 'public',
+                    table: 'click_battles',
+                    filter: `room_code=eq.${currentRoom}`
                 }, (payload) => {
-                    const newScore = payload.new.score;
-                    const newTps = payload.new.taps_per_sec || 0;
-                    if (viewerScoreSpan) viewerScoreSpan.textContent = newScore;
-                    if (tapsPerSecSpan) tapsPerSecSpan.textContent = `${newTps} taps/sec`;
-                    // animated bounce
-                    const scoreEl = document.getElementById('viewerScore');
-                    if (scoreEl) {
-                        scoreEl.style.transform = 'scale(1.08)';
-                        setTimeout(() => scoreEl.style.transform = '', 120);
-                    }
+                    updateScores(payload.new.players);
                 })
                 .subscribe();
         }
         
-        // Clean viewer leave (decrement counter)
-        async function leaveViewerCleanup() {
-            if (activeRoomCode && currentMode === 'viewer') {
-                await decrementViewerCount();
-            }
-            fullReset(false);
-            // ensure viewer mode selection stays
-            currentMode = 'viewer';
-            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelector('.mode-btn[data-mode="viewer"]').classList.add('active');
-            viewerSetupDiv.classList.add('active');
-            hostSetupDiv.classList.remove('active');
-            hostGameDiv.classList.remove('active');
-            viewerGameDiv.classList.remove('active');
-            activeRoomCode = null;
-            isHostGameActive = false;
-        }
-        
-        // Reset for host (exit)
-        function resetHostGame() {
-            if (activeRoomCode && currentMode === 'host') {
-                supabase.from('tap_rooms').delete().eq('code', activeRoomCode).catch(e=>console.warn);
-            }
-            fullReset(false);
-            currentMode = 'host';
-            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelector('.mode-btn[data-mode="host"]').classList.add('active');
-            hostSetupDiv.classList.add('active');
-        }
-        
-        // Mode selector logic
-        function switchMode(mode) {
-            if (mode === currentMode && (mode === 'host' ? hostSetupDiv.classList.contains('active') : viewerSetupDiv.classList.contains('active'))) return;
-            if (isHostGameActive || activeRoomCode) {
-                if (confirm('Exit current game session?')) {
-                    if (currentMode === 'host') resetHostGame();
-                    else leaveViewerCleanup();
-                } else return;
-            } else {
-                fullReset(true);
-            }
-            currentMode = mode;
-            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
-            if (mode === 'host') {
-                document.querySelector('.mode-btn[data-mode="host"]').classList.add('active');
-                hostSetupDiv.classList.add('active');
-                viewerSetupDiv.classList.remove('active');
-                viewerGameDiv.classList.remove('active');
-                hostGameDiv.classList.remove('active');
-            } else {
-                document.querySelector('.mode-btn[data-mode="viewer"]').classList.add('active');
-                viewerSetupDiv.classList.add('active');
-                hostSetupDiv.classList.remove('active');
-                hostGameDiv.classList.remove('active');
-                viewerGameDiv.classList.remove('active');
-            }
-            activeRoomCode = null;
-            isHostGameActive = false;
-        }
-        
-        // ==================== EVENT LISTENERS ====================
-        document.getElementById('createRoomBtn').addEventListener('click', createRoom);
-        document.getElementById('joinRoomBtn').addEventListener('click', joinRoomAsViewer);
-        tapBtn.addEventListener('click', handleTap);
-        tapBtn.addEventListener('touchstart', (e) => { e.preventDefault(); handleTap(e); });
-        document.getElementById('hostBackBtn').addEventListener('click', resetHostGame);
-        document.getElementById('viewerBackBtn').addEventListener('click', leaveViewerCleanup);
-        
-        document.querySelectorAll('.mode-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const mode = btn.getAttribute('data-mode');
-                switchMode(mode);
+        // Update scores display
+        function updateScores(players) {
+            const playersList = document.getElementById('playersList');
+            playersList.innerHTML = '';
+            
+            let sortedPlayers = [...(players || [])].sort((a, b) => b.score - a.score);
+            
+            sortedPlayers.forEach((player, index) => {
+                const isMe = player.id === playerId;
+                const playerDiv = document.createElement('div');
+                playerDiv.style.cssText = `
+                    display: flex;
+                    justify-content: space-between;
+                    padding: 10px;
+                    margin: 5px 0;
+                    background: ${isMe ? '#e3f2fd' : '#f5f5f5'};
+                    border-radius: 8px;
+                    font-weight: ${isMe ? 'bold' : 'normal'};
+                `;
+                playerDiv.innerHTML = `
+                    <span>${index === 0 ? '👑 ' : ''}${player.name} ${isMe ? '(You)' : ''}</span>
+                    <span style="color: #667eea; font-weight: bold;">${player.score} clicks</span>
+                `;
+                playersList.appendChild(playerDiv);
             });
-        });
+        }
         
-        // Prevent double-tap zoom globally
-        document.addEventListener('touchend', (e) => {
-            if (e.target.closest('.tap-btn')) e.preventDefault();
-        }, { passive: false });
+        // Load current players
+        async function loadPlayers() {
+            try {
+                const { data, error } = await supabase
+                    .from('click_battles')
+                    .select('players')
+                    .eq('room_code', currentRoom)
+                    .single();
+                
+                if (!error && data) {
+                    updateScores(data.players);
+                }
+            } catch (error) {
+                console.error('Error loading players:', error);
+            }
+        }
         
-        // initial UI ready
-        console.log('Tap Race ready — realtime multiplayer');
+        // Handle click
+        async function handleClick() {
+            if (!currentRoom) return;
+            
+            currentScore++;
+            document.getElementById('scoreDisplay').textContent = currentScore;
+            
+            // Visual feedback
+            const btn = document.getElementById('clickBtn');
+            btn.style.transform = 'scale(0.95)';
+            setTimeout(() => btn.style.transform = '', 100);
+            
+            // Update score in database
+            try {
+                // Get current room data
+                const { data, error } = await supabase
+                    .from('click_battles')
+                    .select('players')
+                    .eq('room_code', currentRoom)
+                    .single();
+                
+                if (error) throw error;
+                
+                let players = data.players || [];
+                const playerIndex = players.findIndex(p => p.id === playerId);
+                
+                if (playerIndex !== -1) {
+                    players[playerIndex].score = currentScore;
+                    
+                    // Update database
+                    const { error: updateError } = await supabase
+                        .from('click_battles')
+                        .update({ players: players })
+                        .eq('room_code', currentRoom);
+                    
+                    if (updateError) throw updateError;
+                }
+                
+            } catch (error) {
+                console.error('Error updating score:', error);
+            }
+        }
+        
+        // Exit game
+        async function exitGame() {
+            if (currentRoom && playerId) {
+                try {
+                    // Remove player from room
+                    const { data, error } = await supabase
+                        .from('click_battles')
+                        .select('players')
+                        .eq('room_code', currentRoom)
+                        .single();
+                    
+                    if (!error && data) {
+                        let players = data.players || [];
+                        players = players.filter(p => p.id !== playerId);
+                        
+                        if (players.length === 0) {
+                            // Delete empty room
+                            await supabase
+                                .from('click_battles')
+                                .delete()
+                                .eq('room_code', currentRoom);
+                        } else {
+                            // Update room without this player
+                            await supabase
+                                .from('click_battles')
+                                .update({ players: players })
+                                .eq('room_code', currentRoom);
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error exiting:', error);
+                }
+            }
+            
+            // Cleanup
+            if (clickChannel) {
+                supabase.removeChannel(clickChannel);
+                clickChannel = null;
+            }
+            
+            // Reset state
+            currentRoom = null;
+            currentScore = 0;
+            playerId = null;
+            
+            // Go back to menu
+            setMode('host');
+        }
+        
+        // Create table on load if needed
+        async function init() {
+            try {
+                // Test if table exists
+                const { error } = await supabase
+                    .from('click_battles')
+                    .select('count')
+                    .limit(1);
+                
+                if (error && error.message.includes('does not exist')) {
+                    console.log('Table not found, please create it');
+                    showManualSQLInstructions();
+                }
+            } catch(e) {
+                console.log('Initialization check:', e);
+            }
+        }
+        
+        // Start the app
+        init();
     </script>
 </body>
 </html>
