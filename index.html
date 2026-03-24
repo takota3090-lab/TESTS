@@ -1,171 +1,805 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Multiplayer Charades</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Slender Man: Mobile Version</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
+        }
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+        body {
+            background: #000;
+            overflow: hidden;
+            font-family: 'Courier New', monospace;
+            color: #fff;
+        }
 
-<style>
-body { font-family: Arial; text-align: center; background:#f5f5f5; }
-input, button { padding:10px; margin:5px; border-radius:8px; }
-button { cursor:pointer; }
-#game { display:none; }
-</style>
+        #gameCanvas {
+            display: block;
+            background: #0a0a0a;
+        }
+
+        /* Menu Screen */
+        #menuScreen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, #1a1a2e 0%, #000 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .title {
+            font-size: 2.5rem;
+            color: #fff;
+            text-shadow: 0 0 20px rgba(255,0,0,0.5), 0 0 40px rgba(255,0,0,0.3);
+            margin-bottom: 1rem;
+            letter-spacing: 3px;
+            animation: flicker 3s infinite;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 3rem;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+            52% { opacity: 0.3; }
+            54% { opacity: 1; }
+        }
+
+        #startBtn {
+            padding: 20px 60px;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, #2d132c 0%, #1a0f1a 100%);
+            border: 2px solid #c72c41;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 0 30px rgba(199,44,65,0.3);
+        }
+
+        #startBtn:active {
+            transform: scale(0.95);
+            background: linear-gradient(135deg, #c72c41 0%, #2d132c 100%);
+        }
+
+        /* Game UI */
+        #gameUI {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: none;
+        }
+
+        #timer {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2rem;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+            background: rgba(0,0,0,0.5);
+            padding: 10px 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        #heartbeat {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0,0,0,0.5);
+            padding: 10px 15px;
+            border: 1px solid rgba(255,0,0,0.3);
+        }
+
+        .heart {
+            width: 30px;
+            height: 30px;
+            background: #c72c41;
+            position: relative;
+            transform: rotate(-45deg);
+            animation: heartbeat 1s infinite;
+        }
+
+        .heart::before,
+        .heart::after {
+            content: '';
+            width: 30px;
+            height: 30px;
+            position: absolute;
+            background: #c72c41;
+            border-radius: 50%;
+        }
+
+        .heart::before {
+            top: -15px;
+            left: 0;
+        }
+
+        .heart::after {
+            left: 15px;
+            top: 0;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: rotate(-45deg) scale(1); }
+            10% { transform: rotate(-45deg) scale(1.2); }
+            20% { transform: rotate(-45deg) scale(1); }
+            30% { transform: rotate(-45deg) scale(1.2); }
+        }
+
+        .heart.fast {
+            animation-duration: 0.5s;
+        }
+
+        .heart.danger {
+            animation-duration: 0.3s;
+            background: #ff0000;
+        }
+
+        .heart.danger::before,
+        .heart.danger::after {
+            background: #ff0000;
+        }
+
+        #heartRate {
+            font-size: 1.2rem;
+            color: #c72c41;
+            min-width: 50px;
+        }
+
+        /* Joystick */
+        #joystickZone {
+            position: absolute;
+            bottom: 100px;
+            left: 100px;
+            width: 150px;
+            height: 150px;
+            pointer-events: auto;
+        }
+
+        #joystickBase {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+        }
+
+        #joystickStick {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.3) 100%);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 20px rgba(255,255,255,0.3);
+        }
+
+        /* Game Over Screen */
+        #gameOverScreen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+            cursor: pointer;
+        }
+
+        #gameOverText {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .caught {
+            color: #c72c41;
+            text-shadow: 0 0 30px rgba(199,44,65,0.8);
+            animation: glitch 0.3s infinite;
+        }
+
+        .survived {
+            color: #4ade80;
+            text-shadow: 0 0 30px rgba(74,222,128,0.8);
+        }
+
+        @keyframes glitch {
+            0%, 100% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+        }
+
+        #restartText {
+            font-size: 1.2rem;
+            color: #666;
+            animation: pulse 1.5s infinite;
+            margin-top: 2rem;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* Vignette effect */
+        #vignette {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.8) 100%);
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        /* Static noise */
+        #static {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.05;
+            pointer-events: none;
+            z-index: 40;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        .warning {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            color: #c72c41;
+            text-shadow: 0 0 20px rgba(199,44,65,0.8);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            z-index: 60;
+        }
+
+        .warning.show {
+            opacity: 1;
+            animation: warningPulse 0.5s infinite;
+        }
+
+        @keyframes warningPulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
+        }
+    </style>
+<base target="_blank">
 </head>
 <body>
+    <canvas id="gameCanvas"></canvas>
+    
+    <div id="static"></div>
+    <div id="vignette"></div>
+    
+    <div id="menuScreen">
+        <h1 class="title">SLENDER MAN</h1>
+        <p class="subtitle">Mobile Version - Survive the Night</p>
+        <button id="startBtn">Start Game</button>
+    </div>
 
-<h2>🎮 Multiplayer Charades</h2>
+    <div id="gameUI">
+        <div id="timer">03:00</div>
+        <div id="heartbeat">
+            <div class="heart" id="heartIcon"></div>
+            <span id="heartRate">60</span>
+        </div>
+        <div id="joystickZone">
+            <div id="joystickBase"></div>
+            <div id="joystickStick"></div>
+        </div>
+    </div>
 
-<div id="menu">
-  <input id="name" placeholder="اسمك">
-  <br>
-  <button onclick="createRoom()">إنشاء غرفة</button>
-  <br>
-  <input id="room" placeholder="كود الغرفة">
-  <br>
-  <button onclick="joinRoom()">دخول</button>
-</div>
+    <div id="gameOverScreen">
+        <div id="gameOverText"></div>
+        <div id="restartText">Tap anywhere to restart</div>
+    </div>
 
-<div id="game">
-  <h3 id="roomCode"></h3>
-  <h1 id="word">---</h1>
-  <button onclick="newWord()">كلمة جديدة (Host)</button>
+    <div class="warning" id="warning">⚠ HE IS NEAR ⚠</div>
 
-  <h3>اللاعبين:</h3>
-  <ul id="players"></ul>
-</div>
-
-<script>
-// Avoid redeclaration issue
-let supabaseClient = window.supabase?.createClient(
-  "https://mwjdmbcdysvkzdoluyzw.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-);
-
-let roomCode = null;
-let playerName = null;
-let isHost = false;
-
-const words = ["جمل","سيارة","طيارة","قلم","حصان","أسد"];
-
-function randomWord(){
- return words[Math.floor(Math.random()*words.length)];
-}
-
-function generateCode(){
- return Math.random().toString(36).substring(2,7).toUpperCase();
-}
-
-async function createRoom(){
- playerName = document.getElementById("name").value;
- if(!playerName) return alert("اكتب اسمك");
-
- roomCode = generateCode();
- isHost = true;
-
- await supabaseClient.from("rooms").insert({
-  code: roomCode,
-  host_name: playerName,
-  current_word: ""
- });
-
- await supabaseClient.from("players").insert({
-  room_code: roomCode,
-  name: playerName,
-  is_host: true
- });
-
- startGame();
-}
-
-async function joinRoom(){
- playerName = document.getElementById("name").value;
- roomCode = document.getElementById("room").value.toUpperCase();
-
- if(!playerName || !roomCode) return alert("أكمل البيانات");
-
- const { data } = await supabaseClient
- .from("rooms")
- .select("*")
- .eq("code", roomCode)
- .single();
-
- if(!data) return alert("الغرفة غير موجودة");
-
- await supabaseClient.from("players").insert({
-  room_code: roomCode,
-  name: playerName,
-  is_host: false
- });
-
- startGame();
-}
-
-function startGame(){
- document.getElementById("menu").style.display="none";
- document.getElementById("game").style.display="block";
- document.getElementById("roomCode").innerText="Room: "+roomCode;
-
- listenRoom();
- listenPlayers();
-}
-
-function listenRoom(){
- supabaseClient.channel("room-"+roomCode)
- .on("postgres_changes",{
-  event:"*",
-  schema:"public",
-  table:"rooms",
-  filter:`code=eq.${roomCode}`
- },payload=>{
-  if(payload.new.current_word){
-   document.getElementById("word").innerText = payload.new.current_word;
-  }
- })
- .subscribe();
-}
-
-function listenPlayers(){
- supabaseClient.channel("players-"+roomCode)
- .on("postgres_changes",{
-  event:"*",
-  schema:"public",
-  table:"players",
-  filter:`room_code=eq.${roomCode}`
- },loadPlayers)
- .subscribe();
-
- loadPlayers();
-}
-
-async function loadPlayers(){
- const { data } = await supabaseClient
- .from("players")
- .select("*")
- .eq("room_code", roomCode);
-
- const list = document.getElementById("players");
- list.innerHTML = "";
-
- data.forEach(p=>{
-  const li = document.createElement("li");
-  li.innerText = p.name + " ("+p.score+")";
-  list.appendChild(li);
- });
-}
-
-async function newWord(){
- if(!isHost) return alert("فقط الهوست يغير الكلمة");
-
- const w = randomWord();
-
- await supabaseClient.from("rooms").update({
-  current_word: w
- }).eq("code", roomCode);
-}
-</script>
-
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Game state
+        let gameRunning = false;
+        let gameTime = 180; // 3 minutes in seconds
+        let lastTime = 0;
+        let animationId;
+        
+        // Player
+        const player = {
+            x: 0,
+            y: 0,
+            radius: 15,
+            speed: 3,
+            vx: 0,
+            vy: 0
+        };
+        
+        // Slender Man
+        const slender = {
+            x: 0,
+            y: 0,
+            radius: 20,
+            speed: 1.5,
+            angle: 0,
+            visible: false,
+            visibilityTimer: 0
+        };
+        
+        // Trees for atmosphere
+        const trees = [];
+        const numTrees = 30;
+        
+        // Joystick
+        const joystick = {
+            active: false,
+            centerX: 0,
+            centerY: 0,
+            stickX: 0,
+            stickY: 0,
+            maxDist: 45
+        };
+        
+        // Camera/View
+        const camera = {
+            x: 0,
+            y: 0
+        };
+        
+        // Heartbeat system
+        let heartRate = 60;
+        let targetHeartRate = 60;
+        
+        // Flashlight
+        let flashlightAngle = 0;
+        let flashlightWidth = Math.PI / 3;
+        
+        // Resize canvas
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            joystick.centerX = 100 + 75;
+            joystick.centerY = window.innerHeight - 100 - 75;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+        
+        // Initialize game world
+        function initWorld() {
+            // Place player at center
+            player.x = 0;
+            player.y = 0;
+            
+            // Place Slender Man far away
+            slender.x = 800;
+            slender.y = 800;
+            
+            // Generate trees
+            trees.length = 0;
+            for (let i = 0; i < numTrees; i++) {
+                let x, y, dist;
+                do {
+                    x = (Math.random() - 0.5) * 2000;
+                    y = (Math.random() - 0.5) * 2000;
+                    dist = Math.sqrt(x * x + y * y);
+                } while (dist < 100); // Keep clear of spawn
+                
+                trees.push({
+                    x: x,
+                    y: y,
+                    radius: 20 + Math.random() * 30,
+                    height: 100 + Math.random() * 150
+                });
+            }
+        }
+        
+        // Joystick handling
+        const joystickZone = document.getElementById('joystickZone');
+        const joystickStick = document.getElementById('joystickStick');
+        
+        function handleJoystickStart(e) {
+            e.preventDefault();
+            joystick.active = true;
+            updateJoystick(e);
+        }
+        
+        function handleJoystickMove(e) {
+            e.preventDefault();
+            if (joystick.active) {
+                updateJoystick(e);
+            }
+        }
+        
+        function handleJoystickEnd(e) {
+            e.preventDefault();
+            joystick.active = false;
+            joystick.stickX = joystick.centerX;
+            joystick.stickY = joystick.centerY;
+            joystickStick.style.transform = `translate(-50%, -50%)`;
+            player.vx = 0;
+            player.vy = 0;
+        }
+        
+        function updateJoystick(e) {
+            const touch = e.touches ? e.touches[0] : e;
+            const rect = canvas.getBoundingClientRect();
+            const x = touch.clientX - rect.left;
+            const y = touch.clientY - rect.top;
+            
+            const dx = x - joystick.centerX;
+            const dy = y - joystick.centerY;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            
+            let finalX = x;
+            let finalY = y;
+            
+            if (dist > joystick.maxDist) {
+                const ratio = joystick.maxDist / dist;
+                finalX = joystick.centerX + dx * ratio;
+                finalY = joystick.centerY + dy * ratio;
+            }
+            
+            joystick.stickX = finalX;
+            joystick.stickY = finalY;
+            
+            const offsetX = finalX - joystick.centerX;
+            const offsetY = finalY - joystick.centerY;
+            
+            joystickStick.style.transform = `translate(calc(-50% + ${offsetX}px), calc(-50% + ${offsetY}px))`;
+            
+            // Update player velocity
+            const normalizedDist = Math.min(dist, joystick.maxDist) / joystick.maxDist;
+            player.vx = (dx / dist) * player.speed * normalizedDist || 0;
+            player.vy = (dy / dist) * player.speed * normalizedDist || 0;
+        }
+        
+        joystickZone.addEventListener('touchstart', handleJoystickStart);
+        joystickZone.addEventListener('touchmove', handleJoystickMove);
+        joystickZone.addEventListener('touchend', handleJoystickEnd);
+        joystickZone.addEventListener('mousedown', handleJoystickStart);
+        window.addEventListener('mousemove', handleJoystickMove);
+        window.addEventListener('mouseup', handleJoystickEnd);
+        
+        // Start game
+        document.getElementById('startBtn').addEventListener('click', () => {
+            document.getElementById('menuScreen').style.display = 'none';
+            document.getElementById('gameUI').style.display = 'block';
+            initWorld();
+            gameRunning = true;
+            gameTime = 180;
+            lastTime = performance.now();
+            gameLoop(lastTime);
+            
+            // Start timer
+            const timerInterval = setInterval(() => {
+                if (!gameRunning) {
+                    clearInterval(timerInterval);
+                    return;
+                }
+                gameTime--;
+                updateTimer();
+                if (gameTime <= 0) {
+                    endGame(true);
+                }
+            }, 1000);
+        });
+        
+        function updateTimer() {
+            const mins = Math.floor(gameTime / 60);
+            const secs = gameTime % 60;
+            document.getElementById('timer').textContent = 
+                `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+        
+        // Game loop
+        function gameLoop(currentTime) {
+            if (!gameRunning) return;
+            
+            const deltaTime = (currentTime - lastTime) / 1000;
+            lastTime = currentTime;
+            
+            update(deltaTime);
+            render();
+            
+            animationId = requestAnimationFrame(gameLoop);
+        }
+        
+        function update(deltaTime) {
+            // Update player position
+            player.x += player.vx;
+            player.y += player.vy;
+            
+            // Keep player in bounds (soft boundaries)
+            const bound = 1500;
+            player.x = Math.max(-bound, Math.min(bound, player.x));
+            player.y = Math.max(-bound, Math.min(bound, player.y));
+            
+            // Update camera to follow player
+            camera.x = player.x - canvas.width / 2;
+            camera.y = player.y - canvas.height / 2;
+            
+            // Slender Man AI
+            const dx = player.x - slender.x;
+            const dy = player.y - slender.y;
+            const distToPlayer = Math.sqrt(dx * dx + dy * dy);
+            
+            // Slender Man moves toward player but stops at distance
+            if (distToPlayer > 100) {
+                slender.x += (dx / distToPlayer) * slender.speed;
+                slender.y += (dy / distToPlayer) * slender.speed;
+            }
+            
+            // Slender Man visibility based on distance and looking direction
+            const angleToPlayer = Math.atan2(dy, dx);
+            const angleDiff = Math.abs(normalizeAngle(angleToPlayer - flashlightAngle));
+            
+            // More visible when closer and in front of player
+            slender.visible = distToPlayer < 400 && angleDiff < flashlightWidth;
+            slender.visibilityTimer += deltaTime;
+            
+            // Update heartbeat based on distance
+            const dangerLevel = Math.max(0, 1 - distToPlayer / 600);
+            targetHeartRate = 60 + dangerLevel * 120;
+            heartRate += (targetHeartRate - heartRate) * 0.1;
+            
+            // Update heart UI
+            const heartIcon = document.getElementById('heartIcon');
+            const heartRateText = document.getElementById('heartRate');
+            heartRateText.textContent = Math.round(heartRate);
+            
+            if (heartRate > 120) {
+                heartIcon.className = 'heart danger';
+            } else if (heartRate > 90) {
+                heartIcon.className = 'heart fast';
+            } else {
+                heartIcon.className = 'heart';
+            }
+            
+            // Warning when very close
+            const warning = document.getElementById('warning');
+            if (distToPlayer < 200) {
+                warning.classList.add('show');
+            } else {
+                warning.classList.remove('show');
+            }
+            
+            // Check collision
+            if (distToPlayer < player.radius + slender.radius) {
+                endGame(false);
+            }
+            
+            // Update flashlight angle to face movement direction or default
+            if (player.vx !== 0 || player.vy !== 0) {
+                flashlightAngle = Math.atan2(player.vy, player.vx);
+            }
+        }
+        
+        function normalizeAngle(angle) {
+            while (angle > Math.PI) angle -= 2 * Math.PI;
+            while (angle < -Math.PI) angle += 2 * Math.PI;
+            return angle;
+        }
+        
+        function render() {
+            // Clear with dark background
+            ctx.fillStyle = '#0a0a0a';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.save();
+            
+            // Apply camera transform
+            ctx.translate(-camera.x, -camera.y);
+            
+            // Draw ground grid
+            ctx.strokeStyle = 'rgba(30, 30, 30, 0.5)';
+            ctx.lineWidth = 1;
+            const gridSize = 100;
+            const startX = Math.floor(camera.x / gridSize) * gridSize;
+            const startY = Math.floor(camera.y / gridSize) * gridSize;
+            
+            for (let x = startX; x < camera.x + canvas.width + gridSize; x += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(x, camera.y);
+                ctx.lineTo(x, camera.y + canvas.height);
+                ctx.stroke();
+            }
+            for (let y = startY; y < camera.y + canvas.height + gridSize; y += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(camera.x, y);
+                ctx.lineTo(camera.x + canvas.width, y);
+                ctx.stroke();
+            }
+            
+            // Draw trees (shadows first)
+            trees.forEach(tree => {
+                // Check if tree is on screen
+                if (tree.x + tree.radius < camera.x || tree.x - tree.radius > camera.x + canvas.width ||
+                    tree.y + tree.radius < camera.y || tree.y - tree.radius > camera.y + canvas.height) {
+                    return;
+                }
+                
+                // Tree shadow
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+                ctx.beginPath();
+                ctx.ellipse(tree.x, tree.y + 10, tree.radius, tree.radius * 0.3, 0, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Tree trunk
+                ctx.fillStyle = '#1a1a1a';
+                ctx.fillRect(tree.x - 5, tree.y - tree.height/2, 10, tree.height/2);
+                
+                // Tree foliage (dark silhouette)
+                ctx.fillStyle = '#0d1f0d';
+                ctx.beginPath();
+                ctx.arc(tree.x, tree.y - tree.height/3, tree.radius, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            
+            // Draw Slender Man
+            if (slender.visible) {
+                const flicker = Math.random() > 0.9 ? 0.5 : 1;
+                ctx.save();
+                ctx.globalAlpha = flicker;
+                
+                // Slender Man body (tall, thin silhouette)
+                ctx.fillStyle = '#000';
+                const x = slender.x;
+                const y = slender.y;
+                
+                // Head
+                ctx.beginPath();
+                ctx.ellipse(x, y - 60, 8, 12, 0, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Body (very thin)
+                ctx.fillRect(x - 3, y - 48, 6, 50);
+                
+                // Arms (long, thin)
+                ctx.fillRect(x - 25, y - 40, 22, 3);
+                ctx.fillRect(x + 3, y - 40, 22, 3);
+                
+                // Legs
+                ctx.fillRect(x - 8, y, 3, 50);
+                ctx.fillRect(x + 5, y, 3, 50);
+                
+                // Suit details (subtle)
+                ctx.fillStyle = '#111';
+                ctx.fillRect(x - 3, y - 30, 6, 25);
+                
+                // White face (featureless)
+                ctx.fillStyle = '#e8e8e8';
+                ctx.beginPath();
+                ctx.ellipse(x, y - 60, 6, 10, 0, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Tentacles (subtle, animated)
+                ctx.strokeStyle = 'rgba(0, 0, 0, 0.6)';
+                ctx.lineWidth = 2;
+                for (let i = 0; i < 4; i++) {
+                    const angle = (Math.PI * 2 / 4) * i + slender.visibilityTimer * 0.5;
+                    const tentacleLength = 30 + Math.sin(slender.visibilityTimer * 2 + i) * 10;
+                    ctx.beginPath();
+                    ctx.moveTo(x, y - 40);
+                    ctx.quadraticCurveTo(
+                        x + Math.cos(angle) * tentacleLength * 0.5,
+                        y - 60 + Math.sin(angle) * 10,
+                        x + Math.cos(angle) * tentacleLength,
+                        y - 80 + Math.sin(angle) * 20
+                    );
+                    ctx.stroke();
+                }
+                
+                ctx.restore();
+            }
+            
+            // Draw player
+            ctx.fillStyle = '#2d4a3e';
+            ctx.beginPath();
+            ctx.arc(player.x, player.y, player.radius, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Player flashlight effect
+            ctx.save();
+            ctx.globalCompositeOperation = 'screen';
+            const gradient = ctx.createRadialGradient(
+                player.x, player.y, 0,
+                player.x, player.y, 200
+            );
+            gradient.addColorStop(0, 'rgba(255, 255, 200, 0.3)');
+            gradient.addColorStop(0.5, 'rgba(255, 255, 200, 0.1)');
+            gradient.addColorStop(1, 'rgba(255, 255, 200, 0)');
+            
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.moveTo(player.x, player.y);
+            ctx.arc(player.x, player.y, 200, flashlightAngle - flashlightWidth, flashlightAngle + flashlightWidth);
+            ctx.fill();
+            ctx.restore();
+            
+            ctx.restore();
+            
+            // Darkness overlay (flashlight effect)
+            const darkness = ctx.createRadialGradient(
+                canvas.width/2, canvas.height/2, 50,
+                canvas.width/2, canvas.height/2, 400
+            );
+            darkness.addColorStop(0, 'rgba(0, 0, 0, 0)');
+            darkness.addColorStop(0.3, 'rgba(0, 0, 0, 0.3)');
+            darkness.addColorStop(1, 'rgba(0, 0, 0, 0.95)');
+            
+            ctx.fillStyle = darkness;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+        
+        function endGame(survived) {
+            gameRunning = false;
+            cancelAnimationFrame(animationId);
+            
+            const gameOverScreen = document.getElementById('gameOverScreen');
+            const gameOverText = document.getElementById('gameOverText');
+            
+            gameOverScreen.style.display = 'flex';
+            
+            if (survived) {
+                gameOverText.textContent = 'YOU SURVIVED';
+                gameOverText.className = 'survived';
+            } else {
+                gameOverText.textContent = 'SLENDER MAN CAUGHT YOU';
+                gameOverText.className = 'caught';
+            }
+            
+            gameOverScreen.addEventListener('click', () => {
+                location.reload();
+            });
+        }
+    </script>
 </body>
 </html>
