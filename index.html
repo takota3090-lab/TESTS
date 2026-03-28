@@ -127,7 +127,7 @@
             color: #00f5ff;
         }
         
-        .players-input, .teams-input {
+        .players-input, .teams-input, .single-input {
             flex: 1;
             overflow-y: auto;
             display: flex;
@@ -137,7 +137,7 @@
             padding-right: 5px;
         }
         
-        .players-input.hidden, .teams-input.hidden {
+        .players-input.hidden, .teams-input.hidden, .single-input.hidden {
             display: none;
         }
         
@@ -260,30 +260,7 @@
             cursor: not-allowed;
         }
         
-        .ai-toggle {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px;
-            background: rgba(255, 0, 255, 0.1);
-            border: 1px solid rgba(255, 0, 255, 0.3);
-            border-radius: 10px;
-            margin-bottom: 10px;
-            flex-shrink: 0;
-        }
-        
-        .ai-toggle input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            accent-color: #ff00ff;
-        }
-        
-        .ai-toggle label {
-            font-size: 0.9rem;
-            color: #ff00ff;
-        }
-        
-        .add-player-btn, .add-team-btn {
+        .add-player-btn, .add-team-btn, .add-member-btn {
             padding: 10px;
             border: 2px dashed rgba(255, 255, 255, 0.3);
             background: transparent;
@@ -294,6 +271,13 @@
             font-size: 0.85rem;
             margin-bottom: 10px;
             flex-shrink: 0;
+        }
+        
+        .add-member-btn {
+            padding: 8px;
+            font-size: 0.8rem;
+            margin-bottom: 6px;
+            margin-right: 36px;
         }
         
         .start-game-btn {
@@ -528,7 +512,7 @@
         
         .final-score-card.ai-card {
             border: 2px solid rgba(255, 0, 255, 0.3);
-            background: linear-gradient(135deg, rgba(255, 0, 255, 0.1), rgba(255, 0, 255, 0.05));
+            background: linear-gradient(135deg, rgba(255, 0, 255, 0.1), rgba(255, 255, 255, 0.05));
         }
         
         .points-sticker {
@@ -650,7 +634,7 @@
             flex-shrink: 0;
         }
         
-        .next-btn, .reset-btn {
+        .next-btn, .reset-btn, .back-btn {
             flex: 1;
             padding: 14px;
             border: none;
@@ -670,6 +654,12 @@
             background: rgba(255, 255, 255, 0.1);
             color: #fff;
             border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .back-btn {
+            background: rgba(255, 68, 68, 0.2);
+            color: #ff4444;
+            border: 1px solid rgba(255, 68, 68, 0.3);
         }
         
         .hidden {
@@ -705,10 +695,51 @@
             0%, 100% { opacity: 1; }
             50% { opacity: 0.5; }
         }
+        
+        .sound-toggle {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+        }
+        
+        .sound-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 1.2rem;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .sound-btn.muted {
+            opacity: 0.5;
+        }
+        
+        .game-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-shrink: 0;
+        }
+        
+        .game-controls .back-btn {
+            flex: 1;
+            padding: 12px;
+            font-size: 0.9rem;
+        }
     </style>
 <base target="_blank">
 </head>
 <body>
+    <div class="sound-toggle">
+        <button class="sound-btn" id="soundBtn" onclick="toggleSound()">🔊</button>
+    </div>
+    
     <div class="game-container">
         <h1>⏱️ تحدي الوقت</h1>
         <p class="subtitle">من الأقرب للهدف؟</p>
@@ -716,8 +747,9 @@
         <div class="how-to-play" id="howToPlay">
             <h2>📋 كيفية اللعب</h2>
             <ol>
-                <li>اختر وضع: لاعبين أو فرق (4 أفراد لكل فريق)</li>
-                <li>فعل "اللعب ضد الذكاء الاصطناعي" إذا كنت لاعب واحد</li>
+                <li>اختر وضع: فردي أو لاعبين أو فرق</li>
+                <li>في وضع الفردي: العب ضد الذكاء الاصطناعي</li>
+                <li>في وضع الفرق: اختر عدد اللاعبين في كل فريق</li>
                 <li>10 جولات - كل جولة هدف مختلف</li>
                 <li>اضغط "ابدأ" ثم "قف" عند الهدف</li>
                 <li>الأقرب للهدف يفوز بالنقطة</li>
@@ -728,15 +760,24 @@
             <h2>👥 التسجيل</h2>
             
             <div class="mode-selector">
+                <button class="mode-btn" onclick="setMode('single')" id="singleMode">🤖 فردي</button>
                 <button class="mode-btn active" onclick="setMode('players')" id="playersMode">لاعبين</button>
                 <button class="mode-btn" onclick="setMode('teams')" id="teamsMode">فرق</button>
             </div>
             
-            <div class="ai-toggle">
-                <input type="checkbox" id="aiOpponent" onchange="toggleAI()">
-                <label for="aiOpponent">🤖 اللعب ضد الذكاء الاصطناعي (للاعب/فريق واحد)</label>
+            <!-- Single Player Mode -->
+            <div class="single-input hidden" id="singleInput">
+                <div class="player-input-row" data-index="0">
+                    <div class="player-number">1</div>
+                    <input type="text" class="player-input" placeholder="اسم اللاعب" id="singlePlayer0">
+                    <input type="color" class="color-picker" value="#00f5ff" id="singleColor0">
+                </div>
+                <div style="background: rgba(255,0,255,0.1); border: 1px solid rgba(255,0,255,0.3); border-radius: 10px; padding: 12px; text-align: center; color: #ff00ff; font-size: 0.9rem;">
+                    🤖 ستلعب ضد الذكاء الاصطناعي
+                </div>
             </div>
             
+            <!-- Players Mode -->
             <div class="players-input" id="playersInput">
                 <div class="player-input-row" data-index="0">
                     <div class="player-number">1</div>
@@ -748,10 +789,11 @@
                     <div class="player-number">2</div>
                     <input type="text" class="player-input" placeholder="اللاعب 2" id="player1">
                     <input type="color" class="color-picker" value="#ff00ff" id="color1">
-                    <button class="delete-btn" onclick="deletePlayer(1)" disabled>×</button>
+                    <button class="delete-btn" onclick="deletePlayer(1)">×</button>
                 </div>
             </div>
             
+            <!-- Teams Mode -->
             <div class="teams-input hidden" id="teamsInput">
                 <div class="team-row" data-index="0">
                     <div class="team-header">
@@ -760,7 +802,7 @@
                         <input type="color" class="color-picker" value="#00f5ff" id="teamColor0">
                         <button class="delete-btn" onclick="deleteTeam(0)" disabled>×</button>
                     </div>
-                    <div class="team-members">
+                    <div class="team-members" id="teamMembers0">
                         <div class="member-input">
                             <span class="member-number">فرد 1</span>
                             <input type="text" class="member-name-input" placeholder="اسم الفرد الأول" id="team0member0">
@@ -769,15 +811,8 @@
                             <span class="member-number">فرد 2</span>
                             <input type="text" class="member-name-input" placeholder="اسم الفرد الثاني" id="team0member1">
                         </div>
-                        <div class="member-input">
-                            <span class="member-number">فرد 3</span>
-                            <input type="text" class="member-name-input" placeholder="اسم الفرد الثالث" id="team0member2">
-                        </div>
-                        <div class="member-input">
-                            <span class="member-number">فرد 4</span>
-                            <input type="text" class="member-name-input" placeholder="اسم الفرد الرابع" id="team0member3">
-                        </div>
                     </div>
+                    <button class="add-member-btn" onclick="addMember(0)" id="addMemberBtn0">+ إضافة فرد للفريق</button>
                 </div>
             </div>
             
@@ -805,7 +840,7 @@
                 <div class="current-player-label" id="currentPlayerLabel">الدور على</div>
                 <div class="current-player-name" id="currentPlayerName">-</div>
                 <div class="current-player-team hidden" id="currentPlayerTeam"></div>
-                <div class="ai-indicator hidden" id="aiIndicator">خصمك: الذكاء الاصطناعي</div>
+                <div class="ai-indicator hidden" id="aiIndicator"></div>
             </div>
             
             <div class="target-display">
@@ -821,6 +856,11 @@
             </div>
             
             <div class="status-message" id="statusMessage">اضغط "ابدأ"</div>
+            
+            <!-- Back button during gameplay -->
+            <div class="game-controls">
+                <button class="back-btn" onclick="confirmBackToMenu()">🔙 العودة للقائمة</button>
+            </div>
         </div>
         
         <div class="results-section" id="resultsSection">
@@ -833,12 +873,128 @@
             </div>
             <div class="action-buttons">
                 <button class="next-btn" onclick="nextRound()" id="nextRoundBtn">التالية ⏭️</button>
-                <button class="reset-btn" onclick="resetGame()">لعبة جديدة 🔄</button>
+                <button class="back-btn" onclick="confirmBackToMenu()">🔙 القائمة</button>
             </div>
         </div>
     </div>
 
     <script>
+
+        // Premium Sound System using Web Audio API
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+        let soundEnabled = true;
+        
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new AudioContext();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+        
+        function playSound(type) {
+            if (!soundEnabled || !audioCtx) return;
+            
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            const filter = audioCtx.createBiquadFilter();
+            
+            osc.connect(filter);
+            filter.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            const now = audioCtx.currentTime;
+            
+            switch(type) {
+                case 'start':
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(440, now);
+                    osc.frequency.exponentialRampToValueAtTime(880, now + 0.1);
+                    filter.type = 'lowpass';
+                    filter.frequency.setValueAtTime(2000, now);
+                    gainNode.gain.setValueAtTime(0.3, now);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                    osc.start(now);
+                    osc.stop(now + 0.3);
+                    break;
+                    
+                case 'stop':
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(880, now);
+                    osc.frequency.exponentialRampToValueAtTime(440, now + 0.2);
+                    filter.type = 'lowpass';
+                    filter.frequency.setValueAtTime(3000, now);
+                    gainNode.gain.setValueAtTime(0.3, now);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+                    osc.start(now);
+                    osc.stop(now + 0.4);
+                    break;
+                    
+                case 'tick':
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(200, now);
+                    filter.type = 'highpass';
+                    filter.frequency.setValueAtTime(1000, now);
+                    gainNode.gain.setValueAtTime(0.05, now);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+                    osc.start(now);
+                    osc.stop(now + 0.05);
+                    break;
+                    
+                case 'win':
+                    playChord([523.25, 659.25, 783.99, 1046.50], now);
+                    break;
+                    
+                case 'lose':
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(300, now);
+                    osc.frequency.linearRampToValueAtTime(200, now + 0.5);
+                    filter.type = 'lowpass';
+                    filter.frequency.setValueAtTime(1000, now);
+                    gainNode.gain.setValueAtTime(0.2, now);
+                    gainNode.gain.linearRampToValueAtTime(0.01, now + 0.5);
+                    osc.start(now);
+                    osc.stop(now + 0.5);
+                    break;
+                    
+                case 'ai':
+                    osc.type = 'square';
+                    osc.frequency.setValueAtTime(150, now);
+                    osc.frequency.linearRampToValueAtTime(100, now + 0.1);
+                    filter.type = 'bandpass';
+                    filter.frequency.setValueAtTime(800, now);
+                    gainNode.gain.setValueAtTime(0.1, now);
+                    gainNode.gain.linearRampToValueAtTime(0.01, now + 0.1);
+                    osc.start(now);
+                    osc.stop(now + 0.1);
+                    break;
+            }
+        }
+        
+        function playChord(frequencies, startTime) {
+            frequencies.forEach((freq, i) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.15, startTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, startTime + 0.8);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(startTime + i * 0.05);
+                osc.stop(startTime + 0.8);
+            });
+        }
+        
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            document.getElementById('soundBtn').textContent = soundEnabled ? '🔊' : '🔇';
+            document.getElementById('soundBtn').classList.toggle('muted', !soundEnabled);
+            if (soundEnabled) initAudio();
+        }
+        
         let players = [];
         let teams = [];
         let currentPlayerIndex = 0;
@@ -854,42 +1010,47 @@
         let aiEnabled = false;
         let aiPlayer = null;
         let isAiTurn = false;
+        let tickInterval = null;
         
-        function toggleAI() {
-            aiEnabled = document.getElementById('aiOpponent').checked;
-        }
+        // Team member counts tracking
+        let teamMemberCounts = {};
         
         function setMode(mode) {
             gameMode = mode;
+            aiEnabled = (mode === 'single');
+            
+            // Update button states
+            document.getElementById('singleMode').classList.toggle('active', mode === 'single');
             document.getElementById('playersMode').classList.toggle('active', mode === 'players');
             document.getElementById('teamsMode').classList.toggle('active', mode === 'teams');
             
-            if (mode === 'players') {
-                document.getElementById('playersInput').classList.remove('hidden');
-                document.getElementById('teamsInput').classList.add('hidden');
-                document.getElementById('addPlayerBtn').classList.remove('hidden');
-                document.getElementById('addTeamBtn').classList.add('hidden');
-            } else {
-                document.getElementById('playersInput').classList.add('hidden');
-                document.getElementById('teamsInput').classList.remove('hidden');
-                document.getElementById('addPlayerBtn').classList.add('hidden');
-                document.getElementById('addTeamBtn').classList.remove('hidden');
+            // Show/hide appropriate sections
+            document.getElementById('singleInput').classList.toggle('hidden', mode !== 'single');
+            document.getElementById('playersInput').classList.toggle('hidden', mode !== 'players');
+            document.getElementById('teamsInput').classList.toggle('hidden', mode !== 'teams');
+            
+            // Update button visibility
+            document.getElementById('addPlayerBtn').classList.toggle('hidden', mode !== 'players');
+            document.getElementById('addTeamBtn').classList.toggle('hidden', mode !== 'teams');
+            
+            // Reset single player input if switching to single mode
+            if (mode === 'single') {
+                document.getElementById('singlePlayer0').value = '';
             }
         }
         
         function updatePlayerNumbers() {
-            const rows = document.querySelectorAll('.player-input-row');
+            const rows = document.querySelectorAll('#playersInput .player-input-row');
             rows.forEach((row, index) => {
                 row.setAttribute('data-index', index);
                 row.querySelector('.player-number').textContent = index + 1;
                 row.querySelector('.player-input').id = 'player' + index;
-                row.querySelector('.player-input').placeholder = 'لاعب ' + (index + 1);
+                row.querySelector('.player-input').placeholder = 'اللاعب ' + (index + 1);
                 row.querySelector('.color-picker').id = 'color' + index;
                 
                 const deleteBtn = row.querySelector('.delete-btn');
                 deleteBtn.setAttribute('onclick', 'deletePlayer(' + index + ')');
-                const minPlayers = aiEnabled ? 1 : 2;
-                deleteBtn.disabled = rows.length <= minPlayers;
+                deleteBtn.disabled = rows.length <= 2;
             });
         }
         
@@ -904,13 +1065,20 @@
                 
                 const deleteBtn = row.querySelector('.delete-btn');
                 deleteBtn.setAttribute('onclick', 'deleteTeam(' + index + ')');
-                const minTeams = aiEnabled ? 1 : 2;
-                deleteBtn.disabled = rows.length <= minTeams;
+                deleteBtn.disabled = rows.length <= 2;
                 
+                // Update member IDs
                 const memberInputs = row.querySelectorAll('.member-name-input');
                 memberInputs.forEach((input, mIndex) => {
                     input.id = 'team' + index + 'member' + mIndex;
+                    input.parentElement.querySelector('.member-number').textContent = 'فرد ' + (mIndex + 1);
                 });
+                
+                // Update add member button
+                const addBtn = document.getElementById('addMemberBtn' + index);
+                if (addBtn) {
+                    addBtn.setAttribute('onclick', 'addMember(' + index + ')');
+                }
             });
         }
         
@@ -927,7 +1095,7 @@
             row.setAttribute('data-index', currentCount);
             row.innerHTML = 
                 '<div class="player-number">' + (currentCount + 1) + '</div>' +
-                '<input type="text" class="player-input" placeholder="لاعب ' + (currentCount + 1) + '" id="player' + currentCount + '">' +
+                '<input type="text" class="player-input" placeholder="اللاعب ' + (currentCount + 1) + '" id="player' + currentCount + '">' +
                 '<input type="color" class="color-picker" value="' + colors[currentCount % colors.length] + '" id="color' + currentCount + '">' +
                 '<button class="delete-btn" onclick="deletePlayer(' + currentCount + ')">×</button>';
             
@@ -957,12 +1125,11 @@
                     '<input type="color" class="color-picker" value="' + colors[currentCount % colors.length] + '" id="teamColor' + currentCount + '">' +
                     '<button class="delete-btn" onclick="deleteTeam(' + currentCount + ')">×</button>' +
                 '</div>' +
-                '<div class="team-members">' +
+                '<div class="team-members" id="teamMembers' + currentCount + '">' +
                     '<div class="member-input"><span class="member-number">فرد 1</span><input type="text" class="member-name-input" placeholder="اسم الفرد الأول" id="team' + currentCount + 'member0"></div>' +
                     '<div class="member-input"><span class="member-number">فرد 2</span><input type="text" class="member-name-input" placeholder="اسم الفرد الثاني" id="team' + currentCount + 'member1"></div>' +
-                    '<div class="member-input"><span class="member-number">فرد 3</span><input type="text" class="member-name-input" placeholder="اسم الفرد الثالث" id="team' + currentCount + 'member2"></div>' +
-                    '<div class="member-input"><span class="member-number">فرد 4</span><input type="text" class="member-name-input" placeholder="اسم الفرد الرابع" id="team' + currentCount + 'member3"></div>' +
-                '</div>';
+                '</div>' +
+                '<button class="add-member-btn" onclick="addMember(' + currentCount + ')" id="addMemberBtn' + currentCount + '">+ إضافة فرد للفريق</button>';
             
             container.appendChild(row);
             updateTeamNumbers();
@@ -972,13 +1139,50 @@
             }
         }
         
+        function addMember(teamIndex) {
+            const container = document.getElementById('teamMembers' + teamIndex);
+            const currentCount = container.children.length;
+            
+            if (currentCount >= 8) return; // Max 8 members per team
+            
+            const memberDiv = document.createElement('div');
+            memberDiv.className = 'member-input';
+            memberDiv.innerHTML = 
+                '<span class="member-number">فرد ' + (currentCount + 1) + '</span>' +
+                '<input type="text" class="member-name-input" placeholder="اسم الفرد" id="team' + teamIndex + 'member' + currentCount + '">' +
+                '<button class="delete-btn" onclick="deleteMember(' + teamIndex + ', ' + currentCount + ')" style="width: 24px; height: 24px; font-size: 0.8rem;">×</button>';
+            
+            container.appendChild(memberDiv);
+            updateTeamNumbers();
+            
+            // Hide add button if max reached
+            if (container.children.length >= 8) {
+                document.getElementById('addMemberBtn' + teamIndex).style.display = 'none';
+            }
+        }
+        
+        function deleteMember(teamIndex, memberIndex) {
+            const container = document.getElementById('teamMembers' + teamIndex);
+            const members = container.querySelectorAll('.member-input');
+            
+            if (members.length <= 2) {
+                alert('يجب أن يكون هناك فردان على الأقل في الفريق!');
+                return;
+            }
+            
+            members[memberIndex].remove();
+            updateTeamNumbers();
+            
+            // Show add button again
+            document.getElementById('addMemberBtn' + teamIndex).style.display = 'block';
+        }
+        
         function deletePlayer(index) {
             const container = document.getElementById('playersInput');
             const rows = container.querySelectorAll('.player-input-row');
-            const minPlayers = aiEnabled ? 1 : 2;
             
-            if (rows.length <= minPlayers) {
-                alert(aiEnabled ? 'يجب أن يكون هناك لاعب واحد على الأقل!' : 'يجب أن يكون هناك لاعبان على الأقل!');
+            if (rows.length <= 2) {
+                alert('يجب أن يكون هناك لاعبان على الأقل!');
                 return;
             }
             
@@ -991,10 +1195,9 @@
         function deleteTeam(index) {
             const container = document.getElementById('teamsInput');
             const rows = container.querySelectorAll('.team-row');
-            const minTeams = aiEnabled ? 1 : 2;
             
-            if (rows.length <= minTeams) {
-                alert(aiEnabled ? 'يجب أن يكون هناك فريق واحد على الأقل!' : 'يجب أن يكون هناك فريقان على الأقل!');
+            if (rows.length <= 2) {
+                alert('يجب أن يكون هناك فريقان على الأقل!');
                 return;
             }
             
@@ -1003,7 +1206,7 @@
             
             document.getElementById('addTeamBtn').style.display = 'block';
         }
-        
+
         function createAIPlayer() {
             return {
                 id: 999,
@@ -1017,17 +1220,20 @@
             };
         }
         
-        function createAITeam() {
+        function createAITeam(memberCount) {
+            const members = [];
+            for (let i = 0; i < memberCount; i++) {
+                members.push({
+                    name: 'AI-' + (i + 1),
+                    memberIndex: i
+                });
+            }
+            
             return {
                 id: 999,
                 name: '🤖 فريق الذكاء الاصطناعي',
                 color: '#ff00ff',
-                members: [
-                    { name: 'AI-1', memberIndex: 0 },
-                    { name: 'AI-2', memberIndex: 1 },
-                    { name: 'AI-3', memberIndex: 2 },
-                    { name: 'AI-4', memberIndex: 3 }
-                ],
+                members: members,
                 scores: [],
                 points: 0,
                 totalDiff: 0,
@@ -1044,11 +1250,48 @@
         }
         
         function startTournament() {
-            if (gameMode === 'players') {
+            initAudio();
+            if (gameMode === 'single') {
+                startSingleMode();
+            } else if (gameMode === 'players') {
                 startPlayersMode();
             } else {
                 startTeamsMode();
             }
+        }
+        
+        function startSingleMode() {
+            const nameInput = document.getElementById('singlePlayer0');
+            const colorInput = document.getElementById('singleColor0');
+            const name = nameInput.value.trim();
+            
+            if (!name) {
+                nameInput.style.borderColor = '#ff4444';
+                setTimeout(function() { nameInput.style.borderColor = ''; }, 1500);
+                alert('أدخل اسم اللاعب!');
+                return;
+            }
+            
+            players = [];
+            teams = [];
+            
+            // Add human player
+            players.push({
+                id: 0,
+                name: name,
+                color: colorInput.value,
+                scores: [],
+                points: 0,
+                totalDiff: 0,
+                isTeam: false,
+                isAI: false
+            });
+            
+            // Add AI player
+            aiPlayer = createAIPlayer();
+            players.push(aiPlayer);
+            
+            startGame();
         }
         
         function startPlayersMode() {
@@ -1056,6 +1299,7 @@
             const rows = container.querySelectorAll('.player-input-row');
             
             players = [];
+            teams = [];
             let hasEmpty = false;
             
             rows.forEach((row, index) => {
@@ -1075,28 +1319,22 @@
                         scores: [],
                         points: 0,
                         totalDiff: 0,
-                        isTeam: false
+                        isTeam: false,
+                        isAI: false
                     });
                 }
             });
             
             if (hasEmpty) {
-                alert('أدخل جميع الأسماء!');
+                alert('أدخل اسم جميع اللاعبين!');
                 return;
             }
             
-            const minPlayers = aiEnabled ? 1 : 2;
-            if (players.length < minPlayers) {
-                alert(aiEnabled ? 'أدخل لاعب واحد على الأقل!' : 'يلزم لاعبان على الأقل!');
+            if (players.length < 2) {
+                alert('يلزم لاعبان على الأقل!');
                 return;
             }
             
-            if (aiEnabled && players.length === 1) {
-                aiPlayer = createAIPlayer();
-                players.push(aiPlayer);
-            }
-            
-            teams = [];
             startGame();
         }
         
@@ -1136,7 +1374,7 @@
                     }
                 });
                 
-                if (teamName && members.length === 4) {
+                if (teamName && members.length >= 2) {
                     const team = {
                         id: index,
                         name: teamName,
@@ -1145,7 +1383,8 @@
                         scores: [],
                         points: 0,
                         totalDiff: 0,
-                        isTeam: true
+                        isTeam: true,
+                        isAI: false
                     };
                     teams.push(team);
                     
@@ -1160,7 +1399,8 @@
                             points: 0,
                             totalDiff: 0,
                             isTeam: true,
-                            memberIndex: member.memberIndex
+                            memberIndex: member.memberIndex,
+                            isAI: false
                         });
                     });
                 }
@@ -1171,31 +1411,9 @@
                 return;
             }
             
-            const minTeams = aiEnabled ? 1 : 2;
-            if (teams.length < minTeams) {
-                alert(aiEnabled ? 'أدخل فريق واحد على الأقل!' : 'يلزم فريقان على الأقل!');
+            if (teams.length < 2) {
+                alert('يلزم فريقان على الأقل!');
                 return;
-            }
-            
-            if (aiEnabled && teams.length === 1) {
-                const aiTeam = createAITeam();
-                teams.push(aiTeam);
-                
-                aiTeam.members.forEach((member, mIndex) => {
-                    players.push({
-                        id: players.length,
-                        name: member.name,
-                        teamId: aiTeam.id,
-                        teamName: aiTeam.name,
-                        color: aiTeam.color,
-                        scores: [],
-                        points: 0,
-                        totalDiff: 0,
-                        isTeam: true,
-                        memberIndex: mIndex,
-                        isAI: true
-                    });
-                });
             }
             
             startGame();
@@ -1239,7 +1457,7 @@
             const currentPlayer = players[currentPlayerIndex];
             if (currentPlayer && currentPlayer.isAI) {
                 isAiTurn = true;
-                playAITurn();
+                setTimeout(playAITurn, 1000);
             } else {
                 isAiTurn = false;
             }
@@ -1265,11 +1483,12 @@
         }
         
         function playAITurn() {
+            playSound('ai');
             document.getElementById('startBtn').disabled = true;
             document.getElementById('aiThinking').classList.add('show');
             document.getElementById('statusMessage').textContent = 'الذكاء الاصطناعي يختار موعد التوقف...';
             
-            const thinkTime = 1000 + Math.random() * 1000;
+            const thinkTime = 1500 + Math.random() * 1000;
             
             setTimeout(function() {
                 const aiTime = generateAIMove();
@@ -1285,7 +1504,9 @@
                 player.totalDiff += diff;
                 
                 if (gameMode === 'teams' && player.teamId !== undefined) {
-                    const team = teams.find(function(t) { return t.id === player.teamId || t.isAI; });
+                    const team = teams.find(function(t) { 
+                        return t.id === player.teamId || (t.isAI && player.isAI); 
+                    });
                     if (team) {
                         team.scores.push({
                             round: currentRound,
@@ -1298,6 +1519,7 @@
                     }
                 }
                 
+                playSound('stop');
                 document.getElementById('timerDisplay').textContent = aiTime + 's';
                 document.getElementById('timerDisplay').className = 'timer-display stopped';
                 document.getElementById('aiThinking').classList.remove('show');
@@ -1316,9 +1538,9 @@
                             document.getElementById('startBtn').disabled = false;
                             document.getElementById('statusMessage').textContent = 'دور ' + nextPlayer.name + (nextPlayer.teamName ? ' (' + nextPlayer.teamName + ')' : '');
                         }
-                    }, 1500);
+                    }, 1000);
                 } else {
-                    setTimeout(showRoundResults, 1500);
+                    setTimeout(showRoundResults, 1000);
                 }
             }, thinkTime);
         }
@@ -1326,6 +1548,8 @@
         function startRound() {
             if (isAiTurn) return;
             
+            initAudio();
+            playSound('start');
             startTime = performance.now();
             isRunning = true;
             
@@ -1333,6 +1557,10 @@
             document.getElementById('startBtn').disabled = true;
             document.getElementById('stopBtn').disabled = false;
             document.getElementById('statusMessage').textContent = 'اضغط "قف" عند الهدف!';
+            
+            tickInterval = setInterval(function() {
+                playSound('tick');
+            }, 1000);
             
             timerInterval = setInterval(function() {
                 const current = (performance.now() - startTime) / 1000;
@@ -1344,7 +1572,10 @@
             if (!isRunning || isAiTurn) return;
             
             clearInterval(timerInterval);
+            clearInterval(tickInterval);
             isRunning = false;
+            
+            playSound('stop');
             
             const endTime = performance.now();
             const playerTime = ((endTime - startTime) / 1000).toFixed(3);
@@ -1395,7 +1626,7 @@
                 setTimeout(showRoundResults, 500);
             }
         }
-        
+
         function showRoundResults() {
             document.getElementById('gameSection').classList.remove('active');
             document.getElementById('resultsSection').classList.add('active');
@@ -1403,7 +1634,7 @@
             let roundRankings;
             let winners;
             
-            if (gameMode === 'players') {
+            if (gameMode === 'single' || gameMode === 'players') {
                 roundRankings = players.slice().sort(function(a, b) {
                     const diffA = a.scores[a.scores.length - 1].diff;
                     const diffB = b.scores[b.scores.length - 1].diff;
@@ -1434,9 +1665,20 @@
                 
                 winners.forEach(function(winner) {
                     winner.points += 1;
-                    players.filter(function(p) { return p.teamId === winner.id || (winner.isAI && p.isAI); }).forEach(function(p) { p.points += 1; });
+                    players.filter(function(p) { 
+                        return p.teamId === winner.id; 
+                    }).forEach(function(p) { 
+                        p.points += 1; 
+                    });
                 });
             }
+            
+            // Play win/lose sound
+            const humanPlayer = players.find(function(p) { return !p.isAI; });
+            const humanWon = winners.some(function(w) { 
+                return w.id === humanPlayer.id || (w.isAI === humanPlayer.isAI); 
+            });
+            playSound(humanWon ? 'win' : 'lose');
             
             let resultsHTML = '';
             
@@ -1459,7 +1701,7 @@
             
             resultsHTML += '<div class="final-scores">';
             
-            if (gameMode === 'players') {
+            if (gameMode === 'single' || gameMode === 'players') {
                 roundRankings.forEach(function(player) {
                     const score = player.scores[player.scores.length - 1];
                     const isWinner = winners.indexOf(player) !== -1;
@@ -1478,15 +1720,14 @@
             } else {
                 roundRankings.forEach(function(team) {
                     const roundScores = team.scores.filter(function(s) { return s.round === currentRound; });
-                    const avgTime = (roundScores.reduce(function(sum, s) { return sum + parseFloat(s.time); }, 0) / 4).toFixed(3);
+                    const avgTime = (roundScores.reduce(function(sum, s) { return sum + parseFloat(s.time); }, 0) / roundScores.length).toFixed(3);
                     const isWinner = winners.indexOf(team) !== -1;
-                    const isAI = team.isAI;
                     
                     resultsHTML += 
-                        '<div class="final-score-card ' + (isWinner ? 'winner' : '') + ' ' + (isAI ? 'ai-card' : '') + '" style="grid-column: span 2;">' +
+                        '<div class="final-score-card ' + (isWinner ? 'winner' : '') + '" style="grid-column: span 2;">' +
                             (isWinner ? '<div class="points-sticker">+1</div>' : '') +
                             '<div class="final-score-name" style="color: ' + team.color + '; font-size: 1rem;">' +
-                                (isAI ? '<span class="ai-badge">AI</span>' : '') + team.name +
+                                team.name +
                             '</div>' +
                             '<div class="final-score-time">متوسط: ' + avgTime + 's | فرق: ' + team.roundAvgDiff.toFixed(3) + 's</div>' +
                             '<div style="font-size: 0.7rem; color: #888; margin-top: 3px;">' +
@@ -1515,7 +1756,7 @@
         function updateLeaderboard() {
             let sorted;
             
-            if (gameMode === 'players') {
+            if (gameMode === 'single' || gameMode === 'players') {
                 sorted = players.slice().sort(function(a, b) {
                     if (b.points !== a.points) return b.points - a.points;
                     return a.totalDiff - b.totalDiff;
@@ -1532,7 +1773,7 @@
                 const rankClass = index === 0 ? 'rank-1' : index === 1 ? 'rank-2' : index === 2 ? 'rank-3' : 'rank-other';
                 const isAI = item.isAI;
                 
-                if (gameMode === 'players') {
+                if (gameMode === 'single' || gameMode === 'players') {
                     html += 
                         '<div class="leaderboard-item ' + (isAI ? 'ai-item' : '') + '" style="border-right-color: ' + item.color + '">' +
                             '<div class="leaderboard-rank ' + rankClass + '">' + (index + 1) + '</div>' +
@@ -1549,11 +1790,11 @@
                 } else {
                     const membersList = item.members.map(function(m) { return m.name; }).join('، ');
                     html += 
-                        '<div class="leaderboard-item ' + (isAI ? 'ai-item' : '') + '" style="border-right-color: ' + item.color + '">' +
+                        '<div class="leaderboard-item" style="border-right-color: ' + item.color + '">' +
                             '<div class="leaderboard-rank ' + rankClass + '">' + (index + 1) + '</div>' +
                             '<div class="leaderboard-info">' +
                                 '<div class="leaderboard-name" style="color: ' + item.color + '">' +
-                                    (isAI ? '🤖 ' : '') + item.name +
+                                    item.name +
                                 '</div>' +
                                 '<div class="leaderboard-stats" style="font-size: 0.65rem;">' +
                                     membersList + '<br>' +
@@ -1579,7 +1820,7 @@
         function showFinalResults() {
             let finalRanking;
             
-            if (gameMode === 'players') {
+            if (gameMode === 'single' || gameMode === 'players') {
                 finalRanking = players.slice().sort(function(a, b) {
                     if (b.points !== a.points) return b.points - a.points;
                     return a.totalDiff - b.totalDiff;
@@ -1592,6 +1833,10 @@
             }
             
             const champion = finalRanking[0];
+            
+            const humanPlayer = players.find(function(p) { return !p.isAI; });
+            const humanWon = champion.id === humanPlayer.id || (champion.isAI === humanPlayer.isAI);
+            playSound(humanWon ? 'win' : 'lose');
             
             let html = 
                 '<div class="winner-announcement" style="padding: 20px; margin-bottom: 10px;">' +
@@ -1608,7 +1853,7 @@
             finalRanking.forEach(function(item, index) {
                 const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : (index + 1) + '.';
                 
-                if (gameMode === 'players') {
+                if (gameMode === 'single' || gameMode === 'players') {
                     html += 
                         '<div class="leaderboard-item ' + (item.isAI ? 'ai-item' : '') + '" style="padding: 12px; margin-bottom: 8px;">' +
                             '<div style="font-size: 1.5rem; margin-left: 10px;">' + medal + '</div>' +
@@ -1623,11 +1868,11 @@
                 } else {
                     const membersList = item.members.map(function(m) { return m.name; }).join('، ');
                     html += 
-                        '<div class="leaderboard-item ' + (item.isAI ? 'ai-item' : '') + '" style="padding: 12px; margin-bottom: 8px;">' +
+                        '<div class="leaderboard-item" style="padding: 12px; margin-bottom: 8px;">' +
                             '<div style="font-size: 1.5rem; margin-left: 10px;">' + medal + '</div>' +
                             '<div class="leaderboard-info">' +
                                 '<div class="leaderboard-name" style="color: ' + item.color + ';">' +
-                                    (item.isAI ? '🤖 ' : '') + item.name +
+                                    item.name +
                                 '</div>' +
                                 '<div class="leaderboard-stats" style="font-size: 0.7rem;">' +
                                     membersList + '<br>' +
@@ -1643,38 +1888,49 @@
             document.getElementById('roundResults').innerHTML = html;
             document.getElementById('leaderboard').classList.add('hidden');
             document.getElementById('nextRoundBtn').classList.add('hidden');
-            
-            const resetBtn = document.querySelector('.reset-btn');
-            resetBtn.textContent = 'لعبة جديدة 🔄';
-            resetBtn.style.background = 'linear-gradient(135deg, #00f5ff, #00a8ff)';
-            resetBtn.style.color = '#0f0c29';
         }
         
-        function resetGame() {
-            players = [];
-            teams = [];
-            aiPlayer = null;
-            isAiTurn = false;
-            currentPlayerIndex = 0;
-            currentRound = 1;
-            targetTime = 0;
-            startTime = 0;
-            isRunning = false;
-            gameMode = 'players';
-            
+        // NEW: Back to menu functionality
+        function confirmBackToMenu() {
+            if (confirm('هل تريد العودة للقائمة الرئيسية؟ سيتم فقدان تقدم اللعبة الحالية.')) {
+                backToMenu();
+            }
+        }
+        
+        function backToMenu() {
+            // Stop any running timers
             if (timerInterval) {
                 clearInterval(timerInterval);
                 timerInterval = null;
             }
+            if (tickInterval) {
+                clearInterval(tickInterval);
+                tickInterval = null;
+            }
             
+            isRunning = false;
+            isAiTurn = false;
+            
+            // Reset game state
+            players = [];
+            teams = [];
+            aiPlayer = null;
+            currentPlayerIndex = 0;
+            currentRound = 1;
+            targetTime = 0;
+            startTime = 0;
+            aiEnabled = false;
+            
+            // Hide game sections
+            document.getElementById('gameSection').classList.remove('active');
+            document.getElementById('resultsSection').classList.remove('active');
+            
+            // Show registration
             document.getElementById('howToPlay').classList.remove('hidden');
             document.getElementById('registrationSection').classList.remove('hidden');
             document.getElementById('registrationSection').style.display = '';
-            document.getElementById('gameSection').classList.remove('active');
-            document.getElementById('gameSection').style.display = '';
-            document.getElementById('resultsSection').classList.remove('active');
-            document.getElementById('resultsSection').style.display = '';
             
+            // Reset indicators
             document.getElementById('teamModeIndicator').classList.add('hidden');
             document.getElementById('aiModeIndicator').classList.add('hidden');
             document.getElementById('currentPlayerTeam').classList.add('hidden');
@@ -1682,51 +1938,25 @@
             document.getElementById('aiThinking').classList.remove('show');
             document.getElementById('currentPlayerLabel').textContent = 'الدور على';
             
+            // Reset results
+            document.getElementById('roundResults').innerHTML = '';
             document.getElementById('leaderboard').classList.remove('hidden');
             
+            // Reset next button
             const nextBtn = document.getElementById('nextRoundBtn');
             nextBtn.textContent = 'التالية ⏭️';
             nextBtn.onclick = nextRound;
             nextBtn.classList.remove('hidden');
             
-            const resetBtn = document.querySelector('.reset-btn');
-            resetBtn.textContent = 'جديد 🔄';
-            resetBtn.style.background = 'rgba(255, 255, 255, 0.1)';
-            resetBtn.style.color = '#fff';
-            
-            document.getElementById('aiOpponent').checked = false;
-            aiEnabled = false;
-            
+            // Reset mode to players (default)
             setMode('players');
             
-            const playerInputs = document.querySelectorAll('.player-input');
-            playerInputs.forEach(function(input) { input.value = ''; });
-            
-            const teamNameInputs = document.querySelectorAll('.team-name-input');
-            teamNameInputs.forEach(function(input) { input.value = ''; });
-            
-            const memberInputs = document.querySelectorAll('.member-name-input');
-            memberInputs.forEach(function(input) { input.value = ''; });
-            
-            const colors = ['#00f5ff', '#ff00ff', '#ffd700', '#ff4444', '#44ff44', '#4444ff', '#ff8844', '#8844ff'];
-            const colorPickers = document.querySelectorAll('.color-picker');
-            colorPickers.forEach(function(picker, index) {
-                picker.value = colors[index % colors.length];
-            });
-            
-            const playersContainer = document.getElementById('playersInput');
-            while (playersContainer.children.length > 2) {
-                playersContainer.removeChild(playersContainer.lastChild);
-            }
-            updatePlayerNumbers();
-            document.getElementById('addPlayerBtn').style.display = 'block';
-            
-            const teamsContainer = document.getElementById('teamsInput');
-            while (teamsContainer.children.length > 1) {
-                teamsContainer.removeChild(teamsContainer.lastChild);
-            }
-            updateTeamNumbers();
-            document.getElementById('addTeamBtn').style.display = 'block';
+            // Clear single player input
+            document.getElementById('singlePlayer0').value = '';
+        }
+        
+        function resetGame() {
+            backToMenu();
         }
         
         document.addEventListener('touchstart', function() {}, {passive: true});
