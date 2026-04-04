@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#ffffff">
-    <title>قائمة التسوق الذكية | خضروات وفواكه | طعام | صحة | منزل</title>
+    <title>قائمة التسوق الذكية | إضافة سريعة</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -27,7 +27,6 @@
             --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
             --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
             --gradient-primary: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
-            --gradient-veg: linear-gradient(135deg, #10b981 0%, #059669 100%);
             --radius: 12px;
             --radius-xl: 20px;
         }
@@ -44,7 +43,7 @@
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1;
             background: radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.08) 0px, transparent 50%),
-                radial-gradient(at 100% 0%, rgba(124, 58, 237, 0.08) 0px, transparent 50%);
+                        radial-gradient(at 100% 0%, rgba(124, 58, 237, 0.08) 0px, transparent 50%);
         }
         .nav-bar {
             position: fixed;
@@ -67,22 +66,142 @@
             padding: 0.5rem 1rem;
             border-radius: var(--radius);
             cursor: pointer;
+            transition: all 0.2s;
         }
         .nav-item.active { color: var(--primary); background: rgba(37, 99, 235, 0.1); }
         .page { display: none; min-height: 100vh; padding-bottom: 100px; }
         .page.active { display: block; animation: fadeIn 0.4s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
+        /* home page (القائمة النشطة مع حقل إضافة) */
         .home-container { padding: 1.5rem; max-width: 600px; margin: 0 auto; }
-        .home-header-section { text-align: center; padding: 2rem 0; }
+        .home-header-section { text-align: center; padding: 1rem 0 1rem; }
         .home-logo {
-            font-size: 2.25rem;
+            font-size: 2rem;
             font-weight: 900;
             background: var(--gradient-primary);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        .home-subtitle { color: var(--text-secondary); font-size: 1rem; font-weight: 500; margin-top: 0.5rem; }
+        .home-subtitle { color: var(--text-secondary); font-size: 0.9rem; font-weight: 500; margin-top: 0.25rem; }
+        
+        /* حقل الإضافة السريعة النصي في الرئيسية */
+        .quick-add-input-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+        .quick-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .quick-input {
+            flex: 1;
+            background: var(--bg-primary);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-xl);
+            padding: 0.9rem 1rem;
+            font-size: 1rem;
+            font-family: 'Tajawal', sans-serif;
+        }
+        .quick-input:focus { border-color: var(--primary); outline: none; }
+        .quick-add-btn {
+            background: var(--gradient-primary);
+            border: none;
+            color: white;
+            padding: 0.9rem 1.2rem;
+            border-radius: var(--radius-xl);
+            font-weight: 800;
+            font-family: 'Tajawal', sans-serif;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .voice-icon-btn {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            width: 48px;
+            cursor: pointer;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+        
+        /* Active list card */
+        .home-list-section {
+            background: var(--bg-card);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            margin-top: 0.5rem;
+        }
+        .home-list-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.25rem;
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(124, 58, 237, 0.05) 100%);
+            border-bottom: 1px solid var(--border);
+        }
+        .home-list-title { font-weight: 800; font-size: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+        .home-list-count {
+            background: var(--primary);
+            color: white;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 100px;
+            font-weight: 800;
+        }
+        .home-list-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: background 0.1s;
+        }
+        .home-list-item:hover { background: var(--bg-tertiary); }
+        .home-item-checkbox {
+            width: 24px; height: 24px;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .home-item-checkbox.checked { background: var(--success); border-color: var(--success); }
+        .home-item-checkbox i { color: white; font-size: 0.75rem; opacity: 0; }
+        .home-item-checkbox.checked i { opacity: 1; }
+        .home-item-info { flex: 1; display: flex; align-items: center; gap: 0.75rem; }
+        .item-icon { font-size: 1.2rem; width: 28px; text-align: center; }
+        .home-item-name { font-weight: 700; font-size: 0.95rem; }
+        .home-item-name.completed { text-decoration: line-through; color: var(--text-muted); }
+        .view-all-btn {
+            width: 100%;
+            padding: 1rem;
+            text-align: center;
+            background: var(--bg-tertiary);
+            border: none;
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 0.9rem;
+            cursor: pointer;
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        /* quick add page (صفحة الإضافات السريعة بالفئات) */
+        .quick-container { padding: 1.5rem; max-width: 600px; margin: 0 auto; }
+        .quick-header { text-align: center; margin-bottom: 1.5rem; }
+        .quick-header h2 { font-size: 1.5rem; font-weight: 900; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
         
         .categories-section { margin-bottom: 1.5rem; }
         .section-title {
@@ -153,74 +272,19 @@
             cursor: pointer;
             transition: all 0.2s ease;
             text-align: center;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            justify-content: flex-start;
         }
         .item-btn:hover {
             background: var(--primary);
             color: white;
             border-color: var(--primary);
         }
+        .item-btn i { width: 20px; font-size: 1rem; }
         
-        .home-list-section {
-            background: var(--bg-card);
-            border-radius: var(--radius-xl);
-            border: 1px solid var(--border);
-            overflow: hidden;
-            box-shadow: var(--shadow-sm);
-        }
-        .home-list-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 1rem 1.25rem;
-            background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(124, 58, 237, 0.05) 100%);
-            border-bottom: 1px solid var(--border);
-        }
-        .home-list-title { font-weight: 800; font-size: 1rem; display: flex; align-items: center; gap: 0.5rem; }
-        .home-list-count {
-            background: var(--primary);
-            color: white;
-            font-size: 0.75rem;
-            padding: 0.25rem 0.75rem;
-            border-radius: 100px;
-            font-weight: 800;
-        }
-        .home-list-item {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem 1.25rem;
-            border-bottom: 1px solid var(--border);
-            cursor: pointer;
-        }
-        .home-item-checkbox {
-            width: 24px; height: 24px;
-            border: 2px solid var(--border);
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-        }
-        .home-item-checkbox.checked { background: var(--success); border-color: var(--success); }
-        .home-item-checkbox i { color: white; font-size: 0.75rem; opacity: 0; }
-        .home-item-checkbox.checked i { opacity: 1; }
-        .home-item-info { flex: 1; }
-        .home-item-name { font-weight: 700; font-size: 0.95rem; }
-        .home-item-name.completed { text-decoration: line-through; color: var(--text-muted); }
-        .home-item-price { font-weight: 800; color: var(--accent); }
-        .view-all-btn {
-            width: 100%;
-            padding: 1rem;
-            text-align: center;
-            background: var(--bg-tertiary);
-            border: none;
-            color: var(--primary);
-            font-weight: 800;
-            font-size: 0.9rem;
-            cursor: pointer;
-            font-family: 'Tajawal', sans-serif;
-        }
-        
+        /* list page (جميع العناصر) */
         .page-header {
             padding: 1.5rem;
             background: var(--bg-primary);
@@ -231,48 +295,10 @@
         }
         .page-title { font-size: 1.5rem; font-weight: 900; }
         .progress-container { margin-top: 1rem; }
-        .progress-header {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-        }
+        .progress-header { display: flex; justify-content: space-between; font-size: 0.875rem; color: var(--text-secondary); font-weight: 500; margin-bottom: 0.5rem; }
         .progress-bar { height: 8px; background: var(--bg-tertiary); border-radius: 100px; overflow: hidden; }
-        .progress-fill {
-            height: 100%;
-            background: var(--gradient-primary);
-            border-radius: 100px;
-            transition: width 0.6s ease;
-        }
-        .ai-input-section { padding: 1.5rem; }
-        .input-wrapper { position: relative; margin-bottom: 1rem; }
-        .smart-input {
-            width: 100%;
-            background: var(--bg-primary);
-            border: 2px solid var(--border);
-            border-radius: var(--radius-xl);
-            padding: 1rem 3.5rem 1rem 1.25rem;
-            font-size: 1rem;
-            font-family: 'Tajawal', sans-serif;
-        }
-        .smart-input:focus { border-color: var(--primary); outline: none; }
-        .input-actions {
-            position: absolute;
-            left: 0.5rem;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-        .icon-btn {
-            width: 36px; height: 36px;
-            border-radius: var(--radius);
-            border: none;
-            background: transparent;
-            color: var(--text-muted);
-            cursor: pointer;
-        }
-        .items-container { padding: 0 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; }
+        .progress-fill { height: 100%; background: var(--gradient-primary); border-radius: 100px; transition: width 0.6s ease; }
+        .items-container { padding: 0 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; padding-bottom: 2rem; }
         .item-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -294,10 +320,10 @@
         .item-checkbox.checked { background: var(--success); border-color: var(--success); }
         .item-checkbox i { color: white; font-size: 0.875rem; opacity: 0; }
         .item-checkbox.checked i { opacity: 1; }
-        .item-content { flex: 1; }
+        .item-content { flex: 1; display: flex; align-items: center; gap: 0.75rem; }
+        .item-icon-large { font-size: 1.3rem; width: 32px; text-align: center; }
         .item-name { font-weight: 800; font-size: 1rem; }
         .item-name.completed { text-decoration: line-through; color: var(--text-muted); }
-        .item-price { color: var(--accent); font-weight: 800; }
         .action-icon-btn {
             width: 36px; height: 36px;
             border-radius: var(--radius);
@@ -306,26 +332,6 @@
             color: var(--text-muted);
             cursor: pointer;
         }
-        
-        .insights-grid { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
-        .insight-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-xl);
-            padding: 1.5rem;
-        }
-        .insight-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
-        .insight-icon {
-            width: 44px; height: 44px;
-            border-radius: var(--radius);
-            background: var(--gradient-primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.25rem;
-        }
-        .insight-title { font-weight: 900; font-size: 1.125rem; }
         
         .toast {
             position: fixed;
@@ -371,6 +377,7 @@
             0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.7); }
             50% { transform: scale(1.1); box-shadow: 0 0 0 30px rgba(37, 99, 235, 0); }
         }
+        .empty-state { text-align: center; padding: 2rem; color: var(--text-muted); }
     </style>
 </head>
 <body>
@@ -378,210 +385,303 @@
     <div class="toast" id="toast"><div style="width: 32px; height: 32px; border-radius: 8px; background: var(--success); display: flex; align-items: center; justify-content: center; color: white;"><i class="fas fa-check"></i></div><span id="toastMessage">تم الإضافة</span></div>
     <div class="voice-modal" id="voiceModal"><div class="voice-circle"><i class="fas fa-microphone"></i></div><div style="font-size: 1.25rem; font-weight: 700; color: var(--text-secondary);">جاري الاستماع...</div><button onclick="stopVoiceInput()" style="padding: 0.75rem 1.5rem; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 100px; font-family: 'Tajawal'; font-weight: 700; cursor: pointer;">إلغاء</button></div>
 
+    <!-- الصفحة الرئيسية: حقل إضافة + القائمة النشطة -->
     <div class="page active" id="homePage">
         <div class="home-container">
-            <div class="home-header-section"><h1 class="home-logo">قائمة التسوق الذكية</h1><p class="home-subtitle">خضروات، فواكه، طعام، صحة، منزل</p></div>
+            <div class="home-header-section">
+                <h1 class="home-logo">قائمة التسوق الذكية</h1>
+                <p class="home-subtitle">أضف عناصرك بسرعة أو اختر من الفئات</p>
+            </div>
+            
+            <!-- حقل إضافة مخصص (كتابة العنصر) في الصفحة الرئيسية -->
+            <div class="quick-add-input-section">
+                <div class="quick-input-wrapper">
+                    <input type="text" id="homeQuickItem" class="quick-input" placeholder="اكتب عنصراً... مثال: أكواب ورقية، خبز، شامبو" onkeypress="handleHomeQuickAdd(event)">
+                    <button class="quick-add-btn" onclick="addHomeQuickItem()"><i class="fas fa-plus"></i> أضف</button>
+                    <button class="voice-icon-btn" onclick="toggleVoiceInputHome()"><i class="fas fa-microphone"></i></button>
+                </div>
+            </div>
+            
+            <div class="home-list-section">
+                <div class="home-list-header">
+                    <div class="home-list-title"><i class="fas fa-shopping-basket" style="color: var(--primary);"></i> العناصر النشطة</div>
+                    <span class="home-list-count" id="homeActiveCount">0</span>
+                </div>
+                <div id="homeActiveList"></div>
+                <button class="view-all-btn" onclick="navigateToList()">إدارة القائمة الكاملة <i class="fas fa-arrow-left"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- صفحة الإضافات السريعة بالفئات والأيقونات -->
+    <div class="page" id="quickPage">
+        <div class="quick-container">
+            <div class="quick-header">
+                <h2><i class="fas fa-bolt" style="color: var(--accent);"></i> إضافة بالفئات</h2>
+                <p style="color: var(--text-muted);">اختر من القوائم أدناه</p>
+            </div>
             <div class="categories-section">
-                <h3 class="section-title"><i class="fas fa-th-large" style="color: var(--primary);"></i> الفئات الرئيسية</h3>
-                
-                <!-- فئة الخضروات والفواكه الجديدة -->
+                <!-- خضروات وفواكه -->
                 <div class="category-card">
                     <div class="category-header" onclick="toggleCategory('veg')">
                         <div class="category-icon veg">🥬</div>
                         <div class="category-info"><div class="category-name">الخضروات والفواكه</div><div class="category-count">22 عنصر</div></div>
                         <i class="fas fa-chevron-down category-arrow" id="arrow-veg"></i>
                     </div>
-                    <div class="category-items" id="items-veg">
-                        <div class="item-grid">
-                            <button class="item-btn" onclick="addFromCategory('كزبرة', 'veg', 2.50)">🌿 كزبرة</button>
-                            <button class="item-btn" onclick="addFromCategory('بقدونس', 'veg', 2.00)">🌿 بقدونس</button>
-                            <button class="item-btn" onclick="addFromCategory('خس', 'veg', 3.00)">🥬 خس</button>
-                            <button class="item-btn" onclick="addFromCategory('سبانخ', 'veg', 4.00)">🍃 سبانخ</button>
-                            <button class="item-btn" onclick="addFromCategory('طماطم', 'veg', 5.00)">🍅 طماطم</button>
-                            <button class="item-btn" onclick="addFromCategory('خيار', 'veg', 3.50)">🥒 خيار</button>
-                            <button class="item-btn" onclick="addFromCategory('جزر', 'veg', 2.50)">🥕 جزر</button>
-                            <button class="item-btn" onclick="addFromCategory('بصل', 'veg', 4.00)">🧅 بصل</button>
-                            <button class="item-btn" onclick="addFromCategory('ثوم', 'veg', 3.00)">🧄 ثوم</button>
-                            <button class="item-btn" onclick="addFromCategory('بطاطس', 'veg', 5.50)">🥔 بطاطس</button>
-                            <button class="item-btn" onclick="addFromCategory('فلفل أخضر', 'veg', 6.00)">🫑 فلفل أخضر</button>
-                            <button class="item-btn" onclick="addFromCategory('باذنجان', 'veg', 4.50)">🍆 باذنجان</button>
-                            <button class="item-btn" onclick="addFromCategory('كوسة', 'veg', 5.00)">🥒 كوسة</button>
-                            <button class="item-btn" onclick="addFromCategory('قرنبيط', 'veg', 7.00)">🥦 قرنبيط</button>
-                            <button class="item-btn" onclick="addFromCategory('بروكلي', 'veg', 8.00)">🥦 بروكلي</button>
-                            <button class="item-btn" onclick="addFromCategory('ليمون', 'veg', 3.00)">🍋 ليمون</button>
-                            <button class="item-btn" onclick="addFromCategory('تفاح', 'veg', 7.00)">🍎 تفاح</button>
-                            <button class="item-btn" onclick="addFromCategory('موز', 'veg', 5.00)">🍌 موز</button>
-                            <button class="item-btn" onclick="addFromCategory('برتقال', 'veg', 6.00)">🍊 برتقال</button>
-                            <button class="item-btn" onclick="addFromCategory('فراولة', 'veg', 12.00)">🍓 فراولة</button>
-                            <button class="item-btn" onclick="addFromCategory('عنب', 'veg', 10.00)">🍇 عنب</button>
-                            <button class="item-btn" onclick="addFromCategory('بطيخ', 'veg', 15.00)">🍉 بطيخ</button>
-                        </div>
-                    </div>
+                    <div class="category-items" id="items-veg"><div class="item-grid" id="vegGrid"></div></div>
                 </div>
-
-                <!-- فئة الطعام (مضاف لها زبادي، زيت طبخ، وغيرها) -->
+                <!-- الطعام -->
                 <div class="category-card">
                     <div class="category-header" onclick="toggleCategory('food')">
                         <div class="category-icon food">🍔</div>
-                        <div class="category-info"><div class="category-name">الطعام والمشروبات</div><div class="category-count">20 عنصر</div></div>
+                        <div class="category-info"><div class="category-name">الطعام والمشروبات</div><div class="category-count">22 عنصر</div></div>
                         <i class="fas fa-chevron-down category-arrow" id="arrow-food"></i>
                     </div>
-                    <div class="category-items" id="items-food">
-                        <div class="item-grid">
-                            <button class="item-btn" onclick="addFromCategory('زبادي', 'food', 4.50)">🥛 زبادي</button>
-                            <button class="item-btn" onclick="addFromCategory('زيت طبخ', 'food', 12.00)">🫒 زيت طبخ</button>
-                            <button class="item-btn" onclick="addFromCategory('حليب', 'food', 5.00)">🥛 حليب</button>
-                            <button class="item-btn" onclick="addFromCategory('خبز أسمر', 'food', 3.00)">🍞 خبز أسمر</button>
-                            <button class="item-btn" onclick="addFromCategory('بيض', 'food', 6.00)">🥚 بيض</button>
-                            <button class="item-btn" onclick="addFromCategory('جبنة بيضاء', 'food', 9.00)">🧀 جبنة بيضاء</button>
-                            <button class="item-btn" onclick="addFromCategory('دجاج', 'food', 12.00)">🍗 دجاج</button>
-                            <button class="item-btn" onclick="addFromCategory('لحم مفروم', 'food', 18.00)">🥩 لحم مفروم</button>
-                            <button class="item-btn" onclick="addFromCategory('أرز بسمتي', 'food', 8.00)">🍚 أرز بسمتي</button>
-                            <button class="item-btn" onclick="addFromCategory('مكرونة', 'food', 4.50)">🍝 مكرونة</button>
-                            <button class="item-btn" onclick="addFromCategory('عدس', 'food', 6.00)">🥣 عدس</button>
-                            <button class="item-btn" onclick="addFromCategory('قهوة', 'food', 14.00)">☕ قهوة</button>
-                            <button class="item-btn" onclick="addFromCategory('شاي', 'food', 7.00)">🍵 شاي</button>
-                            <button class="item-btn" onclick="addFromCategory('عسل', 'food', 20.00)">🍯 عسل</button>
-                            <button class="item-btn" onclick="addFromCategory('صلصة', 'food', 5.00)">🥫 صلصة</button>
-                            <button class="item-btn" onclick="addFromCategory('زعتر', 'food', 4.00)">🌿 زعتر</button>
-                            <button class="item-btn" onclick="addFromCategory('طحينة', 'food', 7.00)">🥣 طحينة</button>
-                            <button class="item-btn" onclick="addFromCategory('عصير برتقال', 'food', 8.00)">🧃 عصير</button>
-                            <button class="item-btn" onclick="addFromCategory('ماء معدني', 'food', 4.00)">💧 ماء</button>
-                            <button class="item-btn" onclick="addFromCategory('حلاوة طحينية', 'food', 9.00)">🍬 حلاوة</button>
-                        </div>
-                    </div>
+                    <div class="category-items" id="items-food"><div class="item-grid" id="foodGrid"></div></div>
                 </div>
-
-                <!-- فئة الصحة والجمال -->
+                <!-- الصحة والجمال -->
                 <div class="category-card">
                     <div class="category-header" onclick="toggleCategory('health')">
                         <div class="category-icon health">💊</div>
                         <div class="category-info"><div class="category-name">الصحة والجمال</div><div class="category-count">16 عنصر</div></div>
                         <i class="fas fa-chevron-down category-arrow" id="arrow-health"></i>
                     </div>
-                    <div class="category-items" id="items-health">
-                        <div class="item-grid">
-                            <button class="item-btn" onclick="addFromCategory('شامبو', 'health', 12.00)">🧴 شامبو</button>
-                            <button class="item-btn" onclick="addFromCategory('معجون أسنان', 'health', 6.00)">🦷 معجون أسنان</button>
-                            <button class="item-btn" onclick="addFromCategory('فرشاة أسنان', 'health', 5.00)">🪥 فرشاة أسنان</button>
-                            <button class="item-btn" onclick="addFromCategory('فيتامينات', 'health', 25.00)">💊 فيتامينات</button>
-                            <button class="item-btn" onclick="addFromCategory('كريم ترطيب', 'health', 15.00)">🧴 كريم ترطيب</button>
-                            <button class="item-btn" onclick="addFromCategory('مطهر', 'health', 9.00)">🧼 مطهر</button>
-                            <button class="item-btn" onclick="addFromCategory('مسكن ألم', 'health', 8.00)">💊 مسكن</button>
-                            <button class="item-btn" onclick="addFromCategory('واقي شمس', 'health', 28.00)">☀️ واقي شمس</button>
-                            <button class="item-btn" onclick="addFromCategory('فيتامين سي', 'health', 20.00)">🍊 فيتامين سي</button>
-                            <button class="item-btn" onclick="addFromCategory('زيت شعر', 'health', 22.00)">💧 زيت شعر</button>
-                            <button class="item-btn" onclick="addFromCategory('لوشن جسم', 'health', 13.00)">🧴 لوشن</button>
-                            <button class="item-btn" onclick="addFromCategory('أدوية برد', 'health', 10.00)">🤧 أدوية برد</button>
-                            <button class="item-btn" onclick="addFromCategory('مكمل غذائي', 'health', 35.00)">💪 مكمل غذائي</button>
-                            <button class="item-btn" onclick="addFromCategory('صابون غسول', 'health', 7.00)">🧼 صابون</button>
-                            <button class="item-btn" onclick="addFromCategory('أدوات حلاقة', 'health', 11.00)">🪒 أدوات حلاقة</button>
-                            <button class="item-btn" onclick="addFromCategory('كريم عين', 'health', 21.00)">👁️ كريم عين</button>
-                        </div>
-                    </div>
+                    <div class="category-items" id="items-health"><div class="item-grid" id="healthGrid"></div></div>
                 </div>
-
-                <!-- فئة المنزل -->
+                <!-- المنزل والمستلزمات -->
                 <div class="category-card">
                     <div class="category-header" onclick="toggleCategory('home')">
                         <div class="category-icon home">🏠</div>
-                        <div class="category-info"><div class="category-name">المنزل والحديقة</div><div class="category-count">18 عنصر</div></div>
+                        <div class="category-info"><div class="category-name">المنزل والمستلزمات</div><div class="category-count">24 عنصر</div></div>
                         <i class="fas fa-chevron-down category-arrow" id="arrow-home"></i>
                     </div>
-                    <div class="category-items" id="items-home">
-                        <div class="item-grid">
-                            <button class="item-btn" onclick="addFromCategory('صابون سائل', 'home', 6.00)">🧼 صابون سائل</button>
-                            <button class="item-btn" onclick="addFromCategory('مناديل', 'home', 10.00)">🧻 مناديل</button>
-                            <button class="item-btn" onclick="addFromCategory('مسحوق غسيل', 'home', 15.00)">🧴 مسحوق غسيل</button>
-                            <button class="item-btn" onclick="addFromCategory('معطر جو', 'home', 8.00)">🌸 معطر جو</button>
-                            <button class="item-btn" onclick="addFromCategory('لمبات', 'home', 14.00)">💡 لمبات</button>
-                            <button class="item-btn" onclick="addFromCategory('بطاريات', 'home', 11.00)">🔋 بطاريات</button>
-                            <button class="item-btn" onclick="addFromCategory('سلة مهملات', 'home', 20.00)">🗑️ سلة مهملات</button>
-                            <button class="item-btn" onclick="addFromCategory('منظف زجاج', 'home', 9.00)">🪟 منظف زجاج</button>
-                            <button class="item-btn" onclick="addFromCategory('إسفنج', 'home', 4.00)">🧽 إسفنج</button>
-                            <button class="item-btn" onclick="addFromCategory('قفازات', 'home', 7.00)">🧤 قفازات</button>
-                            <button class="item-btn" onclick="addFromCategory('فرشاة مرحاض', 'home', 8.50)">🧹 فرشاة مرحاض</button>
-                            <button class="item-btn" onclick="addFromCategory('منفضة', 'home', 10.00)">🪶 منفضة</button>
-                            <button class="item-btn" onclick="addFromCategory('ممسحة', 'home', 24.00)">🧹 ممسحة</button>
-                            <button class="item-btn" onclick="addFromCategory('وعاء طعام', 'home', 16.00)">🥣 وعاء طعام</button>
-                            <button class="item-btn" onclick="addFromCategory('مزهرية', 'home', 22.00)">🏺 مزهرية</button>
-                            <button class="item-btn" onclick="addFromCategory('سجادة', 'home', 27.00)">🧶 سجادة</button>
-                            <button class="item-btn" onclick="addFromCategory('معلقات', 'home', 15.00)">🖼️ معلقات</button>
-                            <button class="item-btn" onclick="addFromCategory('سماد نباتات', 'home', 12.00)">🌱 سماد</button>
-                        </div>
-                    </div>
+                    <div class="category-items" id="items-home"><div class="item-grid" id="homeGrid"></div></div>
                 </div>
-            </div>
-
-            <div class="home-list-section">
-                <div class="home-list-header"><div class="home-list-title"><i class="fas fa-shopping-basket" style="color: var(--primary);"></i> قائمة التسوق النشطة</div><span class="home-list-count" id="homeActiveCount">0</span></div>
-                <div id="homeActiveList"></div>
-                <button class="view-all-btn" onclick="navigateToList()">عرض الكل <i class="fas fa-arrow-left" style="margin-right: 0.5rem;"></i></button>
             </div>
         </div>
     </div>
 
+    <!-- صفحة تفاصيل القائمة (جميع العناصر) -->
     <div class="page" id="listPage">
-        <div class="page-header"><h2 class="page-title">قائمة التسوق</h2><div class="progress-container"><div class="progress-header"><span>تقدم التسوق</span><span id="progressText">0%</span></div><div class="progress-bar"><div class="progress-fill" id="progressBar" style="width: 0%"></div></div></div></div>
-        <div class="ai-input-section"><div class="input-wrapper"><input type="text" class="smart-input" id="smartInput" placeholder='اكتب عنصراً أو استخدم الميكروفون...' onkeypress="handleInputKeypress(event)"><div class="input-actions"><button class="icon-btn" onclick="toggleVoiceInput()"><i class="fas fa-microphone"></i></button></div></div></div>
+        <div class="page-header"><h2 class="page-title">جميع العناصر</h2><div class="progress-container"><div class="progress-header"><span>تقدم التسوق</span><span id="progressText">0%</span></div><div class="progress-bar"><div class="progress-fill" id="progressBar" style="width: 0%"></div></div></div></div>
         <div class="items-container" id="itemsList"></div>
     </div>
 
-    <div class="page" id="insightsPage">
-        <div class="page-header"><h2 class="page-title">تحليلات الذكاء الاصطناعي</h2></div>
-        <div class="insights-grid"><div class="insight-card"><div class="insight-header"><div class="insight-icon"><i class="fas fa-brain"></i></div><div><div class="insight-title">التوقعات الذكية</div></div></div><div id="predictionsList"></div></div><div class="insight-card"><div class="insight-header"><div class="insight-icon" style="background: var(--gradient-primary);"><i class="fas fa-tags"></i></div><div><div class="insight-title">الإنفاق حسب الفئة</div></div></div><div id="categoryBreakdown"></div></div></div>
-    </div>
-
-    <nav class="nav-bar"><a class="nav-item active" onclick="showPage('home')"><i class="fas fa-home"></i><span>الرئيسية</span></a><a class="nav-item" onclick="showPage('list')"><i class="fas fa-list-check"></i><span>القائمة</span></a><a class="nav-item" onclick="showPage('insights')"><i class="fas fa-chart-line"></i><span>التحليلات</span></a></nav>
+    <nav class="nav-bar">
+        <a class="nav-item active" onclick="showPage('home')"><i class="fas fa-home"></i><span>الرئيسية</span></a>
+        <a class="nav-item" onclick="showPage('quick')"><i class="fas fa-plus-circle"></i><span>الفئات</span></a>
+        <a class="nav-item" onclick="showPage('list')"><i class="fas fa-list-check"></i><span>جميع العناصر</span></a>
+    </nav>
 
     <script>
         let items = JSON.parse(localStorage.getItem('smartlist_items')) || [];
         let recognition = null;
+        let currentVoiceTarget = null; // 'home' or 'quick'
+        
         const categoryTranslations = { 'veg': '🥬 خضروات وفواكه', 'food': '🍔 طعام', 'health': '💊 صحة', 'home': '🏠 منزل', 'other': '📦 أخرى' };
+        
+        // أيقونات ذكية للعناصر حسب الاسم (لإضافة أيقونات تلقائية)
+        function getIconForItem(name) {
+            const lowerName = name.toLowerCase();
+            if(lowerName.includes('خبز') || lowerName.includes('توست')) return '🍞';
+            if(lowerName.includes('حليب') || lowerName.includes('لبن')) return '🥛';
+            if(lowerName.includes('بيض')) return '🥚';
+            if(lowerName.includes('جبن')) return '🧀';
+            if(lowerName.includes('دجاج')) return '🍗';
+            if(lowerName.includes('لحم')) return '🥩';
+            if(lowerName.includes('عسل')) return '🍯';
+            if(lowerName.includes('قهوة')) return '☕';
+            if(lowerName.includes('عصير')) return '🧃';
+            if(lowerName.includes('ماء')) return '💧';
+            if(lowerName.includes('موز') || lowerName.includes('تفاح') || lowerName.includes('برتقال') || lowerName.includes('فراولة')) return '🍎';
+            if(lowerName.includes('طماطم') || lowerName.includes('خيار') || lowerName.includes('جزر') || lowerName.includes('بصل')) return '🥕';
+            if(lowerName.includes('كزبرة') || lowerName.includes('بقدونس')) return '🌿';
+            if(lowerName.includes('سبانخ') || lowerName.includes('خس')) return '🥬';
+            if(lowerName.includes('بطاطس')) return '🥔';
+            if(lowerName.includes('شامبو') || lowerName.includes('بلسم')) return '🧴';
+            if(lowerName.includes('معجون') || lowerName.includes('فرشاة')) return '🦷';
+            if(lowerName.includes('فيتامين')) return '💊';
+            if(lowerName.includes('كريم')) return '🧴';
+            if(lowerName.includes('صابون')) return '🧼';
+            if(lowerName.includes('مناديل')) return '🧻';
+            if(lowerName.includes('أكواب') || lowerName.includes('كاسات')) return '🥤';
+            if(lowerName.includes('أكياس زبالة') || lowerName.includes('كيس')) return '🗑️';
+            if(lowerName.includes('مسحوق') || lowerName.includes('غسيل')) return '🧴';
+            if(lowerName.includes('لمبة')) return '💡';
+            if(lowerName.includes('بطارية')) return '🔋';
+            return '📌';
+        }
+        
+        // بيانات العناصر مع أيقونات مخصصة (بدون أسعار)
+        const itemsData = {
+            veg: [
+                { name: 'كزبرة', icon: '🌿' }, { name: 'بقدونس', icon: '🌿' }, { name: 'خس', icon: '🥬' }, { name: 'سبانخ', icon: '🥬' },
+                { name: 'طماطم', icon: '🍅' }, { name: 'خيار', icon: '🥒' }, { name: 'جزر', icon: '🥕' }, { name: 'بصل', icon: '🧅' },
+                { name: 'ثوم', icon: '🧄' }, { name: 'بطاطس', icon: '🥔' }, { name: 'فلفل أخضر', icon: '🫑' }, { name: 'باذنجان', icon: '🍆' },
+                { name: 'كوسة', icon: '🥒' }, { name: 'قرنبيط', icon: '🥦' }, { name: 'بروكلي', icon: '🥦' }, { name: 'ليمون', icon: '🍋' },
+                { name: 'تفاح', icon: '🍎' }, { name: 'موز', icon: '🍌' }, { name: 'برتقال', icon: '🍊' }, { name: 'فراولة', icon: '🍓' },
+                { name: 'عنب', icon: '🍇' }, { name: 'بطيخ', icon: '🍉' }
+            ],
+            food: [
+                { name: 'زبادي', icon: '🥛' }, { name: 'زيت طبخ', icon: '🫒' }, { name: 'حليب', icon: '🥛' }, { name: 'خبز أسمر', icon: '🍞' },
+                { name: 'بيض', icon: '🥚' }, { name: 'جبنة بيضاء', icon: '🧀' }, { name: 'دجاج', icon: '🍗' }, { name: 'لحم مفروم', icon: '🥩' },
+                { name: 'أرز بسمتي', icon: '🍚' }, { name: 'مكرونة', icon: '🍝' }, { name: 'عدس', icon: '🥣' }, { name: 'قهوة', icon: '☕' },
+                { name: 'شاي', icon: '🍵' }, { name: 'عسل', icon: '🍯' }, { name: 'صلصة', icon: '🥫' }, { name: 'زعتر', icon: '🌿' },
+                { name: 'طحينة', icon: '🥣' }, { name: 'عصير برتقال', icon: '🧃' }, { name: 'ماء معدني', icon: '💧' }, { name: 'حلاوة طحينية', icon: '🍬' },
+                { name: 'زبدة', icon: '🧈' }, { name: 'كاتشب', icon: '🍅' }
+            ],
+            health: [
+                { name: 'شامبو', icon: '🧴' }, { name: 'معجون أسنان', icon: '🦷' }, { name: 'فرشاة أسنان', icon: '🪥' }, { name: 'فيتامينات', icon: '💊' },
+                { name: 'كريم ترطيب', icon: '🧴' }, { name: 'مطهر', icon: '🧼' }, { name: 'مسكن ألم', icon: '💊' }, { name: 'واقي شمس', icon: '☀️' },
+                { name: 'فيتامين سي', icon: '🍊' }, { name: 'زيت شعر', icon: '💧' }, { name: 'لوشن جسم', icon: '🧴' }, { name: 'أدوية برد', icon: '🤧' },
+                { name: 'مكمل غذائي', icon: '💪' }, { name: 'صابون غسول', icon: '🧼' }, { name: 'أدوات حلاقة', icon: '🪒' }, { name: 'كريم عين', icon: '👁️' }
+            ],
+            home: [
+                { name: 'صابون سائل', icon: '🧼' }, { name: 'مناديل ورقية', icon: '🧻' }, { name: 'مسحوق غسيل', icon: '🧴' }, { name: 'معطر جو', icon: '🌸' },
+                { name: 'لمبات LED', icon: '💡' }, { name: 'بطاريات', icon: '🔋' }, { name: 'سلة مهملات', icon: '🗑️' }, { name: 'منظف زجاج', icon: '🪟' },
+                { name: 'إسفنج', icon: '🧽' }, { name: 'قفازات مطاط', icon: '🧤' }, { name: 'فرشاة مرحاض', icon: '🧹' }, { name: 'منفضة', icon: '🪶' },
+                { name: 'ممسحة', icon: '🧹' }, { name: 'وعاء طعام', icon: '🥣' }, { name: 'مزهرية', icon: '🏺' }, { name: 'سجادة', icon: '🧶' },
+                { name: 'معلقات حائط', icon: '🖼️' }, { name: 'سماد نباتات', icon: '🌱' },
+                { name: 'أكواب ورقية', icon: '🥤' }, { name: 'أكياس زبالة', icon: '🗑️' }, { name: 'أطباق بلاستيك', icon: '🍽️' }, { name: 'قصدير ألمنيوم', icon: '🥫' },
+                { name: 'مناديل مبللة', icon: '🧻' }, { name: 'معطر ملابس', icon: '🌸' }
+            ]
+        };
 
-        document.addEventListener('DOMContentLoaded', () => { initVoiceRecognition(); renderHomeActiveList(); renderItems(); updateInsights(); });
+        function buildCategoryGrids() {
+            for(let cat in itemsData) {
+                const grid = document.getElementById(cat + 'Grid');
+                if(grid) {
+                    grid.innerHTML = itemsData[cat].map(item => `<button class="item-btn" onclick="addFromCategory('${item.name}', '${cat}', '${item.icon}')"><i class="fas ${getIconClass(item.icon)}"></i> ${item.name}</button>`).join('');
+                }
+            }
+        }
+        
+        function getIconClass(emoji) {
+            // mapping بسيط لأيقونات FontAwesome (اختياري) لكن نرجع فئة فارغة ونعرض الإيموجي مباشرة
+            return '';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            buildCategoryGrids();
+            initVoiceRecognition();
+            renderHomeActiveList();
+            renderItems();
+        });
 
         function showPage(page) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             document.getElementById(page + 'Page').classList.add('active');
-            event.currentTarget.classList.add('active');
-            if (page === 'home') renderHomeActiveList();
-            else if (page === 'list') { renderItems(); updateProgress(); }
-            else if (page === 'insights') updateInsights();
+            if(event && event.currentTarget) event.currentTarget.classList.add('active');
+            else {
+                const idx = { home:0, quick:1, list:2 }[page];
+                if(idx!==undefined) document.querySelectorAll('.nav-item')[idx].classList.add('active');
+            }
+            if(page === 'home') renderHomeActiveList();
+            else if(page === 'list') renderItems();
         }
-        function navigateToList() { showPage('list'); document.querySelectorAll('.nav-item')[1].classList.add('active'); document.querySelectorAll('.nav-item')[0].classList.remove('active'); }
-        function toggleCategory(cat) { const div = document.getElementById('items-'+cat); const arr = document.getElementById('arrow-'+cat); if(div && arr) { div.classList.toggle('show'); arr.classList.toggle('expanded'); } }
-        function addFromCategory(name, cat, price) { items.unshift({ id: Date.now(), name, price, category: cat, quantity: 1, completed: false, addedAt: new Date().toISOString() }); saveItems(); renderHomeActiveList(); renderItems(); updateInsights(); showToast(`✨ تم إضافة ${name}`); }
+
+        function navigateToList() { showPage('list'); }
+
+        function toggleCategory(category) {
+            const itemsDiv = document.getElementById('items-' + category);
+            const arrow = document.getElementById('arrow-' + category);
+            if(itemsDiv && arrow) { itemsDiv.classList.toggle('show'); arrow.classList.toggle('expanded'); }
+        }
+
+        // إضافة عنصر من الفئات مع أيقونة
+        function addFromCategory(name, category, icon) {
+            const item = { id: Date.now(), name, category, completed: false, addedAt: new Date().toISOString(), icon: icon || getIconForItem(name) };
+            items.unshift(item);
+            saveItems();
+            renderHomeActiveList();
+            renderItems();
+            showToast(`✅ تم إضافة ${name}`);
+        }
+        
+        // إضافة من الحقل الرئيسي
+        function addHomeQuickItem() {
+            const input = document.getElementById('homeQuickItem');
+            const text = input.value.trim();
+            if(text === "") { showToast("✏️ الرجاء كتابة اسم العنصر"); return; }
+            const icon = getIconForItem(text);
+            addFromCategory(text, 'other', icon);
+            input.value = "";
+        }
+        
+        function handleHomeQuickAdd(e) { if(e.key === 'Enter') addHomeQuickItem(); }
+
         function renderHomeActiveList() {
             const container = document.getElementById('homeActiveList');
-            const activeItems = items.filter(i => !i.completed).slice(0, 5);
+            const activeItems = items.filter(i => !i.completed).slice(0, 6);
             document.getElementById('homeActiveCount').textContent = items.filter(i => !i.completed).length;
-            if(activeItems.length === 0) { container.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--text-muted);"><i class="fas fa-shopping-basket" style="font-size: 2rem; opacity: 0.3;"></i><p>لا توجد عناصر نشطة</p></div>'; return; }
-            container.innerHTML = activeItems.map(item => `<div class="home-list-item" onclick="navigateToList()"><div class="home-item-checkbox ${item.completed ? 'checked' : ''}" onclick="event.stopPropagation(); toggleComplete(${item.id})"><i class="fas fa-check"></i></div><div class="home-item-info"><div class="home-item-name ${item.completed ? 'completed' : ''}">${item.name}</div></div><div class="home-item-price">$${item.price.toFixed(2)}</div></div>`).join('');
+            if(activeItems.length === 0) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-shopping-basket" style="font-size: 2rem; opacity: 0.3;"></i><p>لا توجد عناصر نشطة</p><p style="font-size:0.85rem">أضف عنصراً أعلاه أو من صفحة الفئات</p></div>';
+                return;
+            }
+            container.innerHTML = activeItems.map(item => `
+                <div class="home-list-item" onclick="navigateToList()">
+                    <div class="home-item-checkbox ${item.completed ? 'checked' : ''}" onclick="event.stopPropagation(); toggleComplete(${item.id})">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="home-item-info">
+                        <span class="item-icon">${item.icon || getIconForItem(item.name)}</span>
+                        <div class="home-item-name ${item.completed ? 'completed' : ''}">${item.name}</div>
+                    </div>
+                </div>
+            `).join('');
         }
-        function toggleComplete(id) { const item = items.find(i => i.id === id); if(item) { item.completed = !item.completed; saveItems(); renderHomeActiveList(); renderItems(); updateInsights(); if(item.completed) showToast(`🎉 تم إكمال ${item.name}!`); } }
-        function handleInputKeypress(e) { if(e.key === 'Enter' && e.target.value.trim()) { addFromCategory(e.target.value.trim(), 'other', 0); e.target.value = ''; } }
+
+        function toggleComplete(id) {
+            const item = items.find(i => i.id === id);
+            if(item) { item.completed = !item.completed; saveItems(); renderHomeActiveList(); renderItems(); if(item.completed) showToast(`🎉 تم إكمال ${item.name}!`); }
+        }
+
         function renderItems() {
             const container = document.getElementById('itemsList');
-            if(items.length === 0) { container.innerHTML = '<div style="text-align: center; padding: 3rem; color: var(--text-muted);"><i class="fas fa-clipboard-list" style="font-size: 3rem; opacity: 0.3;"></i><p>القائمة فارغة</p></div>'; return; }
-            container.innerHTML = items.map(item => `<div class="item-card"><div class="item-checkbox ${item.completed ? 'checked' : ''}" onclick="toggleComplete(${item.id})"><i class="fas fa-check"></i></div><div class="item-content"><div class="item-name ${item.completed ? 'completed' : ''}">${item.name}</div><div style="font-size: 0.8rem; color: var(--text-muted);">${categoryTranslations[item.category] || 'أخرى'}</div></div><div class="item-price">$${item.price.toFixed(2)}</div><button class="action-icon-btn" onclick="deleteItem(${item.id})"><i class="fas fa-trash"></i></button></div>`).join('');
+            if(items.length === 0) { container.innerHTML = '<div class="empty-state"><i class="fas fa-clipboard-list" style="font-size: 3rem; opacity: 0.3;"></i><p>القائمة فارغة</p><p>أضف عناصر من الصفحة الرئيسية أو الفئات</p></div>'; updateProgress(); return; }
+            container.innerHTML = items.map(item => `
+                <div class="item-card">
+                    <div class="item-checkbox ${item.completed ? 'checked' : ''}" onclick="toggleComplete(${item.id})"><i class="fas fa-check"></i></div>
+                    <div class="item-content">
+                        <span class="item-icon-large">${item.icon || getIconForItem(item.name)}</span>
+                        <div class="item-name ${item.completed ? 'completed' : ''}">${item.name}</div>
+                    </div>
+                    <button class="action-icon-btn" onclick="deleteItem(${item.id})"><i class="fas fa-trash"></i></button>
+                </div>
+            `).join('');
             updateProgress();
         }
-        function deleteItem(id) { items = items.filter(i => i.id !== id); saveItems(); renderItems(); renderHomeActiveList(); updateInsights(); showToast('🗑️ تم الحذف'); }
-        function updateProgress() { const total = items.length, completed = items.filter(i => i.completed).length, percent = total === 0 ? 0 : Math.round((completed/total)*100); document.getElementById('progressBar').style.width = percent+'%'; document.getElementById('progressText').textContent = percent+'%'; }
-        function updateInsights() {
-            const breakdown = {};
-            items.forEach(item => { breakdown[item.category] = (breakdown[item.category] || 0) + item.price; });
-            const breakdownHTML = Object.entries(breakdown).map(([cat, amt]) => `<div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--bg-tertiary); border-radius: var(--radius); margin-bottom: 0.5rem;"><span style="font-weight: 700;">${categoryTranslations[cat] || cat}</span><span style="font-weight: 800; color: var(--accent);">$${amt.toFixed(2)}</span></div>`).join('');
-            document.getElementById('categoryBreakdown').innerHTML = breakdownHTML || '<p style="color: var(--text-muted); text-align: center;">أضف عناصر للتحليلات</p>';
-            const pending = items.filter(i => !i.completed).length;
-            let msg = items.length === 0 ? '✨ أضف عناصر إلى القائمة.' : (pending === 0 ? '🎉 القائمة مكتملة! تصفح الفئات لبدء قائمة جديدة.' : `📊 تبقى ${pending} عناصر. ركز على الفئة الأكبر لتحقيق تقدم أسرع.`);
-            document.getElementById('predictionsList').innerHTML = `<p style="line-height:1.6">${msg}</p>`;
+
+        function deleteItem(id) { items = items.filter(i => i.id !== id); saveItems(); renderItems(); renderHomeActiveList(); showToast('🗑️ تم الحذف'); }
+
+        function updateProgress() { 
+            const total = items.length, completed = items.filter(i => i.completed).length, percent = total === 0 ? 0 : Math.round((completed/total)*100); 
+            const bar = document.getElementById('progressBar'); const txt = document.getElementById('progressText');
+            if(bar) bar.style.width = percent+'%'; if(txt) txt.textContent = percent+'%';
         }
-        function initVoiceRecognition() { if('webkitSpeechRecognition' in window) { const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition; recognition = new SpeechRecognition(); recognition.continuous = false; recognition.interimResults = false; recognition.lang = 'ar-SA'; recognition.onresult = (e) => { const transcript = e.results[0][0].transcript; document.getElementById('smartInput').value = transcript; addFromCategory(transcript, 'other', 0); stopVoiceInput(); }; recognition.onend = () => document.getElementById('voiceModal').classList.remove('show'); recognition.onerror = () => { stopVoiceInput(); showToast('لم يتم التعرف على الصوت'); }; } }
-        function toggleVoiceInput() { if(!recognition) { showToast('التعرف على الصوت غير مدعوم'); return; } const modal = document.getElementById('voiceModal'); if(modal.classList.contains('show')) stopVoiceInput(); else { modal.classList.add('show'); recognition.start(); } }
-        function stopVoiceInput() { if(recognition) recognition.abort(); document.getElementById('voiceModal').classList.remove('show'); }
+
+        // التعرف على الصوت
+        function initVoiceRecognition() { 
+            if('webkitSpeechRecognition' in window) { 
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition; 
+                recognition = new SpeechRecognition(); 
+                recognition.continuous = false; recognition.interimResults = false; recognition.lang = 'ar-SA'; 
+                recognition.onresult = (e) => { 
+                    const transcript = e.results[0][0].transcript; 
+                    if(currentVoiceTarget === 'home') {
+                        document.getElementById('homeQuickItem').value = transcript;
+                        addHomeQuickItem();
+                    }
+                    stopVoiceInput(); 
+                }; 
+                recognition.onend = () => document.getElementById('voiceModal').classList.remove('show'); 
+                recognition.onerror = () => { stopVoiceInput(); showToast('لم يتم التعرف على الصوت'); }; 
+            } 
+        }
+        function toggleVoiceInputHome() { if(!recognition) { showToast('غير مدعوم'); return; } currentVoiceTarget = 'home'; const modal = document.getElementById('voiceModal'); if(modal.classList.contains('show')) stopVoiceInput(); else { modal.classList.add('show'); recognition.start(); } }
+        function stopVoiceInput() { if(recognition) recognition.abort(); document.getElementById('voiceModal').classList.remove('show'); currentVoiceTarget = null; }
+        
         function saveItems() { localStorage.setItem('smartlist_items', JSON.stringify(items)); }
         function showToast(msg) { const toast = document.getElementById('toast'); document.getElementById('toastMessage').textContent = msg; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 2000); }
     </script>
