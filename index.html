@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#ffffff">
-    <title>قائمة التسوق الذكية | إضافة سريعة</title>
+    <title>قائمة التسوق الذكية | مشاركة واتساب</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -15,6 +15,7 @@
             --accent: #f59e0b;
             --success: #10b981;
             --danger: #ef4444;
+            --whatsapp: #25D366;
             --bg-primary: #ffffff;
             --bg-secondary: #f8fafc;
             --bg-tertiary: #f1f5f9;
@@ -73,7 +74,6 @@
         .page.active { display: block; animation: fadeIn 0.4s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        /* home page (القائمة النشطة مع حقل إضافة) */
         .home-container { padding: 1.5rem; max-width: 600px; margin: 0 auto; }
         .home-header-section { text-align: center; padding: 1rem 0 1rem; }
         .home-logo {
@@ -85,7 +85,6 @@
         }
         .home-subtitle { color: var(--text-secondary); font-size: 0.9rem; font-weight: 500; margin-top: 0.25rem; }
         
-        /* حقل الإضافة السريعة النصي في الرئيسية */
         .quick-add-input-section {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -133,7 +132,6 @@
             font-size: 1.2rem;
         }
         
-        /* Active list card */
         .home-list-section {
             background: var(--bg-card);
             border-radius: var(--radius-xl);
@@ -185,6 +183,27 @@
         .item-icon { font-size: 1.2rem; width: 28px; text-align: center; }
         .home-item-name { font-weight: 700; font-size: 0.95rem; }
         .home-item-name.completed { text-decoration: line-through; color: var(--text-muted); }
+        
+        .share-whatsapp-btn {
+            background: var(--whatsapp);
+            color: white;
+            border: none;
+            padding: 0.9rem;
+            width: 100%;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 800;
+            font-size: 1rem;
+            border-radius: var(--radius-xl);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-top: 1rem;
+            transition: transform 0.2s;
+        }
+        .share-whatsapp-btn:active { transform: scale(0.98); }
+        
         .view-all-btn {
             width: 100%;
             padding: 1rem;
@@ -198,7 +217,6 @@
             font-family: 'Tajawal', sans-serif;
         }
         
-        /* quick add page (صفحة الإضافات السريعة بالفئات) */
         .quick-container { padding: 1.5rem; max-width: 600px; margin: 0 auto; }
         .quick-header { text-align: center; margin-bottom: 1.5rem; }
         .quick-header h2 { font-size: 1.5rem; font-weight: 900; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
@@ -282,9 +300,7 @@
             color: white;
             border-color: var(--primary);
         }
-        .item-btn i { width: 20px; font-size: 1rem; }
         
-        /* list page (جميع العناصر) */
         .page-header {
             padding: 1.5rem;
             background: var(--bg-primary);
@@ -385,15 +401,14 @@
     <div class="toast" id="toast"><div style="width: 32px; height: 32px; border-radius: 8px; background: var(--success); display: flex; align-items: center; justify-content: center; color: white;"><i class="fas fa-check"></i></div><span id="toastMessage">تم الإضافة</span></div>
     <div class="voice-modal" id="voiceModal"><div class="voice-circle"><i class="fas fa-microphone"></i></div><div style="font-size: 1.25rem; font-weight: 700; color: var(--text-secondary);">جاري الاستماع...</div><button onclick="stopVoiceInput()" style="padding: 0.75rem 1.5rem; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 100px; font-family: 'Tajawal'; font-weight: 700; cursor: pointer;">إلغاء</button></div>
 
-    <!-- الصفحة الرئيسية: حقل إضافة + القائمة النشطة -->
+    <!-- الصفحة الرئيسية -->
     <div class="page active" id="homePage">
         <div class="home-container">
             <div class="home-header-section">
                 <h1 class="home-logo">قائمة التسوق الذكية</h1>
-                <p class="home-subtitle">أضف عناصرك بسرعة أو اختر من الفئات</p>
+                <p class="home-subtitle">أضف عناصرك بسرعة وشارك القائمة</p>
             </div>
             
-            <!-- حقل إضافة مخصص (كتابة العنصر) في الصفحة الرئيسية -->
             <div class="quick-add-input-section">
                 <div class="quick-input-wrapper">
                     <input type="text" id="homeQuickItem" class="quick-input" placeholder="اكتب عنصراً... مثال: أكواب ورقية، خبز، شامبو" onkeypress="handleHomeQuickAdd(event)">
@@ -409,11 +424,14 @@
                 </div>
                 <div id="homeActiveList"></div>
                 <button class="view-all-btn" onclick="navigateToList()">إدارة القائمة الكاملة <i class="fas fa-arrow-left"></i></button>
+                <button class="share-whatsapp-btn" onclick="shareListToWhatsApp()">
+                    <i class="fab fa-whatsapp"></i> مشاركة القائمة عبر واتساب
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- صفحة الإضافات السريعة بالفئات والأيقونات -->
+    <!-- صفحة الإضافات بالفئات -->
     <div class="page" id="quickPage">
         <div class="quick-container">
             <div class="quick-header">
@@ -421,7 +439,6 @@
                 <p style="color: var(--text-muted);">اختر من القوائم أدناه</p>
             </div>
             <div class="categories-section">
-                <!-- خضروات وفواكه -->
                 <div class="category-card">
                     <div class="category-header" onclick="toggleCategory('veg')">
                         <div class="category-icon veg">🥬</div>
@@ -430,7 +447,6 @@
                     </div>
                     <div class="category-items" id="items-veg"><div class="item-grid" id="vegGrid"></div></div>
                 </div>
-                <!-- الطعام -->
                 <div class="category-card">
                     <div class="category-header" onclick="toggleCategory('food')">
                         <div class="category-icon food">🍔</div>
@@ -439,7 +455,6 @@
                     </div>
                     <div class="category-items" id="items-food"><div class="item-grid" id="foodGrid"></div></div>
                 </div>
-                <!-- الصحة والجمال -->
                 <div class="category-card">
                     <div class="category-header" onclick="toggleCategory('health')">
                         <div class="category-icon health">💊</div>
@@ -448,7 +463,6 @@
                     </div>
                     <div class="category-items" id="items-health"><div class="item-grid" id="healthGrid"></div></div>
                 </div>
-                <!-- المنزل والمستلزمات -->
                 <div class="category-card">
                     <div class="category-header" onclick="toggleCategory('home')">
                         <div class="category-icon home">🏠</div>
@@ -461,7 +475,7 @@
         </div>
     </div>
 
-    <!-- صفحة تفاصيل القائمة (جميع العناصر) -->
+    <!-- صفحة جميع العناصر -->
     <div class="page" id="listPage">
         <div class="page-header"><h2 class="page-title">جميع العناصر</h2><div class="progress-container"><div class="progress-header"><span>تقدم التسوق</span><span id="progressText">0%</span></div><div class="progress-bar"><div class="progress-fill" id="progressBar" style="width: 0%"></div></div></div></div>
         <div class="items-container" id="itemsList"></div>
@@ -476,15 +490,12 @@
     <script>
         let items = JSON.parse(localStorage.getItem('smartlist_items')) || [];
         let recognition = null;
-        let currentVoiceTarget = null; // 'home' or 'quick'
+        let currentVoiceTarget = null;
         
-        const categoryTranslations = { 'veg': '🥬 خضروات وفواكه', 'food': '🍔 طعام', 'health': '💊 صحة', 'home': '🏠 منزل', 'other': '📦 أخرى' };
-        
-        // أيقونات ذكية للعناصر حسب الاسم (لإضافة أيقونات تلقائية)
         function getIconForItem(name) {
             const lowerName = name.toLowerCase();
-            if(lowerName.includes('خبز') || lowerName.includes('توست')) return '🍞';
-            if(lowerName.includes('حليب') || lowerName.includes('لبن')) return '🥛';
+            if(lowerName.includes('خبز')) return '🍞';
+            if(lowerName.includes('حليب')) return '🥛';
             if(lowerName.includes('بيض')) return '🥚';
             if(lowerName.includes('جبن')) return '🧀';
             if(lowerName.includes('دجاج')) return '🍗';
@@ -493,26 +504,20 @@
             if(lowerName.includes('قهوة')) return '☕';
             if(lowerName.includes('عصير')) return '🧃';
             if(lowerName.includes('ماء')) return '💧';
-            if(lowerName.includes('موز') || lowerName.includes('تفاح') || lowerName.includes('برتقال') || lowerName.includes('فراولة')) return '🍎';
-            if(lowerName.includes('طماطم') || lowerName.includes('خيار') || lowerName.includes('جزر') || lowerName.includes('بصل')) return '🥕';
+            if(lowerName.includes('موز') || lowerName.includes('تفاح') || lowerName.includes('برتقال')) return '🍎';
+            if(lowerName.includes('طماطم') || lowerName.includes('خيار')) return '🥕';
             if(lowerName.includes('كزبرة') || lowerName.includes('بقدونس')) return '🌿';
-            if(lowerName.includes('سبانخ') || lowerName.includes('خس')) return '🥬';
-            if(lowerName.includes('بطاطس')) return '🥔';
-            if(lowerName.includes('شامبو') || lowerName.includes('بلسم')) return '🧴';
-            if(lowerName.includes('معجون') || lowerName.includes('فرشاة')) return '🦷';
+            if(lowerName.includes('شامبو')) return '🧴';
+            if(lowerName.includes('معجون')) return '🦷';
             if(lowerName.includes('فيتامين')) return '💊';
-            if(lowerName.includes('كريم')) return '🧴';
             if(lowerName.includes('صابون')) return '🧼';
             if(lowerName.includes('مناديل')) return '🧻';
-            if(lowerName.includes('أكواب') || lowerName.includes('كاسات')) return '🥤';
-            if(lowerName.includes('أكياس زبالة') || lowerName.includes('كيس')) return '🗑️';
-            if(lowerName.includes('مسحوق') || lowerName.includes('غسيل')) return '🧴';
+            if(lowerName.includes('أكواب')) return '🥤';
+            if(lowerName.includes('أكياس زبالة')) return '🗑️';
             if(lowerName.includes('لمبة')) return '💡';
-            if(lowerName.includes('بطارية')) return '🔋';
             return '📌';
         }
         
-        // بيانات العناصر مع أيقونات مخصصة (بدون أسعار)
         const itemsData = {
             veg: [
                 { name: 'كزبرة', icon: '🌿' }, { name: 'بقدونس', icon: '🌿' }, { name: 'خس', icon: '🥬' }, { name: 'سبانخ', icon: '🥬' },
@@ -525,25 +530,20 @@
             food: [
                 { name: 'زبادي', icon: '🥛' }, { name: 'زيت طبخ', icon: '🫒' }, { name: 'حليب', icon: '🥛' }, { name: 'خبز أسمر', icon: '🍞' },
                 { name: 'بيض', icon: '🥚' }, { name: 'جبنة بيضاء', icon: '🧀' }, { name: 'دجاج', icon: '🍗' }, { name: 'لحم مفروم', icon: '🥩' },
-                { name: 'أرز بسمتي', icon: '🍚' }, { name: 'مكرونة', icon: '🍝' }, { name: 'عدس', icon: '🥣' }, { name: 'قهوة', icon: '☕' },
+                { name: 'أرز', icon: '🍚' }, { name: 'مكرونة', icon: '🍝' }, { name: 'عدس', icon: '🥣' }, { name: 'قهوة', icon: '☕' },
                 { name: 'شاي', icon: '🍵' }, { name: 'عسل', icon: '🍯' }, { name: 'صلصة', icon: '🥫' }, { name: 'زعتر', icon: '🌿' },
-                { name: 'طحينة', icon: '🥣' }, { name: 'عصير برتقال', icon: '🧃' }, { name: 'ماء معدني', icon: '💧' }, { name: 'حلاوة طحينية', icon: '🍬' },
-                { name: 'زبدة', icon: '🧈' }, { name: 'كاتشب', icon: '🍅' }
+                { name: 'طحينة', icon: '🥣' }, { name: 'عصير', icon: '🧃' }, { name: 'ماء', icon: '💧' }, { name: 'زبدة', icon: '🧈' }
             ],
             health: [
                 { name: 'شامبو', icon: '🧴' }, { name: 'معجون أسنان', icon: '🦷' }, { name: 'فرشاة أسنان', icon: '🪥' }, { name: 'فيتامينات', icon: '💊' },
-                { name: 'كريم ترطيب', icon: '🧴' }, { name: 'مطهر', icon: '🧼' }, { name: 'مسكن ألم', icon: '💊' }, { name: 'واقي شمس', icon: '☀️' },
-                { name: 'فيتامين سي', icon: '🍊' }, { name: 'زيت شعر', icon: '💧' }, { name: 'لوشن جسم', icon: '🧴' }, { name: 'أدوية برد', icon: '🤧' },
-                { name: 'مكمل غذائي', icon: '💪' }, { name: 'صابون غسول', icon: '🧼' }, { name: 'أدوات حلاقة', icon: '🪒' }, { name: 'كريم عين', icon: '👁️' }
+                { name: 'كريم ترطيب', icon: '🧴' }, { name: 'مطهر', icon: '🧼' }, { name: 'مسكن', icon: '💊' }, { name: 'واقي شمس', icon: '☀️' },
+                { name: 'زيت شعر', icon: '💧' }, { name: 'لوشن', icon: '🧴' }, { name: 'مكمل غذائي', icon: '💪' }, { name: 'صابون', icon: '🧼' }
             ],
             home: [
                 { name: 'صابون سائل', icon: '🧼' }, { name: 'مناديل ورقية', icon: '🧻' }, { name: 'مسحوق غسيل', icon: '🧴' }, { name: 'معطر جو', icon: '🌸' },
-                { name: 'لمبات LED', icon: '💡' }, { name: 'بطاريات', icon: '🔋' }, { name: 'سلة مهملات', icon: '🗑️' }, { name: 'منظف زجاج', icon: '🪟' },
-                { name: 'إسفنج', icon: '🧽' }, { name: 'قفازات مطاط', icon: '🧤' }, { name: 'فرشاة مرحاض', icon: '🧹' }, { name: 'منفضة', icon: '🪶' },
-                { name: 'ممسحة', icon: '🧹' }, { name: 'وعاء طعام', icon: '🥣' }, { name: 'مزهرية', icon: '🏺' }, { name: 'سجادة', icon: '🧶' },
-                { name: 'معلقات حائط', icon: '🖼️' }, { name: 'سماد نباتات', icon: '🌱' },
-                { name: 'أكواب ورقية', icon: '🥤' }, { name: 'أكياس زبالة', icon: '🗑️' }, { name: 'أطباق بلاستيك', icon: '🍽️' }, { name: 'قصدير ألمنيوم', icon: '🥫' },
-                { name: 'مناديل مبللة', icon: '🧻' }, { name: 'معطر ملابس', icon: '🌸' }
+                { name: 'لمبات', icon: '💡' }, { name: 'بطاريات', icon: '🔋' }, { name: 'سلة مهملات', icon: '🗑️' }, { name: 'منظف زجاج', icon: '🪟' },
+                { name: 'إسفنج', icon: '🧽' }, { name: 'قفازات', icon: '🧤' }, { name: 'ممسحة', icon: '🧹' }, { name: 'أكواب ورقية', icon: '🥤' },
+                { name: 'أكياس زبالة', icon: '🗑️' }, { name: 'أطباق بلاستيك', icon: '🍽️' }, { name: 'قصدير', icon: '🥫' }, { name: 'مناديل مبللة', icon: '🧻' }
             ]
         };
 
@@ -551,14 +551,9 @@
             for(let cat in itemsData) {
                 const grid = document.getElementById(cat + 'Grid');
                 if(grid) {
-                    grid.innerHTML = itemsData[cat].map(item => `<button class="item-btn" onclick="addFromCategory('${item.name}', '${cat}', '${item.icon}')"><i class="fas ${getIconClass(item.icon)}"></i> ${item.name}</button>`).join('');
+                    grid.innerHTML = itemsData[cat].map(item => `<button class="item-btn" onclick="addFromCategory('${item.name}', '${cat}', '${item.icon}')"><span style="font-size:1.1rem">${item.icon}</span> ${item.name}</button>`).join('');
                 }
             }
-        }
-        
-        function getIconClass(emoji) {
-            // mapping بسيط لأيقونات FontAwesome (اختياري) لكن نرجع فئة فارغة ونعرض الإيموجي مباشرة
-            return '';
         }
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -582,14 +577,12 @@
         }
 
         function navigateToList() { showPage('list'); }
-
         function toggleCategory(category) {
-            const itemsDiv = document.getElementById('items-' + category);
+            const div = document.getElementById('items-' + category);
             const arrow = document.getElementById('arrow-' + category);
-            if(itemsDiv && arrow) { itemsDiv.classList.toggle('show'); arrow.classList.toggle('expanded'); }
+            if(div && arrow) { div.classList.toggle('show'); arrow.classList.toggle('expanded'); }
         }
 
-        // إضافة عنصر من الفئات مع أيقونة
         function addFromCategory(name, category, icon) {
             const item = { id: Date.now(), name, category, completed: false, addedAt: new Date().toISOString(), icon: icon || getIconForItem(name) };
             items.unshift(item);
@@ -599,13 +592,11 @@
             showToast(`✅ تم إضافة ${name}`);
         }
         
-        // إضافة من الحقل الرئيسي
         function addHomeQuickItem() {
             const input = document.getElementById('homeQuickItem');
             const text = input.value.trim();
             if(text === "") { showToast("✏️ الرجاء كتابة اسم العنصر"); return; }
-            const icon = getIconForItem(text);
-            addFromCategory(text, 'other', icon);
+            addFromCategory(text, 'other', getIconForItem(text));
             input.value = "";
         }
         
@@ -616,7 +607,7 @@
             const activeItems = items.filter(i => !i.completed).slice(0, 6);
             document.getElementById('homeActiveCount').textContent = items.filter(i => !i.completed).length;
             if(activeItems.length === 0) {
-                container.innerHTML = '<div class="empty-state"><i class="fas fa-shopping-basket" style="font-size: 2rem; opacity: 0.3;"></i><p>لا توجد عناصر نشطة</p><p style="font-size:0.85rem">أضف عنصراً أعلاه أو من صفحة الفئات</p></div>';
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-shopping-basket" style="font-size: 2rem; opacity: 0.3;"></i><p>لا توجد عناصر نشطة</p></div>';
                 return;
             }
             container.innerHTML = activeItems.map(item => `
@@ -639,7 +630,7 @@
 
         function renderItems() {
             const container = document.getElementById('itemsList');
-            if(items.length === 0) { container.innerHTML = '<div class="empty-state"><i class="fas fa-clipboard-list" style="font-size: 3rem; opacity: 0.3;"></i><p>القائمة فارغة</p><p>أضف عناصر من الصفحة الرئيسية أو الفئات</p></div>'; updateProgress(); return; }
+            if(items.length === 0) { container.innerHTML = '<div class="empty-state"><i class="fas fa-clipboard-list" style="font-size: 3rem; opacity: 0.3;"></i><p>القائمة فارغة</p></div>'; updateProgress(); return; }
             container.innerHTML = items.map(item => `
                 <div class="item-card">
                     <div class="item-checkbox ${item.completed ? 'checked' : ''}" onclick="toggleComplete(${item.id})"><i class="fas fa-check"></i></div>
@@ -661,7 +652,23 @@
             if(bar) bar.style.width = percent+'%'; if(txt) txt.textContent = percent+'%';
         }
 
-        // التعرف على الصوت
+        // مشاركة القائمة عبر واتساب - رسالة واضحة باستخدام إيموجي ✅ و ⬜
+        function shareListToWhatsApp() {
+            if(items.length === 0) {
+                showToast("⚠️ لا توجد عناصر للمشاركة");
+                return;
+            }
+            let message = "";
+            items.forEach((item) => {
+                const icon = item.icon || getIconForItem(item.name);
+                const statusEmoji = item.completed ? "✅" : "⬜";
+                message += `${statusEmoji} ${icon} ${item.name}\n`;
+            });
+            const encodedMessage = encodeURIComponent(message.trim());
+            const whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
         function initVoiceRecognition() { 
             if('webkitSpeechRecognition' in window) { 
                 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition; 
