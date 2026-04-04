@@ -4,20 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#ffffff">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>قائمة التسوق الذكية - AI Powered</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>قائمة التسوق الذكية | خضروات وفواكه | طعام | صحة | منزل</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --primary: #2563eb;
             --primary-light: #3b82f6;
-            --primary-dark: #1d4ed8;
             --secondary: #7c3aed;
             --accent: #f59e0b;
             --success: #10b981;
             --danger: #ef4444;
-            --warning: #f59e0b;
             --bg-primary: #ffffff;
             --bg-secondary: #f8fafc;
             --bg-tertiary: #f1f5f9;
@@ -26,37 +23,28 @@
             --text-secondary: #475569;
             --text-muted: #94a3b8;
             --border: #e2e8f0;
-            --border-light: #f1f5f9;
             --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
             --gradient-primary: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
-            --gradient-secondary: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%);
-            --gradient-accent: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
-            --radius-sm: 8px;
+            --gradient-veg: linear-gradient(135deg, #10b981 0%, #059669 100%);
             --radius: 12px;
-            --radius-lg: 16px;
             --radius-xl: 20px;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        html { scroll-behavior: smooth; }
         body {
-            font-family: 'Noto Sans Arabic', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Tajawal', sans-serif;
             background: var(--bg-secondary);
             min-height: 100vh;
             color: var(--text-primary);
-            overflow-x: hidden;
             line-height: 1.6;
         }
         .bg-pattern {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1;
-            background: 
-                radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.08) 0px, transparent 50%),
-                radial-gradient(at 100% 0%, rgba(124, 58, 237, 0.08) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(245, 158, 11, 0.05) 0px, transparent 50%),
-                radial-gradient(at 0% 100%, rgba(16, 185, 129, 0.05) 0px, transparent 50%);
+            background: radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.08) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(124, 58, 237, 0.08) 0px, transparent 50%);
         }
         .nav-bar {
             position: fixed;
@@ -66,9 +54,7 @@
             padding: 0.75rem 1.5rem calc(0.75rem + env(safe-area-inset-bottom));
             display: flex;
             justify-content: space-around;
-            align-items: center;
             z-index: 1000;
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.05);
         }
         .nav-item {
             display: flex;
@@ -76,188 +62,165 @@
             align-items: center;
             gap: 0.25rem;
             color: var(--text-muted);
-            text-decoration: none;
             font-size: 0.75rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
+            font-weight: 700;
             padding: 0.5rem 1rem;
             border-radius: var(--radius);
+            cursor: pointer;
         }
-        .nav-item i { font-size: 1.25rem; }
-        .nav-item.active { 
-            color: var(--primary); 
-            background: rgba(37, 99, 235, 0.1);
-        }
-        .page {
-            display: none;
-            min-height: 100vh;
-            padding-bottom: 100px;
-            animation: fadeIn 0.4s ease-out;
-        }
-        .page.active { display: block; }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .home-header { 
-            padding: 2rem 1.5rem; 
-            text-align: center; 
-            background: var(--bg-primary);
-            border-bottom: 1px solid var(--border);
-        }
-        .logo-main {
-            font-size: 2rem;
-            font-weight: 800;
+        .nav-item.active { color: var(--primary); background: rgba(37, 99, 235, 0.1); }
+        .page { display: none; min-height: 100vh; padding-bottom: 100px; }
+        .page.active { display: block; animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .home-container { padding: 1.5rem; max-width: 600px; margin: 0 auto; }
+        .home-header-section { text-align: center; padding: 2rem 0; }
+        .home-logo {
+            font-size: 2.25rem;
+            font-weight: 900;
             background: var(--gradient-primary);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 0.5rem;
-            letter-spacing: -0.5px;
         }
-        .tagline { 
-            color: var(--text-secondary); 
-            font-size: 1rem; 
-            font-weight: 400; 
-        }
-        .ai-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: rgba(37, 99, 235, 0.1);
-            border: 1px solid rgba(37, 99, 235, 0.2);
-            padding: 0.5rem 1rem;
-            border-radius: 100px;
-            font-size: 0.875rem;
-            color: var(--primary);
-            margin-top: 1rem;
-            font-weight: 600;
-        }
-        .ai-badge i { animation: pulse 2s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        .quick-actions {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-        }
-        .action-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-xl);
-            padding: 1.5rem;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            box-shadow: var(--shadow-sm);
-        }
-        .action-card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow);
-            border-color: var(--primary-light);
-        }
-        .action-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 3px;
-            background: var(--gradient-primary);
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
-        }
-        .action-card:hover::before { transform: scaleX(1); }
-        .action-card:active { transform: scale(0.98); }
-        .action-icon {
-            width: 56px; height: 56px;
-            border-radius: var(--radius-lg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            margin: 0 auto 1rem;
-            background: var(--gradient-primary);
-            color: white;
-            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
-        }
-        .action-card.voice .action-icon { 
-            background: var(--gradient-secondary); 
-            box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
-        }
-        .action-card.scan .action-icon { 
-            background: var(--gradient-accent); 
-            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
-        }
-        .action-card.suggestions .action-icon { 
-            background: linear-gradient(135deg, #10b981, #34d399); 
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-        }
-        .action-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.25rem; }
-        .action-subtitle { font-size: 0.75rem; color: var(--text-muted); }
-        .stats-overview { padding: 0 1.5rem; margin-bottom: 2rem; }
+        .home-subtitle { color: var(--text-secondary); font-size: 1rem; font-weight: 500; margin-top: 0.5rem; }
+        
+        .categories-section { margin-bottom: 1.5rem; }
         .section-title {
             font-size: 1.125rem;
-            font-weight: 700;
+            font-weight: 800;
             margin-bottom: 1rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            color: var(--text-primary);
         }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.75rem;
-        }
-        .stat-box {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 1rem;
-            text-align: center;
-            box-shadow: var(--shadow-sm);
-        }
-        .stat-number {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--primary);
-            display: block;
-        }
-        .stat-label { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem; font-weight: 500; }
-        .recent-section { padding: 0 1.5rem; }
-        .recent-list {
+        .category-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: var(--radius-xl);
+            margin-bottom: 0.75rem;
             overflow: hidden;
             box-shadow: var(--shadow-sm);
         }
-        .recent-item {
+        .category-header {
             display: flex;
             align-items: center;
             gap: 1rem;
             padding: 1rem 1.25rem;
-            border-bottom: 1px solid var(--border-light);
-            transition: background 0.2s ease;
             cursor: pointer;
+            transition: all 0.2s ease;
         }
-        .recent-item:last-child { border-bottom: none; }
-        .recent-item:hover { background: var(--bg-tertiary); }
-        .recent-item:active { background: rgba(37, 99, 235, 0.05); }
-        .recent-icon {
-            width: 44px; height: 44px;
+        .category-header:hover { background: var(--bg-tertiary); }
+        .category-icon {
+            width: 48px; height: 48px;
             border-radius: var(--radius);
-            background: rgba(37, 99, 235, 0.1);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.25rem;
-            color: var(--primary);
+            font-size: 1.5rem;
         }
-        .recent-info { flex: 1; }
-        .recent-name { font-weight: 600; font-size: 0.9375rem; }
-        .recent-meta { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.125rem; }
-        .recent-price { font-weight: 700; color: var(--accent); font-size: 1rem; }
+        .category-icon.food { background: rgba(16, 185, 129, 0.1); }
+        .category-icon.veg { background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(5, 150, 105, 0.1)); }
+        .category-icon.home { background: rgba(245, 158, 11, 0.1); }
+        .category-icon.health { background: rgba(239, 68, 68, 0.1); }
+        .category-info { flex: 1; }
+        .category-name { font-weight: 800; font-size: 1rem; }
+        .category-count { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
+        .category-arrow {
+            color: var(--text-muted);
+            transition: transform 0.3s ease;
+        }
+        .category-arrow.expanded { transform: rotate(180deg); }
+        .category-items {
+            display: none;
+            padding: 0 1.25rem 1rem;
+            border-top: 1px solid var(--border);
+        }
+        .category-items.show { display: block; }
+        .item-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+            padding-top: 1rem;
+        }
+        .item-btn {
+            padding: 0.75rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-family: 'Tajawal', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+        .item-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .home-list-section {
+            background: var(--bg-card);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+        .home-list-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.25rem;
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(124, 58, 237, 0.05) 100%);
+            border-bottom: 1px solid var(--border);
+        }
+        .home-list-title { font-weight: 800; font-size: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+        .home-list-count {
+            background: var(--primary);
+            color: white;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 100px;
+            font-weight: 800;
+        }
+        .home-list-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+        }
+        .home-item-checkbox {
+            width: 24px; height: 24px;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .home-item-checkbox.checked { background: var(--success); border-color: var(--success); }
+        .home-item-checkbox i { color: white; font-size: 0.75rem; opacity: 0; }
+        .home-item-checkbox.checked i { opacity: 1; }
+        .home-item-info { flex: 1; }
+        .home-item-name { font-weight: 700; font-size: 0.95rem; }
+        .home-item-name.completed { text-decoration: line-through; color: var(--text-muted); }
+        .home-item-price { font-weight: 800; color: var(--accent); }
+        .view-all-btn {
+            width: 100%;
+            padding: 1rem;
+            text-align: center;
+            background: var(--bg-tertiary);
+            border: none;
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 0.9rem;
+            cursor: pointer;
+            font-family: 'Tajawal', sans-serif;
+        }
+        
         .page-header {
             padding: 1.5rem;
             background: var(--bg-primary);
@@ -266,361 +229,92 @@
             top: 0;
             z-index: 100;
         }
-        .page-title { font-size: 1.5rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .page-title { font-size: 1.5rem; font-weight: 900; }
         .progress-container { margin-top: 1rem; }
         .progress-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.5rem;
             font-size: 0.875rem;
             color: var(--text-secondary);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
         }
-        .progress-bar {
-            height: 8px;
-            background: var(--bg-tertiary);
-            border-radius: 100px;
-            overflow: hidden;
-        }
+        .progress-bar { height: 8px; background: var(--bg-tertiary); border-radius: 100px; overflow: hidden; }
         .progress-fill {
             height: 100%;
             background: var(--gradient-primary);
             border-radius: 100px;
-            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
+            transition: width 0.6s ease;
         }
-        .progress-fill::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            animation: shimmer 2s infinite;
-        }
-        @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
-        .ai-input-section {
-            padding: 1.5rem;
-            background: linear-gradient(180deg, rgba(37, 99, 235, 0.05) 0%, transparent 100%);
-        }
+        .ai-input-section { padding: 1.5rem; }
         .input-wrapper { position: relative; margin-bottom: 1rem; }
         .smart-input {
             width: 100%;
             background: var(--bg-primary);
             border: 2px solid var(--border);
-            border-radius: var(--radius-lg);
+            border-radius: var(--radius-xl);
             padding: 1rem 3.5rem 1rem 1.25rem;
-            color: var(--text-primary);
             font-size: 1rem;
-            font-family: inherit;
-            transition: all 0.3s ease;
-            outline: none;
+            font-family: 'Tajawal', sans-serif;
         }
-        .smart-input:focus { 
-            border-color: var(--primary); 
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-        }
+        .smart-input:focus { border-color: var(--primary); outline: none; }
         .input-actions {
             position: absolute;
             left: 0.5rem;
             top: 50%;
             transform: translateY(-50%);
-            display: flex;
-            gap: 0.25rem;
         }
         .icon-btn {
             width: 36px; height: 36px;
-            border-radius: var(--radius-sm);
+            border-radius: var(--radius);
             border: none;
             background: transparent;
             color: var(--text-muted);
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-            font-size: 1rem;
-        }
-        .icon-btn:hover { 
-            background: var(--bg-tertiary); 
-            color: var(--primary); 
-        }
-        .icon-btn.voice-active { 
-            background: var(--danger); 
-            color: white; 
-            animation: pulse 1s infinite; 
-        }
-        .ai-suggestions {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: nowrap;
-            overflow-x: auto;
-            padding-bottom: 0.5rem;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-        }
-        .ai-suggestions::-webkit-scrollbar { display: none; }
-        .ai-chip {
-            background: rgba(37, 99, 235, 0.1);
-            border: 1px solid rgba(37, 99, 235, 0.2);
-            color: var(--primary);
-            padding: 0.5rem 1rem;
-            border-radius: 100px;
-            font-size: 0.875rem;
-            font-weight: 600;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .ai-chip:hover { 
-            background: rgba(37, 99, 235, 0.2); 
-            transform: translateY(-2px); 
-        }
-        .smart-form {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-xl);
-            padding: 1.25rem;
-            margin: 0 1.5rem 1.5rem;
-            display: none;
-            animation: slideDown 0.3s ease-out;
-            box-shadow: var(--shadow);
-        }
-        .smart-form.show { display: block; }
-        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-        .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
-        .form-label {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .form-input, .form-select {
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 0.875rem 1rem;
-            color: var(--text-primary);
-            font-size: 0.9375rem;
-            font-family: inherit;
-            outline: none;
-            transition: all 0.2s ease;
-        }
-        .form-input:focus, .form-select:focus { 
-            border-color: var(--primary); 
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-        }
-        .ai-detected { 
-            border-color: var(--success) !important; 
-            background: rgba(16, 185, 129, 0.05) !important; 
-        }
-        .add-item-btn {
-            width: 100%;
-            background: var(--gradient-primary);
-            border: none;
-            border-radius: var(--radius);
-            padding: 1rem;
-            color: white;
-            font-weight: 700;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
-        }
-        .add-item-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
-        }
-        .add-item-btn:active { transform: scale(0.98); }
-        .filters-container { padding: 0 1.5rem; margin-bottom: 1rem; }
-        .filters-scroll {
-            display: flex;
-            gap: 0.5rem;
-            overflow-x: auto;
-            padding-bottom: 0.5rem;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-        }
-        .filters-scroll::-webkit-scrollbar { display: none; }
-        .filter-pill {
-            background: var(--bg-primary);
-            border: 1px solid var(--border);
-            color: var(--text-secondary);
-            padding: 0.625rem 1.25rem;
-            border-radius: 100px;
-            font-size: 0.875rem;
-            font-weight: 600;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: all 0.2s ease;
-        }
-        .filter-pill.active { 
-            background: var(--primary); 
-            color: white; 
-            border-color: var(--primary);
-            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
         }
         .items-container { padding: 0 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; }
         .item-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
+            border-radius: var(--radius);
             padding: 1rem;
             display: flex;
             align-items: center;
             gap: 1rem;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            box-shadow: var(--shadow-sm);
-        }
-        .item-card:hover {
-            box-shadow: var(--shadow);
-            transform: translateY(-1px);
-        }
-        .item-card::before {
-            content: '';
-            position: absolute;
-            right: 0; top: 0; bottom: 0;
-            width: 4px;
-            background: var(--primary);
-            transform: scaleY(0);
-            transition: transform 0.3s ease;
-        }
-        .item-card:hover::before { transform: scaleY(1); }
-        .item-card.completed { 
-            opacity: 0.6; 
-            background: var(--bg-tertiary);
-        }
-        .item-card.completed .item-name { 
-            text-decoration: line-through; 
-            color: var(--text-muted); 
         }
         .item-checkbox {
             width: 28px; height: 28px;
             border: 2px solid var(--border);
             border-radius: 8px;
-            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s ease;
-            flex-shrink: 0;
+            cursor: pointer;
         }
-        .item-checkbox.checked { 
-            background: var(--success); 
-            border-color: var(--success); 
-        }
-        .item-checkbox i {
-            color: white;
-            font-size: 0.875rem;
-            opacity: 0;
-            transform: scale(0);
-            transition: all 0.2s ease;
-        }
-        .item-checkbox.checked i { opacity: 1; transform: scale(1); }
-        .item-content { flex: 1; min-width: 0; }
-        .item-header {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 0.25rem;
-        }
-        .item-name {
-            font-weight: 700;
-            font-size: 1rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .item-category {
-            font-size: 0.75rem;
-            padding: 0.25rem 0.5rem;
-            border-radius: 6px;
-            background: rgba(37, 99, 235, 0.1);
-            color: var(--primary);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .item-category.food { background: rgba(16, 185, 129, 0.1); color: var(--success); }
-        .item-category.tech { background: rgba(124, 58, 237, 0.1); color: var(--secondary); }
-        .item-category.clothing { background: rgba(236, 72, 153, 0.1); color: #ec4899; }
-        .item-category.home { background: rgba(245, 158, 11, 0.1); color: var(--accent); }
-        .item-category.health { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
-        .item-footer {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            font-size: 0.875rem;
-            color: var(--text-muted);
-        }
-        .item-price { 
-            color: var(--accent); 
-            font-weight: 800; 
-            font-size: 1rem; 
-        }
-        .ai-indicator {
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-            font-size: 0.75rem;
-            color: var(--primary);
-            font-weight: 600;
-        }
-        .item-actions { display: flex; gap: 0.5rem; }
+        .item-checkbox.checked { background: var(--success); border-color: var(--success); }
+        .item-checkbox i { color: white; font-size: 0.875rem; opacity: 0; }
+        .item-checkbox.checked i { opacity: 1; }
+        .item-content { flex: 1; }
+        .item-name { font-weight: 800; font-size: 1rem; }
+        .item-name.completed { text-decoration: line-through; color: var(--text-muted); }
+        .item-price { color: var(--accent); font-weight: 800; }
         .action-icon-btn {
             width: 36px; height: 36px;
-            border-radius: var(--radius-sm);
+            border-radius: var(--radius);
             border: none;
             background: var(--bg-tertiary);
             color: var(--text-muted);
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-            font-size: 0.875rem;
         }
-        .action-icon-btn:hover { 
-            background: rgba(239, 68, 68, 0.1); 
-            color: var(--danger); 
-        }
+        
         .insights-grid { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
         .insight-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: var(--radius-xl);
             padding: 1.5rem;
-            position: relative;
-            overflow: hidden;
-            box-shadow: var(--shadow-sm);
         }
-        .insight-card::before {
-            content: '';
-            position: absolute;
-            top: 0; right: 0; width: 100%; height: 3px;
-            background: var(--gradient-primary);
-        }
-        .insight-header {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 1rem;
-        }
+        .insight-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
         .insight-icon {
             width: 44px; height: 44px;
             border-radius: var(--radius);
@@ -630,57 +324,26 @@
             justify-content: center;
             color: white;
             font-size: 1.25rem;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
         }
-        .insight-title { font-weight: 700; font-size: 1.125rem; }
-        .insight-subtitle { font-size: 0.875rem; color: var(--text-muted); }
-        .prediction-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-            margin-top: 1rem;
-        }
-        .prediction-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0.75rem;
-            background: var(--bg-tertiary);
-            border-radius: var(--radius);
-        }
-        .prediction-name {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 600;
-        }
-        .confidence-bar {
-            width: 100px; height: 6px;
-            background: var(--border);
-            border-radius: 100px;
-            overflow: hidden;
-        }
-        .confidence-fill {
-            height: 100%;
-            background: var(--gradient-primary);
-            border-radius: 100px;
-            transition: width 0.6s ease;
-        }
-        .empty-state { 
-            text-align: center; 
-            padding: 4rem 2rem; 
-            color: var(--text-muted); 
+        .insight-title { font-weight: 900; font-size: 1.125rem; }
+        
+        .toast {
+            position: fixed;
+            top: 20px; right: 50%;
+            transform: translateX(50%) translateY(-100px);
             background: var(--bg-card);
-            border-radius: var(--radius-xl);
             border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            z-index: 3000;
+            opacity: 0;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-lg);
         }
-        .empty-icon { font-size: 4rem; margin-bottom: 1rem; opacity: 0.5; }
-        .empty-title { 
-            font-size: 1.25rem; 
-            font-weight: 700; 
-            color: var(--text-primary); 
-            margin-bottom: 0.5rem; 
-        }
+        .toast.show { transform: translateX(50%) translateY(0); opacity: 1; }
         .voice-modal {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -703,620 +366,224 @@
             font-size: 3rem;
             color: white;
             animation: voicePulse 1.5s infinite;
-            box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.7);
         }
         @keyframes voicePulse {
             0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.7); }
             50% { transform: scale(1.1); box-shadow: 0 0 0 30px rgba(37, 99, 235, 0); }
         }
-        .voice-text { 
-            font-size: 1.25rem; 
-            color: var(--text-secondary); 
-            font-weight: 600;
-        }
-        .toast {
-            position: fixed;
-            top: 20px; right: 50%;
-            transform: translateX(50%) translateY(-100px);
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 1rem 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            z-index: 3000;
-            opacity: 0;
-            transition: all 0.3s ease;
-            box-shadow: var(--shadow-lg);
-        }
-        .toast.show { transform: translateX(50%) translateY(0); opacity: 1; }
-        .toast-icon {
-            width: 32px; height: 32px;
-            border-radius: 8px;
-            background: var(--success);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-        }
-        @media (min-width: 768px) {
-            .quick-actions { grid-template-columns: repeat(4, 1fr); }
-        }
     </style>
 </head>
 <body>
     <div class="bg-pattern"></div>
-    <div class="toast" id="toast">
-        <div class="toast-icon"><i class="fas fa-check"></i></div>
-        <span id="toastMessage">تم الإضافة</span>
-    </div>
-    <div class="voice-modal" id="voiceModal">
-        <div class="voice-circle"><i class="fas fa-microphone"></i></div>
-        <div class="voice-text">جاري الاستماع...</div>
-        <button class="filter-pill" onclick="stopVoiceInput()" style="margin-top: 1rem;">إلغاء</button>
-    </div>
+    <div class="toast" id="toast"><div style="width: 32px; height: 32px; border-radius: 8px; background: var(--success); display: flex; align-items: center; justify-content: center; color: white;"><i class="fas fa-check"></i></div><span id="toastMessage">تم الإضافة</span></div>
+    <div class="voice-modal" id="voiceModal"><div class="voice-circle"><i class="fas fa-microphone"></i></div><div style="font-size: 1.25rem; font-weight: 700; color: var(--text-secondary);">جاري الاستماع...</div><button onclick="stopVoiceInput()" style="padding: 0.75rem 1.5rem; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 100px; font-family: 'Tajawal'; font-weight: 700; cursor: pointer;">إلغاء</button></div>
 
-    <!-- Home Page -->
     <div class="page active" id="homePage">
-        <div class="home-header">
-            <h1 class="logo-main">قائمة التسوق الذكية</h1>
-            <p class="tagline">مساعد التسوق المدعوم بالذكاء الاصطناعي</p>
-            <div class="ai-badge"><i class="fas fa-robot"></i><span>ميزات الذكاء الاصطناعي نشطة</span></div>
-        </div>
-        <div class="quick-actions">
-            <div class="action-card" onclick="navigateToList()">
-                <div class="action-icon"><i class="fas fa-plus"></i></div>
-                <div class="action-title">إضافة سريعة</div>
-                <div class="action-subtitle">أضف العناصر يدوياً</div>
+        <div class="home-container">
+            <div class="home-header-section"><h1 class="home-logo">قائمة التسوق الذكية</h1><p class="home-subtitle">خضروات، فواكه، طعام، صحة، منزل</p></div>
+            <div class="categories-section">
+                <h3 class="section-title"><i class="fas fa-th-large" style="color: var(--primary);"></i> الفئات الرئيسية</h3>
+                
+                <!-- فئة الخضروات والفواكه الجديدة -->
+                <div class="category-card">
+                    <div class="category-header" onclick="toggleCategory('veg')">
+                        <div class="category-icon veg">🥬</div>
+                        <div class="category-info"><div class="category-name">الخضروات والفواكه</div><div class="category-count">22 عنصر</div></div>
+                        <i class="fas fa-chevron-down category-arrow" id="arrow-veg"></i>
+                    </div>
+                    <div class="category-items" id="items-veg">
+                        <div class="item-grid">
+                            <button class="item-btn" onclick="addFromCategory('كزبرة', 'veg', 2.50)">🌿 كزبرة</button>
+                            <button class="item-btn" onclick="addFromCategory('بقدونس', 'veg', 2.00)">🌿 بقدونس</button>
+                            <button class="item-btn" onclick="addFromCategory('خس', 'veg', 3.00)">🥬 خس</button>
+                            <button class="item-btn" onclick="addFromCategory('سبانخ', 'veg', 4.00)">🍃 سبانخ</button>
+                            <button class="item-btn" onclick="addFromCategory('طماطم', 'veg', 5.00)">🍅 طماطم</button>
+                            <button class="item-btn" onclick="addFromCategory('خيار', 'veg', 3.50)">🥒 خيار</button>
+                            <button class="item-btn" onclick="addFromCategory('جزر', 'veg', 2.50)">🥕 جزر</button>
+                            <button class="item-btn" onclick="addFromCategory('بصل', 'veg', 4.00)">🧅 بصل</button>
+                            <button class="item-btn" onclick="addFromCategory('ثوم', 'veg', 3.00)">🧄 ثوم</button>
+                            <button class="item-btn" onclick="addFromCategory('بطاطس', 'veg', 5.50)">🥔 بطاطس</button>
+                            <button class="item-btn" onclick="addFromCategory('فلفل أخضر', 'veg', 6.00)">🫑 فلفل أخضر</button>
+                            <button class="item-btn" onclick="addFromCategory('باذنجان', 'veg', 4.50)">🍆 باذنجان</button>
+                            <button class="item-btn" onclick="addFromCategory('كوسة', 'veg', 5.00)">🥒 كوسة</button>
+                            <button class="item-btn" onclick="addFromCategory('قرنبيط', 'veg', 7.00)">🥦 قرنبيط</button>
+                            <button class="item-btn" onclick="addFromCategory('بروكلي', 'veg', 8.00)">🥦 بروكلي</button>
+                            <button class="item-btn" onclick="addFromCategory('ليمون', 'veg', 3.00)">🍋 ليمون</button>
+                            <button class="item-btn" onclick="addFromCategory('تفاح', 'veg', 7.00)">🍎 تفاح</button>
+                            <button class="item-btn" onclick="addFromCategory('موز', 'veg', 5.00)">🍌 موز</button>
+                            <button class="item-btn" onclick="addFromCategory('برتقال', 'veg', 6.00)">🍊 برتقال</button>
+                            <button class="item-btn" onclick="addFromCategory('فراولة', 'veg', 12.00)">🍓 فراولة</button>
+                            <button class="item-btn" onclick="addFromCategory('عنب', 'veg', 10.00)">🍇 عنب</button>
+                            <button class="item-btn" onclick="addFromCategory('بطيخ', 'veg', 15.00)">🍉 بطيخ</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- فئة الطعام (مضاف لها زبادي، زيت طبخ، وغيرها) -->
+                <div class="category-card">
+                    <div class="category-header" onclick="toggleCategory('food')">
+                        <div class="category-icon food">🍔</div>
+                        <div class="category-info"><div class="category-name">الطعام والمشروبات</div><div class="category-count">20 عنصر</div></div>
+                        <i class="fas fa-chevron-down category-arrow" id="arrow-food"></i>
+                    </div>
+                    <div class="category-items" id="items-food">
+                        <div class="item-grid">
+                            <button class="item-btn" onclick="addFromCategory('زبادي', 'food', 4.50)">🥛 زبادي</button>
+                            <button class="item-btn" onclick="addFromCategory('زيت طبخ', 'food', 12.00)">🫒 زيت طبخ</button>
+                            <button class="item-btn" onclick="addFromCategory('حليب', 'food', 5.00)">🥛 حليب</button>
+                            <button class="item-btn" onclick="addFromCategory('خبز أسمر', 'food', 3.00)">🍞 خبز أسمر</button>
+                            <button class="item-btn" onclick="addFromCategory('بيض', 'food', 6.00)">🥚 بيض</button>
+                            <button class="item-btn" onclick="addFromCategory('جبنة بيضاء', 'food', 9.00)">🧀 جبنة بيضاء</button>
+                            <button class="item-btn" onclick="addFromCategory('دجاج', 'food', 12.00)">🍗 دجاج</button>
+                            <button class="item-btn" onclick="addFromCategory('لحم مفروم', 'food', 18.00)">🥩 لحم مفروم</button>
+                            <button class="item-btn" onclick="addFromCategory('أرز بسمتي', 'food', 8.00)">🍚 أرز بسمتي</button>
+                            <button class="item-btn" onclick="addFromCategory('مكرونة', 'food', 4.50)">🍝 مكرونة</button>
+                            <button class="item-btn" onclick="addFromCategory('عدس', 'food', 6.00)">🥣 عدس</button>
+                            <button class="item-btn" onclick="addFromCategory('قهوة', 'food', 14.00)">☕ قهوة</button>
+                            <button class="item-btn" onclick="addFromCategory('شاي', 'food', 7.00)">🍵 شاي</button>
+                            <button class="item-btn" onclick="addFromCategory('عسل', 'food', 20.00)">🍯 عسل</button>
+                            <button class="item-btn" onclick="addFromCategory('صلصة', 'food', 5.00)">🥫 صلصة</button>
+                            <button class="item-btn" onclick="addFromCategory('زعتر', 'food', 4.00)">🌿 زعتر</button>
+                            <button class="item-btn" onclick="addFromCategory('طحينة', 'food', 7.00)">🥣 طحينة</button>
+                            <button class="item-btn" onclick="addFromCategory('عصير برتقال', 'food', 8.00)">🧃 عصير</button>
+                            <button class="item-btn" onclick="addFromCategory('ماء معدني', 'food', 4.00)">💧 ماء</button>
+                            <button class="item-btn" onclick="addFromCategory('حلاوة طحينية', 'food', 9.00)">🍬 حلاوة</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- فئة الصحة والجمال -->
+                <div class="category-card">
+                    <div class="category-header" onclick="toggleCategory('health')">
+                        <div class="category-icon health">💊</div>
+                        <div class="category-info"><div class="category-name">الصحة والجمال</div><div class="category-count">16 عنصر</div></div>
+                        <i class="fas fa-chevron-down category-arrow" id="arrow-health"></i>
+                    </div>
+                    <div class="category-items" id="items-health">
+                        <div class="item-grid">
+                            <button class="item-btn" onclick="addFromCategory('شامبو', 'health', 12.00)">🧴 شامبو</button>
+                            <button class="item-btn" onclick="addFromCategory('معجون أسنان', 'health', 6.00)">🦷 معجون أسنان</button>
+                            <button class="item-btn" onclick="addFromCategory('فرشاة أسنان', 'health', 5.00)">🪥 فرشاة أسنان</button>
+                            <button class="item-btn" onclick="addFromCategory('فيتامينات', 'health', 25.00)">💊 فيتامينات</button>
+                            <button class="item-btn" onclick="addFromCategory('كريم ترطيب', 'health', 15.00)">🧴 كريم ترطيب</button>
+                            <button class="item-btn" onclick="addFromCategory('مطهر', 'health', 9.00)">🧼 مطهر</button>
+                            <button class="item-btn" onclick="addFromCategory('مسكن ألم', 'health', 8.00)">💊 مسكن</button>
+                            <button class="item-btn" onclick="addFromCategory('واقي شمس', 'health', 28.00)">☀️ واقي شمس</button>
+                            <button class="item-btn" onclick="addFromCategory('فيتامين سي', 'health', 20.00)">🍊 فيتامين سي</button>
+                            <button class="item-btn" onclick="addFromCategory('زيت شعر', 'health', 22.00)">💧 زيت شعر</button>
+                            <button class="item-btn" onclick="addFromCategory('لوشن جسم', 'health', 13.00)">🧴 لوشن</button>
+                            <button class="item-btn" onclick="addFromCategory('أدوية برد', 'health', 10.00)">🤧 أدوية برد</button>
+                            <button class="item-btn" onclick="addFromCategory('مكمل غذائي', 'health', 35.00)">💪 مكمل غذائي</button>
+                            <button class="item-btn" onclick="addFromCategory('صابون غسول', 'health', 7.00)">🧼 صابون</button>
+                            <button class="item-btn" onclick="addFromCategory('أدوات حلاقة', 'health', 11.00)">🪒 أدوات حلاقة</button>
+                            <button class="item-btn" onclick="addFromCategory('كريم عين', 'health', 21.00)">👁️ كريم عين</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- فئة المنزل -->
+                <div class="category-card">
+                    <div class="category-header" onclick="toggleCategory('home')">
+                        <div class="category-icon home">🏠</div>
+                        <div class="category-info"><div class="category-name">المنزل والحديقة</div><div class="category-count">18 عنصر</div></div>
+                        <i class="fas fa-chevron-down category-arrow" id="arrow-home"></i>
+                    </div>
+                    <div class="category-items" id="items-home">
+                        <div class="item-grid">
+                            <button class="item-btn" onclick="addFromCategory('صابون سائل', 'home', 6.00)">🧼 صابون سائل</button>
+                            <button class="item-btn" onclick="addFromCategory('مناديل', 'home', 10.00)">🧻 مناديل</button>
+                            <button class="item-btn" onclick="addFromCategory('مسحوق غسيل', 'home', 15.00)">🧴 مسحوق غسيل</button>
+                            <button class="item-btn" onclick="addFromCategory('معطر جو', 'home', 8.00)">🌸 معطر جو</button>
+                            <button class="item-btn" onclick="addFromCategory('لمبات', 'home', 14.00)">💡 لمبات</button>
+                            <button class="item-btn" onclick="addFromCategory('بطاريات', 'home', 11.00)">🔋 بطاريات</button>
+                            <button class="item-btn" onclick="addFromCategory('سلة مهملات', 'home', 20.00)">🗑️ سلة مهملات</button>
+                            <button class="item-btn" onclick="addFromCategory('منظف زجاج', 'home', 9.00)">🪟 منظف زجاج</button>
+                            <button class="item-btn" onclick="addFromCategory('إسفنج', 'home', 4.00)">🧽 إسفنج</button>
+                            <button class="item-btn" onclick="addFromCategory('قفازات', 'home', 7.00)">🧤 قفازات</button>
+                            <button class="item-btn" onclick="addFromCategory('فرشاة مرحاض', 'home', 8.50)">🧹 فرشاة مرحاض</button>
+                            <button class="item-btn" onclick="addFromCategory('منفضة', 'home', 10.00)">🪶 منفضة</button>
+                            <button class="item-btn" onclick="addFromCategory('ممسحة', 'home', 24.00)">🧹 ممسحة</button>
+                            <button class="item-btn" onclick="addFromCategory('وعاء طعام', 'home', 16.00)">🥣 وعاء طعام</button>
+                            <button class="item-btn" onclick="addFromCategory('مزهرية', 'home', 22.00)">🏺 مزهرية</button>
+                            <button class="item-btn" onclick="addFromCategory('سجادة', 'home', 27.00)">🧶 سجادة</button>
+                            <button class="item-btn" onclick="addFromCategory('معلقات', 'home', 15.00)">🖼️ معلقات</button>
+                            <button class="item-btn" onclick="addFromCategory('سماد نباتات', 'home', 12.00)">🌱 سماد</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="action-card voice" onclick="startVoiceInput()">
-                <div class="action-icon"><i class="fas fa-microphone"></i></div>
-                <div class="action-title">إضافة صوتية</div>
-                <div class="action-subtitle">تحدث لإضافة عناصر</div>
-            </div>
-            <div class="action-card scan" onclick="showToast('ميزة الكاميرا قريباً')">
-                <div class="action-icon"><i class="fas fa-camera"></i></div>
-                <div class="action-title">مسح</div>
-                <div class="action-subtitle">مسح الباركود</div>
-            </div>
-            <div class="action-card suggestions" onclick="navigateToInsights()">
-                <div class="action-icon"><i class="fas fa-lightbulb"></i></div>
-                <div class="action-title">التحليلات</div>
-                <div class="action-subtitle">توقعات الذكاء الاصطناعي</div>
-            </div>
-        </div>
-        <div class="stats-overview">
-            <h3 class="section-title"><i class="fas fa-chart-pie" style="color: var(--primary);"></i>نظرة عامة على اليوم</h3>
-            <div class="stats-grid">
-                <div class="stat-box"><span class="stat-number" id="homeTotal">0</span><div class="stat-label">العناصر</div></div>
-                <div class="stat-box"><span class="stat-number" id="homeCompleted">0</span><div class="stat-label">المكتملة</div></div>
-                <div class="stat-box"><span class="stat-number" id="homeBudget">$0</span><div class="stat-label">الإجمالي</div></div>
-            </div>
-        </div>
-        <div class="recent-section">
-            <h3 class="section-title"><i class="fas fa-clock" style="color: var(--accent);"></i>العناصر الحديثة</h3>
-            <div class="recent-list" id="recentList">
-                <div class="empty-state" style="padding: 2rem;"><div class="empty-icon">🛍️</div><p>لا توجد عناصر بعد. ابدأ بالإضافة!</p></div>
+
+            <div class="home-list-section">
+                <div class="home-list-header"><div class="home-list-title"><i class="fas fa-shopping-basket" style="color: var(--primary);"></i> قائمة التسوق النشطة</div><span class="home-list-count" id="homeActiveCount">0</span></div>
+                <div id="homeActiveList"></div>
+                <button class="view-all-btn" onclick="navigateToList()">عرض الكل <i class="fas fa-arrow-left" style="margin-right: 0.5rem;"></i></button>
             </div>
         </div>
     </div>
 
-    <!-- List Page -->
     <div class="page" id="listPage">
-        <div class="page-header">
-            <h2 class="page-title">قائمة التسوق</h2>
-            <div class="progress-container">
-                <div class="progress-header"><span>تقدم التسوق</span><span id="progressText">0%</span></div>
-                <div class="progress-bar"><div class="progress-fill" id="progressBar" style="width: 0%"></div></div>
-            </div>
-        </div>
-        <div class="ai-input-section">
-            <div class="input-wrapper">
-                <input type="text" class="smart-input" id="smartInput" placeholder='جرب: "2 جالون حليب"' onkeypress="handleInputKeypress(event)">
-                <div class="input-actions">
-                    <button class="icon-btn" id="voiceBtn" onclick="toggleVoiceInput()"><i class="fas fa-microphone"></i></button>
-                </div>
-            </div>
-            <div class="ai-suggestions" id="aiSuggestions">
-                <div class="ai-chip" onclick="quickAdd('حليب')"><i class="fas fa-magic"></i> حليب</div>
-                <div class="ai-chip" onclick="quickAdd('خبز')"><i class="fas fa-magic"></i> خبز</div>
-                <div class="ai-chip" onclick="quickAdd('بيض')"><i class="fas fa-magic"></i> بيض</div>
-                <div class="ai-chip" onclick="quickAdd('موز')"><i class="fas fa-magic"></i> موز</div>
-            </div>
-        </div>
-        <div class="smart-form" id="smartForm">
-            <div class="form-row">
-                <div class="form-group">
-                    <label class="form-label">اسم العنصر</label>
-                    <input type="text" class="form-input" id="itemName" placeholder="مثال: حليب عضوي">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">السعر المتوقع</label>
-                    <input type="number" class="form-input" id="itemPrice" placeholder="0.00" step="0.01">
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label class="form-label">الفئة (تم اكتشافها بالذكاء الاصطناعي)</label>
-                    <select class="form-select" id="itemCategory">
-                        <option value="food">الطعام والمشروبات</option>
-                        <option value="tech">التقنية</option>
-                        <option value="clothing">الملابس</option>
-                        <option value="home">المنزل والحديقة</option>
-                        <option value="health">الصحة والجمال</option>
-                        <option value="other">أخرى</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">الكمية</label>
-                    <input type="number" class="form-input" id="itemQuantity" value="1" min="1">
-                </div>
-            </div>
-            <button class="add-item-btn" onclick="addItem()"><i class="fas fa-plus"></i>إضافة للقائمة</button>
-        </div>
-        <div class="filters-container">
-            <div class="filters-scroll">
-                <button class="filter-pill active" onclick="setFilter('all')">الكل</button>
-                <button class="filter-pill" onclick="setFilter('active')">نشط</button>
-                <button class="filter-pill" onclick="setFilter('completed')">مكتمل</button>
-                <button class="filter-pill" onclick="sortItems('price')">حسب السعر</button>
-                <button class="filter-pill" onclick="sortItems('category')">حسب الفئة</button>
-            </div>
-        </div>
-        <div class="items-container" id="itemsList">
-            <div class="empty-state">
-                <div class="empty-icon">📝</div>
-                <div class="empty-title">قائمتك فارغة</div>
-                <p>أضف العناصر باستخدام الإدخال الذكي أعلاه</p>
-            </div>
-        </div>
+        <div class="page-header"><h2 class="page-title">قائمة التسوق</h2><div class="progress-container"><div class="progress-header"><span>تقدم التسوق</span><span id="progressText">0%</span></div><div class="progress-bar"><div class="progress-fill" id="progressBar" style="width: 0%"></div></div></div></div>
+        <div class="ai-input-section"><div class="input-wrapper"><input type="text" class="smart-input" id="smartInput" placeholder='اكتب عنصراً أو استخدم الميكروفون...' onkeypress="handleInputKeypress(event)"><div class="input-actions"><button class="icon-btn" onclick="toggleVoiceInput()"><i class="fas fa-microphone"></i></button></div></div></div>
+        <div class="items-container" id="itemsList"></div>
     </div>
 
-    <!-- Insights Page -->
     <div class="page" id="insightsPage">
-        <div class="page-header">
-            <h2 class="page-title">تحليلات الذكاء الاصطناعي</h2>
-            <p style="color: var(--text-muted); margin-top: 0.5rem;">التحليلات والتوقعات الذكية</p>
-        </div>
-        <div class="insights-grid">
-            <div class="insight-card">
-                <div class="insight-header">
-                    <div class="insight-icon"><i class="fas fa-brain"></i></div>
-                    <div><div class="insight-title">التوقعات الذكية</div><div class="insight-subtitle">بناءً على أنماط تسوقك</div></div>
-                </div>
-                <div class="prediction-list" id="predictionsList">
-                    <div class="prediction-item"><span class="prediction-name">🥛 حليب</span><div class="confidence-bar"><div class="confidence-fill" style="width: 85%"></div></div></div>
-                    <div class="prediction-item"><span class="prediction-name">🍞 خبز</span><div class="confidence-bar"><div class="confidence-fill" style="width: 72%"></div></div></div>
-                    <div class="prediction-item"><span class="prediction-name">🥚 بيض</span><div class="confidence-bar"><div class="confidence-fill" style="width: 68%"></div></div></div>
-                </div>
-            </div>
-            <div class="insight-card">
-                <div class="insight-header">
-                    <div class="insight-icon" style="background: var(--gradient-secondary);"><i class="fas fa-tags"></i></div>
-                    <div><div class="insight-title">الإنفاق حسب الفئة</div><div class="insight-subtitle">المصروفات المصنفة بالذكاء الاصطناعي</div></div>
-                </div>
-                <div class="prediction-list" id="categoryBreakdown">
-                    <div class="prediction-item"><span class="prediction-name">🍔 الطعام والمشروبات</span><span style="font-weight: 700;">$0</span></div>
-                    <div class="prediction-item"><span class="prediction-name">💻 التقنية</span><span style="font-weight: 700;">$0</span></div>
-                    <div class="prediction-item"><span class="prediction-name">👕 الملابس</span><span style="font-weight: 700;">$0</span></div>
-                </div>
-            </div>
-            <div class="insight-card">
-                <div class="insight-header">
-                    <div class="insight-icon" style="background: var(--gradient-accent);"><i class="fas fa-piggy-bank"></i></div>
-                    <div><div class="insight-title">الميزانية الذكية</div><div class="insight-subtitle">توصيات الميزانية الذكية</div></div>
-                </div>
-                <div style="padding: 1rem; background: var(--bg-tertiary); border-radius: var(--radius); margin-top: 1rem;">
-                    <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.75rem;">بناءً على سجلك، عادةً ما تنفق:</p>
-                    <div style="font-size: 1.5rem; font-weight: 800; color: var(--accent);">~$<span id="avgBudget">45</span>/للرحلة</div>
-                    <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">يقترح الذكاء الاصطناعي تحديد ميزانية 50$ للتوفير الأمثل</p>
-                </div>
-            </div>
-        </div>
+        <div class="page-header"><h2 class="page-title">تحليلات الذكاء الاصطناعي</h2></div>
+        <div class="insights-grid"><div class="insight-card"><div class="insight-header"><div class="insight-icon"><i class="fas fa-brain"></i></div><div><div class="insight-title">التوقعات الذكية</div></div></div><div id="predictionsList"></div></div><div class="insight-card"><div class="insight-header"><div class="insight-icon" style="background: var(--gradient-primary);"><i class="fas fa-tags"></i></div><div><div class="insight-title">الإنفاق حسب الفئة</div></div></div><div id="categoryBreakdown"></div></div></div>
     </div>
 
-    <nav class="nav-bar">
-        <a href="#" class="nav-item active" onclick="showPage('home')"><i class="fas fa-home"></i><span>الرئيسية</span></a>
-        <a href="#" class="nav-item" onclick="showPage('list')"><i class="fas fa-list-check"></i><span>القائمة</span></a>
-        <a href="#" class="nav-item" onclick="showPage('insights')"><i class="fas fa-chart-line"></i><span>التحليلات</span></a>
-    </nav>
+    <nav class="nav-bar"><a class="nav-item active" onclick="showPage('home')"><i class="fas fa-home"></i><span>الرئيسية</span></a><a class="nav-item" onclick="showPage('list')"><i class="fas fa-list-check"></i><span>القائمة</span></a><a class="nav-item" onclick="showPage('insights')"><i class="fas fa-chart-line"></i><span>التحليلات</span></a></nav>
 
     <script>
         let items = JSON.parse(localStorage.getItem('smartlist_items')) || [];
-        let currentFilter = 'all';
         let recognition = null;
-        let shoppingHistory = JSON.parse(localStorage.getItem('smartlist_history')) || {};
+        const categoryTranslations = { 'veg': '🥬 خضروات وفواكه', 'food': '🍔 طعام', 'health': '💊 صحة', 'home': '🏠 منزل', 'other': '📦 أخرى' };
 
-        // Arabic AI Database with Arabic keywords
-        const aiDatabase = {
-            'حليب': { category: 'food', price: 3.50, keywords: ['حليب', 'لبن', 'حليب عضوي'] },
-            'خبز': { category: 'food', price: 2.50, keywords: ['خبز', 'رغيف', 'خبز التوست'] },
-            'بيض': { category: 'food', price: 4.00, keywords: ['بيض', 'بيضة', 'دزينة بيض'] },
-            'موز': { category: 'food', price: 1.50, keywords: ['موز', 'موزة', 'فاكهة'] },
-            'تفاح': { category: 'food', price: 2.00, keywords: ['تفاح', 'تفاحة'] },
-            'دجاج': { category: 'food', price: 8.00, keywords: ['دجاج', 'فراخ'] },
-            'أرز': { category: 'food', price: 5.00, keywords: ['أرز', 'رز'] },
-            'مكرونة': { category: 'food', price: 1.50, keywords: ['مكرونة', 'باستا', 'سباغيتي'] },
-            'قهوة': { category: 'food', price: 8.00, keywords: ['قهوة', 'بن'] },
-            'ماء': { category: 'food', price: 6.00, keywords: ['ماء', 'مياه', 'مياه معدنية'] },
-            'هاتف': { category: 'tech', price: 800, keywords: ['هاتف', 'موبايل', 'آيفون', 'سامسونج'] },
-            'لابتوب': { category: 'tech', price: 1000, keywords: ['لابتوب', 'حاسوب', 'ماكبوك', 'كمبيوتر'] },
-            'سماعات': { category: 'tech', price: 150, keywords: ['سماعات', 'سماعة', 'إيربودز'] },
-            'شاحن': { category: 'tech', price: 20, keywords: ['شاحن', 'كابل'] },
-            'قميص': { category: 'clothing', price: 25, keywords: ['قميص', 'تيشيرت', 'قميص كاجوال'] },
-            'بنطلون': { category: 'clothing', price: 40, keywords: ['بنطلون', 'جينز', 'بنطلون جينز'] },
-            'حذاء': { category: 'clothing', price: 80, keywords: ['حذاء', 'حذاء رياضي', 'جزمة'] },
-            'جورب': { category: 'clothing', price: 10, keywords: ['جورب', 'شراب'] },
-            'صابون': { category: 'home', price: 4, keywords: ['صابون', 'صابون غسيل'] },
-            'ورق': { category: 'home', price: 8, keywords: ['ورق', 'مناديل', 'مناديل مطبخ'] },
-            'فيتامينات': { category: 'health', price: 15, keywords: ['فيتامينات', 'مكملات غذائية'] },
-            'شامبو': { category: 'health', price: 8, keywords: ['شامبو', 'بلسم'] },
-            'milk': { category: 'food', price: 3.50, keywords: ['milk', 'dairy', 'organic milk'] },
-            'bread': { category: 'food', price: 2.50, keywords: ['bread', 'loaf', 'sourdough'] },
-            'eggs': { category: 'food', price: 4.00, keywords: ['eggs', 'dozen eggs'] },
-            'banana': { category: 'food', price: 1.50, keywords: ['banana', 'bananas'] },
-            'apple': { category: 'food', price: 2.00, keywords: ['apple', 'apples'] },
-            'chicken': { category: 'food', price: 8.00, keywords: ['chicken', 'poultry'] },
-            'rice': { category: 'food', price: 5.00, keywords: ['rice', 'basmati'] },
-            'pasta': { category: 'food', price: 1.50, keywords: ['pasta', 'spaghetti'] },
-            'coffee': { category: 'food', price: 8.00, keywords: ['coffee', 'beans'] },
-            'water': { category: 'food', price: 6.00, keywords: ['water', 'bottled'] },
-            'phone': { category: 'tech', price: 800, keywords: ['phone', 'iphone', 'samsung'] },
-            'laptop': { category: 'tech', price: 1000, keywords: ['laptop', 'computer', 'macbook'] },
-            'headphones': { category: 'tech', price: 150, keywords: ['headphones', 'airpods'] },
-            'charger': { category: 'tech', price: 20, keywords: ['charger', 'cable'] },
-            'shirt': { category: 'clothing', price: 25, keywords: ['shirt', 't-shirt'] },
-            'pants': { category: 'clothing', price: 40, keywords: ['pants', 'jeans'] },
-            'shoes': { category: 'clothing', price: 80, keywords: ['shoes', 'sneakers'] },
-            'socks': { category: 'clothing', price: 10, keywords: ['socks'] },
-            'soap': { category: 'home', price: 4, keywords: ['soap'] },
-            'paper': { category: 'home', price: 8, keywords: ['paper towels', 'toilet paper'] },
-            'vitamins': { category: 'health', price: 15, keywords: ['vitamins', 'supplements'] },
-            'shampoo': { category: 'health', price: 8, keywords: ['shampoo'] }
-        };
-
-        // Arabic translations for categories
-        const categoryTranslations = {
-            'food': 'الطعام والمشروبات',
-            'tech': 'التقنية',
-            'clothing': 'الملابس',
-            'home': 'المنزل والحديقة',
-            'health': 'الصحة والجمال',
-            'other': 'أخرى'
-        };
-
-        document.addEventListener('DOMContentLoaded', () => {
-            initVoiceRecognition();
-            updateHomeStats();
-            renderRecentItems();
-            renderItems();
-            updateInsights();
-            document.getElementById('smartInput').addEventListener('input', handleSmartInput);
-            if (items.length > 0) updateProgress();
-        });
+        document.addEventListener('DOMContentLoaded', () => { initVoiceRecognition(); renderHomeActiveList(); renderItems(); updateInsights(); });
 
         function showPage(page) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             document.getElementById(page + 'Page').classList.add('active');
-            event.target.closest('.nav-item').classList.add('active');
-            if (page === 'home') { updateHomeStats(); renderRecentItems(); }
+            event.currentTarget.classList.add('active');
+            if (page === 'home') renderHomeActiveList();
+            else if (page === 'list') { renderItems(); updateProgress(); }
             else if (page === 'insights') updateInsights();
         }
-
-        function navigateToList() {
-            showPage('list');
-            document.querySelectorAll('.nav-item')[1].classList.add('active');
-            document.querySelectorAll('.nav-item')[0].classList.remove('active');
-            setTimeout(() => document.getElementById('smartInput').focus(), 100);
+        function navigateToList() { showPage('list'); document.querySelectorAll('.nav-item')[1].classList.add('active'); document.querySelectorAll('.nav-item')[0].classList.remove('active'); }
+        function toggleCategory(cat) { const div = document.getElementById('items-'+cat); const arr = document.getElementById('arrow-'+cat); if(div && arr) { div.classList.toggle('show'); arr.classList.toggle('expanded'); } }
+        function addFromCategory(name, cat, price) { items.unshift({ id: Date.now(), name, price, category: cat, quantity: 1, completed: false, addedAt: new Date().toISOString() }); saveItems(); renderHomeActiveList(); renderItems(); updateInsights(); showToast(`✨ تم إضافة ${name}`); }
+        function renderHomeActiveList() {
+            const container = document.getElementById('homeActiveList');
+            const activeItems = items.filter(i => !i.completed).slice(0, 5);
+            document.getElementById('homeActiveCount').textContent = items.filter(i => !i.completed).length;
+            if(activeItems.length === 0) { container.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--text-muted);"><i class="fas fa-shopping-basket" style="font-size: 2rem; opacity: 0.3;"></i><p>لا توجد عناصر نشطة</p></div>'; return; }
+            container.innerHTML = activeItems.map(item => `<div class="home-list-item" onclick="navigateToList()"><div class="home-item-checkbox ${item.completed ? 'checked' : ''}" onclick="event.stopPropagation(); toggleComplete(${item.id})"><i class="fas fa-check"></i></div><div class="home-item-info"><div class="home-item-name ${item.completed ? 'completed' : ''}">${item.name}</div></div><div class="home-item-price">$${item.price.toFixed(2)}</div></div>`).join('');
         }
-
-        function navigateToInsights() {
-            showPage('insights');
-            document.querySelectorAll('.nav-item')[2].classList.add('active');
-            document.querySelectorAll('.nav-item')[0].classList.remove('active');
-        }
-
-        function handleSmartInput(e) {
-            const value = e.target.value.toLowerCase();
-            if (value.length < 2) { document.getElementById('smartForm').classList.remove('show'); return; }
-            const parsed = aiParseInput(value);
-            if (parsed) {
-                document.getElementById('itemName').value = parsed.name;
-                document.getElementById('itemPrice').value = parsed.price;
-                document.getElementById('itemCategory').value = parsed.category;
-                document.getElementById('itemQuantity').value = parsed.quantity;
-                document.getElementById('itemCategory').classList.add('ai-detected');
-                document.getElementById('itemPrice').classList.add('ai-detected');
-                document.getElementById('smartForm').classList.add('show');
-            }
-        }
-
-        function handleInputKeypress(e) {
-            if (e.key === 'Enter') {
-                const value = e.target.value;
-                if (value.trim()) {
-                    const parsed = aiParseInput(value.toLowerCase());
-                    if (parsed) {
-                        addItemDirect(parsed);
-                        e.target.value = '';
-                        document.getElementById('smartForm').classList.remove('show');
-                    }
-                }
-            }
-        }
-
-        function aiParseInput(input) {
-            let quantity = 1, name = input, category = 'other', price = 0, matched = false;
-            const quantityMatch = input.match(/^(\\d+)\\s*/);
-            if (quantityMatch) {
-                quantity = parseInt(quantityMatch[1]);
-                name = input.replace(quantityMatch[0], '').trim();
-            }
-            for (const [key, data] of Object.entries(aiDatabase)) {
-                for (const keyword of data.keywords) {
-                    if (name.includes(keyword)) {
-                        category = data.category;
-                        price = data.price * quantity;
-                        matched = true;
-                        name = keyword.charAt(0).toUpperCase() + keyword.slice(1);
-                        break;
-                    }
-                }
-                if (matched) break;
-            }
-            if (!matched) {
-                name = name.charAt(0).toUpperCase() + name.slice(1);
-                if (input.includes('عضوي') || input.includes('طازج')) category = 'food';
-                else if (input.includes('إلكتروني')) category = 'tech';
-                else if (input.includes('قطن')) category = 'clothing';
-            }
-            return { name, quantity, category, price };
-        }
-
-        function quickAdd(itemName) {
-            const parsed = aiParseInput(itemName.toLowerCase());
-            if (parsed) { addItemDirect(parsed); showToast(`تم إضافة ${parsed.name}`); }
-        }
-
-        function addItem() {
-            const name = document.getElementById('itemName').value;
-            const price = parseFloat(document.getElementById('itemPrice').value) || 0;
-            const category = document.getElementById('itemCategory').value;
-            const quantity = parseInt(document.getElementById('itemQuantity').value) || 1;
-            if (!name) { showToast('الرجاء إدخال اسم العنصر'); return; }
-            addItemDirect({ name, price, category, quantity });
-            document.getElementById('smartInput').value = '';
-            document.getElementById('itemName').value = '';
-            document.getElementById('itemPrice').value = '';
-            document.getElementById('itemQuantity').value = '1';
-            document.getElementById('itemCategory').classList.remove('ai-detected');
-            document.getElementById('itemPrice').classList.remove('ai-detected');
-            document.getElementById('smartForm').classList.remove('show');
-        }
-
-        function addItemDirect(parsed) {
-            const item = {
-                id: Date.now(),
-                name: parsed.name,
-                price: parsed.price,
-                category: parsed.category,
-                quantity: parsed.quantity,
-                completed: false,
-                addedAt: new Date().toISOString(),
-                aiDetected: true
-            };
-            items.unshift(item);
-            saveItems();
-            updateShoppingHistory(item.name, item.category);
-            renderItems();
-            updateProgress();
-            updateHomeStats();
-            renderRecentItems();
-            updateInsights();
-            showToast(`${item.name} تمت الإضافة للقائمة`);
-        }
-
-        function toggleComplete(id) {
-            const item = items.find(i => i.id === id);
-            if (item) {
-                item.completed = !item.completed;
-                saveItems();
-                renderItems();
-                updateProgress();
-                updateHomeStats();
-                if (item.completed) showToast(`تم إكمال ${item.name}!`);
-            }
-        }
-
-        function deleteItem(id) {
-            items = items.filter(i => i.id !== id);
-            saveItems();
-            renderItems();
-            updateProgress();
-            updateHomeStats();
-            renderRecentItems();
-            updateInsights();
-            showToast('تم حذف العنصر');
-        }
-
+        function toggleComplete(id) { const item = items.find(i => i.id === id); if(item) { item.completed = !item.completed; saveItems(); renderHomeActiveList(); renderItems(); updateInsights(); if(item.completed) showToast(`🎉 تم إكمال ${item.name}!`); } }
+        function handleInputKeypress(e) { if(e.key === 'Enter' && e.target.value.trim()) { addFromCategory(e.target.value.trim(), 'other', 0); e.target.value = ''; } }
         function renderItems() {
             const container = document.getElementById('itemsList');
-            let filtered = items;
-            if (currentFilter === 'active') filtered = items.filter(i => !i.completed);
-            else if (currentFilter === 'completed') filtered = items.filter(i => i.completed);
-            if (filtered.length === 0) {
-                const emptyMessage = currentFilter === 'completed' ? 'لا توجد عناصر مكتملة' : 'قائمتك فارغة';
-                const emptySubMessage = currentFilter === 'completed' ? 'أكمل بعض العناصر أولاً' : 'أضف العناصر باستخدام الإدخال الذكي أعلاه';
-                container.innerHTML = `<div class="empty-state"><div class="empty-icon">${currentFilter === 'completed' ? '✅' : '📝'}</div><div class="empty-title">${emptyMessage}</div><p>${emptySubMessage}</p></div>`;
-                return;
-            }
-            container.innerHTML = filtered.map(item => `
-                <div class="item-card ${item.completed ? 'completed' : ''}">
-                    <div class="item-checkbox ${item.completed ? 'checked' : ''}" onclick="toggleComplete(${item.id})"><i class="fas fa-check"></i></div>
-                    <div class="item-content">
-                        <div class="item-header"><span class="item-name">${item.name}</span><span class="item-category ${item.category}">${getCategoryIcon(item.category)} ${categoryTranslations[item.category] || item.category}</span></div>
-                        <div class="item-footer"><span class="item-price">$${item.price.toFixed(2)}</span>${item.quantity > 1 ? `<span>الكمية: ${item.quantity}</span>` : ''}${item.aiDetected ? '<span class="ai-indicator"><i class="fas fa-robot"></i> ذكاء اصطناعي</span>' : ''}</div>
-                    </div>
-                    <div class="item-actions"><button class="action-icon-btn" onclick="deleteItem(${item.id})"><i class="fas fa-trash-alt"></i></button></div>
-                </div>
-            `).join('');
+            if(items.length === 0) { container.innerHTML = '<div style="text-align: center; padding: 3rem; color: var(--text-muted);"><i class="fas fa-clipboard-list" style="font-size: 3rem; opacity: 0.3;"></i><p>القائمة فارغة</p></div>'; return; }
+            container.innerHTML = items.map(item => `<div class="item-card"><div class="item-checkbox ${item.completed ? 'checked' : ''}" onclick="toggleComplete(${item.id})"><i class="fas fa-check"></i></div><div class="item-content"><div class="item-name ${item.completed ? 'completed' : ''}">${item.name}</div><div style="font-size: 0.8rem; color: var(--text-muted);">${categoryTranslations[item.category] || 'أخرى'}</div></div><div class="item-price">$${item.price.toFixed(2)}</div><button class="action-icon-btn" onclick="deleteItem(${item.id})"><i class="fas fa-trash"></i></button></div>`).join('');
+            updateProgress();
         }
-
-        function getCategoryIcon(cat) {
-            const icons = { food: '🍔', tech: '💻', clothing: '👕', home: '🏠', health: '💊', other: '📦' };
-            return icons[cat] || '📦';
-        }
-
-        function getCategoryColor(cat) {
-            const colors = { food: '#10b981', tech: '#7c3aed', clothing: '#ec4899', home: '#f59e0b', health: '#ef4444', other: '#64748b' };
-            return colors[cat] || '#64748b';
-        }
-
-        function updateProgress() {
-            const total = items.length;
-            const completed = items.filter(i => i.completed).length;
-            const percentage = total === 0 ? 0 : Math.round((completed / total) * 100);
-            document.getElementById('progressBar').style.width = percentage + '%';
-            document.getElementById('progressText').textContent = percentage + '%';
-        }
-
-        function updateHomeStats() {
-            const total = items.length;
-            const completed = items.filter(i => i.completed).length;
-            const totalCost = items.reduce((sum, i) => sum + i.price, 0);
-            document.getElementById('homeTotal').textContent = total;
-            document.getElementById('homeCompleted').textContent = completed;
-            document.getElementById('homeBudget').textContent = '$' + totalCost.toFixed(0);
-        }
-
-        function renderRecentItems() {
-            const container = document.getElementById('recentList');
-            const recent = items.slice(0, 5);
-            if (recent.length === 0) {
-                container.innerHTML = `<div class="empty-state" style="padding: 2rem;"><div class="empty-icon">🛍️</div><p>لا توجد عناصر بعد. ابدأ بالإضافة!</p></div>`;
-                return;
-            }
-            container.innerHTML = recent.map(item => `
-                <div class="recent-item" onclick="navigateToList()">
-                    <div class="recent-icon" style="background: ${getCategoryColor(item.category)}15; color: ${getCategoryColor(item.category)};">${getCategoryIcon(item.category)}</div>
-                    <div class="recent-info"><div class="recent-name">${item.name}</div><div class="recent-meta">${categoryTranslations[item.category] || item.category} • ${item.completed ? 'مكتمل' : 'معلق'}</div></div>
-                    <div class="recent-price">$${item.price.toFixed(0)}</div>
-                </div>
-            `).join('');
-        }
-
-        function setFilter(filter) {
-            currentFilter = filter;
-            document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
-            event.target.classList.add('active');
-            renderItems();
-        }
-
-        function sortItems(by) {
-            if (by === 'price') items.sort((a, b) => b.price - a.price);
-            else if (by === 'category') items.sort((a, b) => a.category.localeCompare(b.category));
-            saveItems();
-            renderItems();
-        }
-
-        function updateShoppingHistory(name, category) {
-            const key = name.toLowerCase();
-            if (!shoppingHistory[key]) shoppingHistory[key] = { count: 0, category, lastBought: null };
-            shoppingHistory[key].count++;
-            shoppingHistory[key].lastBought = new Date().toISOString();
-            localStorage.setItem('smartlist_history', JSON.stringify(shoppingHistory));
-        }
-
+        function deleteItem(id) { items = items.filter(i => i.id !== id); saveItems(); renderItems(); renderHomeActiveList(); updateInsights(); showToast('🗑️ تم الحذف'); }
+        function updateProgress() { const total = items.length, completed = items.filter(i => i.completed).length, percent = total === 0 ? 0 : Math.round((completed/total)*100); document.getElementById('progressBar').style.width = percent+'%'; document.getElementById('progressText').textContent = percent+'%'; }
         function updateInsights() {
             const breakdown = {};
             items.forEach(item => { breakdown[item.category] = (breakdown[item.category] || 0) + item.price; });
-            const breakdownHTML = Object.entries(breakdown).sort((a, b) => b[1] - a[1]).map(([cat, amount]) => `
-                <div class="prediction-item"><span class="prediction-name">${getCategoryIcon(cat)} ${categoryTranslations[cat] || cat}</span><span style="font-weight: 700;">$${amount.toFixed(0)}</span></div>
-            `).join('');
-            document.getElementById('categoryBreakdown').innerHTML = breakdownHTML || `<div class="prediction-item"><span class="prediction-name">لا توجد بيانات إنفاق بعد</span></div>`;
-            
-            const predictions = Object.entries(shoppingHistory).sort((a, b) => b[1].count - a[1].count).slice(0, 5).map(([name, data]) => {
-                const confidence = Math.min(95, data.count * 15 + 20);
-                return { name: name.charAt(0).toUpperCase() + name.slice(1), confidence };
-            });
-            if (predictions.length > 0) {
-                document.getElementById('predictionsList').innerHTML = predictions.map(p => `
-                    <div class="prediction-item"><span class="prediction-name">${p.name}</span><div class="confidence-bar"><div class="confidence-fill" style="width: ${p.confidence}%"></div></div></div>
-                `).join('');
-            }
-            
-            const totalSpent = items.reduce((sum, i) => sum + i.price, 0);
-            const avgBudget = items.length > 0 ? Math.round(totalSpent / Math.max(1, items.filter(i => i.completed).length || 1)) : 45;
-            document.getElementById('avgBudget').textContent = avgBudget;
+            const breakdownHTML = Object.entries(breakdown).map(([cat, amt]) => `<div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--bg-tertiary); border-radius: var(--radius); margin-bottom: 0.5rem;"><span style="font-weight: 700;">${categoryTranslations[cat] || cat}</span><span style="font-weight: 800; color: var(--accent);">$${amt.toFixed(2)}</span></div>`).join('');
+            document.getElementById('categoryBreakdown').innerHTML = breakdownHTML || '<p style="color: var(--text-muted); text-align: center;">أضف عناصر للتحليلات</p>';
+            const pending = items.filter(i => !i.completed).length;
+            let msg = items.length === 0 ? '✨ أضف عناصر إلى القائمة.' : (pending === 0 ? '🎉 القائمة مكتملة! تصفح الفئات لبدء قائمة جديدة.' : `📊 تبقى ${pending} عناصر. ركز على الفئة الأكبر لتحقيق تقدم أسرع.`);
+            document.getElementById('predictionsList').innerHTML = `<p style="line-height:1.6">${msg}</p>`;
         }
-
-        function initVoiceRecognition() {
-            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-                recognition = new SpeechRecognition();
-                recognition.continuous = false;
-                recognition.interimResults = false;
-                recognition.lang = 'ar-SA';
-                recognition.onresult = (event) => {
-                    const transcript = event.results[0][0].transcript;
-                    processVoiceInput(transcript);
-                };
-                recognition.onerror = (event) => {
-                    showToast('فشل التعرف على الصوت. حاول مرة أخرى.');
-                    stopVoiceInput();
-                };
-                recognition.onend = () => {
-                    document.getElementById('voiceModal').classList.remove('show');
-                    document.getElementById('voiceBtn').classList.remove('voice-active');
-                };
-            }
-        }
-
-        function toggleVoiceInput() {
-            if (!recognition) { showToast('التعرف على الصوت غير مدعوم'); return; }
-            if (document.getElementById('voiceBtn').classList.contains('voice-active')) stopVoiceInput();
-            else startVoiceInput();
-        }
-
-        function startVoiceInput() {
-            if (!recognition) { showToast('التعرف على الصوت غير متاح'); return; }
-            document.getElementById('voiceModal').classList.add('show');
-            document.getElementById('voiceBtn').classList.add('voice-active');
-            try { recognition.start(); } catch (e) { showToast('تم رفض الوصول للميكروفون'); stopVoiceInput(); }
-        }
-
-        function stopVoiceInput() {
-            if (recognition) recognition.stop();
-            document.getElementById('voiceModal').classList.remove('show');
-            document.getElementById('voiceBtn').classList.remove('voice-active');
-        }
-
-        function processVoiceInput(transcript) {
-            const cleaned = transcript.toLowerCase().replace(/أضف /g, '').replace(/إلى القائمة/g, '').replace(/إلى قائمتي/g, '').trim();
-            document.getElementById('smartInput').value = cleaned;
-            const event = { target: { value: cleaned } };
-            handleSmartInput(event);
-            showToast(`تم التعرف على الصوت: "${cleaned}"`);
-            const parsed = aiParseInput(cleaned);
-            if (parsed && parsed.name.length > 2) {
-                setTimeout(() => {
-                    addItemDirect(parsed);
-                    document.getElementById('smartInput').value = '';
-                    document.getElementById('smartForm').classList.remove('show');
-                }, 500);
-            }
-        }
-
+        function initVoiceRecognition() { if('webkitSpeechRecognition' in window) { const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition; recognition = new SpeechRecognition(); recognition.continuous = false; recognition.interimResults = false; recognition.lang = 'ar-SA'; recognition.onresult = (e) => { const transcript = e.results[0][0].transcript; document.getElementById('smartInput').value = transcript; addFromCategory(transcript, 'other', 0); stopVoiceInput(); }; recognition.onend = () => document.getElementById('voiceModal').classList.remove('show'); recognition.onerror = () => { stopVoiceInput(); showToast('لم يتم التعرف على الصوت'); }; } }
+        function toggleVoiceInput() { if(!recognition) { showToast('التعرف على الصوت غير مدعوم'); return; } const modal = document.getElementById('voiceModal'); if(modal.classList.contains('show')) stopVoiceInput(); else { modal.classList.add('show'); recognition.start(); } }
+        function stopVoiceInput() { if(recognition) recognition.abort(); document.getElementById('voiceModal').classList.remove('show'); }
         function saveItems() { localStorage.setItem('smartlist_items', JSON.stringify(items)); }
-
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            document.getElementById('toastMessage').textContent = message;
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 3000);
-        }
+        function showToast(msg) { const toast = document.getElementById('toast'); document.getElementById('toastMessage').textContent = msg; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 2000); }
     </script>
 </body>
 </html>
