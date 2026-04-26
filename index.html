@@ -4,54 +4,91 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#ffffff">
-    <title>قائمة التسوق الذكية | مشاركة واتساب</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+    <title>قائمة التسوق الذكية | دعم كامل للغتين</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #2563eb;
+            --primary: #1e40af;
             --primary-light: #3b82f6;
+            --primary-dark: #1e3a8a;
             --secondary: #7c3aed;
-            --accent: #f59e0b;
-            --success: #10b981;
-            --danger: #ef4444;
+            --accent: #d97706;
+            --success: #059669;
+            --danger: #dc2626;
             --whatsapp: #25D366;
             --bg-primary: #ffffff;
-            --bg-secondary: #f8fafc;
-            --bg-tertiary: #f1f5f9;
+            --bg-secondary: #f9fafb;
+            --bg-tertiary: #f3f4f6;
             --bg-card: #ffffff;
-            --text-primary: #0f172a;
-            --text-secondary: #475569;
-            --text-muted: #94a3b8;
-            --border: #e2e8f0;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
-            --gradient-primary: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
-            --radius: 12px;
-            --radius-xl: 20px;
+            --text-primary: #111827;
+            --text-secondary: #4b5563;
+            --text-muted: #9ca3af;
+            --border: #e5e7eb;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --gradient-primary: linear-gradient(135deg, #1e40af 0%, #4f46e5 100%);
+            --radius: 16px;
+            --radius-xl: 24px;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
-            font-family: 'Tajawal', sans-serif;
+            font-family: 'Cairo', sans-serif;
             background: var(--bg-secondary);
             min-height: 100vh;
             color: var(--text-primary);
-            line-height: 1.6;
+            line-height: 1.5;
+            font-weight: 500;
+            transition: all 0.2s;
         }
+        body[dir="ltr"] { text-align: left; }
+        body[dir="rtl"] { text-align: right; }
         .bg-pattern {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1;
-            background: radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.08) 0px, transparent 50%),
-                        radial-gradient(at 100% 0%, rgba(124, 58, 237, 0.08) 0px, transparent 50%);
+            background: radial-gradient(at 0% 0%, rgba(30, 64, 175, 0.04) 0px, transparent 50%),
+                        radial-gradient(at 100% 100%, rgba(79, 70, 229, 0.04) 0px, transparent 50%);
+        }
+        .lang-switch {
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            z-index: 1100;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            padding: 0.4rem 0.2rem;
+            display: flex;
+            gap: 0.25rem;
+            box-shadow: var(--shadow-sm);
+            backdrop-filter: blur(4px);
+        }
+        .lang-btn {
+            padding: 0.4rem 0.9rem;
+            border-radius: 32px;
+            border: none;
+            background: transparent;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 800;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text-secondary);
+        }
+        .lang-btn.active {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-sm);
         }
         .nav-bar {
             position: fixed;
             bottom: 0; left: 0; right: 0;
-            background: var(--bg-primary);
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(10px);
             border-top: 1px solid var(--border);
-            padding: 0.75rem 1.5rem calc(0.75rem + env(safe-area-inset-bottom));
+            padding: 0.5rem 1.5rem calc(0.75rem + env(safe-area-inset-bottom));
             display: flex;
             justify-content: space-around;
             z-index: 1000;
@@ -69,19 +106,22 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-        .nav-item.active { color: var(--primary); background: rgba(37, 99, 235, 0.1); }
+        .nav-item i { font-size: 1.25rem; }
+        .nav-item.active { color: var(--primary); background: rgba(30, 64, 175, 0.08); }
         .page { display: none; min-height: 100vh; padding-bottom: 100px; }
         .page.active { display: block; animation: fadeIn 0.4s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
         
         .home-container { padding: 1.5rem; max-width: 600px; margin: 0 auto; }
-        .home-header-section { text-align: center; padding: 1rem 0 1rem; }
+        .home-header-section { text-align: center; padding: 1rem 0 1.5rem; }
         .home-logo {
             font-size: 2rem;
             font-weight: 900;
             background: var(--gradient-primary);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
         }
         .home-subtitle { color: var(--text-secondary); font-size: 0.9rem; font-weight: 500; margin-top: 0.25rem; }
         
@@ -89,26 +129,28 @@
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: var(--radius-xl);
-            padding: 1rem;
+            padding: 0.75rem;
             margin-bottom: 1.5rem;
             box-shadow: var(--shadow-sm);
+            transition: box-shadow 0.2s;
         }
+        .quick-add-input-section:focus-within { box-shadow: var(--shadow); border-color: var(--primary-light); }
         .quick-input-wrapper {
-            position: relative;
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
         .quick-input {
             flex: 1;
-            background: var(--bg-primary);
-            border: 2px solid var(--border);
+            background: var(--bg-tertiary);
+            border: none;
             border-radius: var(--radius-xl);
             padding: 0.9rem 1rem;
             font-size: 1rem;
-            font-family: 'Tajawal', sans-serif;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 500;
         }
-        .quick-input:focus { border-color: var(--primary); outline: none; }
+        .quick-input:focus { outline: none; background: var(--bg-primary); box-shadow: 0 0 0 2px var(--primary-light); }
         .quick-add-btn {
             background: var(--gradient-primary);
             border: none;
@@ -116,7 +158,7 @@
             padding: 0.9rem 1.2rem;
             border-radius: var(--radius-xl);
             font-weight: 800;
-            font-family: 'Tajawal', sans-serif;
+            font-family: 'Cairo', sans-serif;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -124,13 +166,15 @@
         }
         .voice-icon-btn {
             background: var(--bg-tertiary);
-            border: 1px solid var(--border);
+            border: none;
             border-radius: var(--radius-xl);
             width: 48px;
             cursor: pointer;
             color: var(--primary);
             font-size: 1.2rem;
+            transition: all 0.2s;
         }
+        .voice-icon-btn:hover { background: var(--border); }
         
         .home-list-section {
             background: var(--bg-card);
@@ -138,19 +182,18 @@
             border: 1px solid var(--border);
             overflow: hidden;
             box-shadow: var(--shadow);
-            margin-top: 0.5rem;
         }
         .home-list-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 1rem 1.25rem;
-            background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(124, 58, 237, 0.05) 100%);
+            background: linear-gradient(135deg, rgba(30, 64, 175, 0.03) 0%, rgba(79, 70, 229, 0.03) 100%);
             border-bottom: 1px solid var(--border);
         }
         .home-list-title { font-weight: 800; font-size: 1rem; display: flex; align-items: center; gap: 0.5rem; }
         .home-list-count {
-            background: var(--primary);
+            background: var(--gradient-primary);
             color: white;
             font-size: 0.75rem;
             padding: 0.25rem 0.75rem;
@@ -168,19 +211,20 @@
         }
         .home-list-item:hover { background: var(--bg-tertiary); }
         .home-item-checkbox {
-            width: 24px; height: 24px;
+            width: 26px; height: 26px;
             border: 2px solid var(--border);
-            border-radius: 6px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
+            transition: all 0.2s;
         }
         .home-item-checkbox.checked { background: var(--success); border-color: var(--success); }
-        .home-item-checkbox i { color: white; font-size: 0.75rem; opacity: 0; }
+        .home-item-checkbox i { color: white; font-size: 0.75rem; opacity: 0; transition: opacity 0.1s; }
         .home-item-checkbox.checked i { opacity: 1; }
         .home-item-info { flex: 1; display: flex; align-items: center; gap: 0.75rem; }
-        .item-icon { font-size: 1.2rem; width: 28px; text-align: center; }
+        .item-icon { font-size: 1.3rem; width: 32px; text-align: center; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.05)); }
         .home-item-name { font-weight: 700; font-size: 0.95rem; }
         .home-item-name.completed { text-decoration: line-through; color: var(--text-muted); }
         
@@ -188,9 +232,9 @@
             background: var(--whatsapp);
             color: white;
             border: none;
-            padding: 0.9rem;
+            padding: 1rem;
             width: 100%;
-            font-family: 'Tajawal', sans-serif;
+            font-family: 'Cairo', sans-serif;
             font-weight: 800;
             font-size: 1rem;
             border-radius: var(--radius-xl);
@@ -200,7 +244,7 @@
             justify-content: center;
             gap: 0.75rem;
             margin-top: 1rem;
-            transition: transform 0.2s;
+            transition: transform 0.2s, opacity 0.2s;
         }
         .share-whatsapp-btn:active { transform: scale(0.98); }
         
@@ -214,8 +258,10 @@
             font-weight: 800;
             font-size: 0.9rem;
             cursor: pointer;
-            font-family: 'Tajawal', sans-serif;
+            font-family: 'Cairo', sans-serif;
+            transition: background 0.2s;
         }
+        .view-all-btn:hover { background: var(--border); }
         
         .quick-container { padding: 1.5rem; max-width: 600px; margin: 0 auto; }
         .quick-header { text-align: center; margin-bottom: 1.5rem; }
@@ -223,12 +269,13 @@
         
         .categories-section { margin-bottom: 1.5rem; }
         .section-title {
-            font-size: 1.125rem;
+            font-size: 1.1rem;
             font-weight: 800;
             margin-bottom: 1rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            color: var(--text-primary);
         }
         .category-card {
             background: var(--bg-card);
@@ -237,14 +284,16 @@
             margin-bottom: 0.75rem;
             overflow: hidden;
             box-shadow: var(--shadow-sm);
+            transition: box-shadow 0.2s;
         }
+        .category-card:hover { box-shadow: var(--shadow); }
         .category-header {
             display: flex;
             align-items: center;
             gap: 1rem;
             padding: 1rem 1.25rem;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: background 0.2s ease;
         }
         .category-header:hover { background: var(--bg-tertiary); }
         .category-icon {
@@ -253,15 +302,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            font-size: 1.6rem;
+            background: var(--bg-tertiary);
         }
-        .category-icon.food { background: rgba(16, 185, 129, 0.1); }
-        .category-icon.veg { background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(5, 150, 105, 0.1)); }
-        .category-icon.home { background: rgba(245, 158, 11, 0.1); }
-        .category-icon.health { background: rgba(239, 68, 68, 0.1); }
         .category-info { flex: 1; }
         .category-name { font-weight: 800; font-size: 1rem; }
-        .category-count { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
+        .category-count { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; }
         .category-arrow {
             color: var(--text-muted);
             transition: transform 0.3s ease;
@@ -276,16 +322,16 @@
         .item-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 0.5rem;
+            gap: 0.6rem;
             padding-top: 1rem;
         }
         .item-btn {
-            padding: 0.75rem;
+            padding: 0.7rem;
             background: var(--bg-tertiary);
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            font-family: 'Tajawal', sans-serif;
-            font-size: 0.9rem;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.85rem;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -299,6 +345,7 @@
             background: var(--primary);
             color: white;
             border-color: var(--primary);
+            transform: translateY(-1px);
         }
         
         .page-header {
@@ -311,7 +358,7 @@
         }
         .page-title { font-size: 1.5rem; font-weight: 900; }
         .progress-container { margin-top: 1rem; }
-        .progress-header { display: flex; justify-content: space-between; font-size: 0.875rem; color: var(--text-secondary); font-weight: 500; margin-bottom: 0.5rem; }
+        .progress-header { display: flex; justify-content: space-between; font-size: 0.875rem; color: var(--text-secondary); font-weight: 600; margin-bottom: 0.5rem; }
         .progress-bar { height: 8px; background: var(--bg-tertiary); border-radius: 100px; overflow: hidden; }
         .progress-fill { height: 100%; background: var(--gradient-primary); border-radius: 100px; transition: width 0.6s ease; }
         .items-container { padding: 0 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; padding-bottom: 2rem; }
@@ -323,11 +370,13 @@
             display: flex;
             align-items: center;
             gap: 1rem;
+            transition: box-shadow 0.2s;
         }
+        .item-card:hover { box-shadow: var(--shadow-sm); }
         .item-checkbox {
             width: 28px; height: 28px;
             border: 2px solid var(--border);
-            border-radius: 8px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -337,26 +386,28 @@
         .item-checkbox i { color: white; font-size: 0.875rem; opacity: 0; }
         .item-checkbox.checked i { opacity: 1; }
         .item-content { flex: 1; display: flex; align-items: center; gap: 0.75rem; }
-        .item-icon-large { font-size: 1.3rem; width: 32px; text-align: center; }
+        .item-icon-large { font-size: 1.4rem; width: 36px; text-align: center; }
         .item-name { font-weight: 800; font-size: 1rem; }
         .item-name.completed { text-decoration: line-through; color: var(--text-muted); }
         .action-icon-btn {
-            width: 36px; height: 36px;
+            width: 38px; height: 38px;
             border-radius: var(--radius);
             border: none;
             background: var(--bg-tertiary);
             color: var(--text-muted);
             cursor: pointer;
+            transition: all 0.2s;
         }
+        .action-icon-btn:hover { background: var(--danger); color: white; }
         
         .toast {
             position: fixed;
             top: 20px; right: 50%;
             transform: translateX(50%) translateY(-100px);
-            background: var(--bg-card);
+            background: var(--bg-primary);
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            padding: 1rem 1.5rem;
+            padding: 0.8rem 1.5rem;
             display: flex;
             align-items: center;
             gap: 0.75rem;
@@ -364,12 +415,14 @@
             opacity: 0;
             transition: all 0.3s ease;
             box-shadow: var(--shadow-lg);
+            font-weight: 600;
         }
         .toast.show { transform: translateX(50%) translateY(0); opacity: 1; }
         .voice-modal {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(8px);
             z-index: 2000;
             display: none;
             align-items: center;
@@ -388,292 +441,393 @@
             font-size: 3rem;
             color: white;
             animation: voicePulse 1.5s infinite;
+            box-shadow: var(--shadow-lg);
         }
         @keyframes voicePulse {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.7); }
-            50% { transform: scale(1.1); box-shadow: 0 0 0 30px rgba(37, 99, 235, 0); }
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(30, 64, 175, 0.4); }
+            50% { transform: scale(1.08); box-shadow: 0 0 0 25px rgba(30, 64, 175, 0); }
         }
-        .empty-state { text-align: center; padding: 2rem; color: var(--text-muted); }
+        .empty-state { text-align: center; padding: 2rem; color: var(--text-muted); font-weight: 500; }
     </style>
 </head>
-<body>
+<body dir="rtl">
     <div class="bg-pattern"></div>
-    <div class="toast" id="toast"><div style="width: 32px; height: 32px; border-radius: 8px; background: var(--success); display: flex; align-items: center; justify-content: center; color: white;"><i class="fas fa-check"></i></div><span id="toastMessage">تم الإضافة</span></div>
-    <div class="voice-modal" id="voiceModal"><div class="voice-circle"><i class="fas fa-microphone"></i></div><div style="font-size: 1.25rem; font-weight: 700; color: var(--text-secondary);">جاري الاستماع...</div><button onclick="stopVoiceInput()" style="padding: 0.75rem 1.5rem; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 100px; font-family: 'Tajawal'; font-weight: 700; cursor: pointer;">إلغاء</button></div>
+    <div class="lang-switch">
+        <button class="lang-btn active" id="langAr" onclick="setLanguage('ar')">العربية</button>
+        <button class="lang-btn" id="langEn" onclick="setLanguage('en')">English</button>
+    </div>
+    <div class="toast" id="toast"><div style="width: 28px; height: 28px; border-radius: 10px; background: var(--success); display: flex; align-items: center; justify-content: center; color: white;"><i class="fas fa-check"></i></div><span id="toastMessage">تم الإضافة</span></div>
+    <div class="voice-modal" id="voiceModal"><div class="voice-circle"><i class="fas fa-microphone-alt"></i></div><div style="font-size: 1.25rem; font-weight: 800; color: var(--text-secondary);" id="voiceListeningText">جاري الاستماع...</div><button onclick="stopVoiceInput()" style="padding: 0.75rem 1.5rem; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 100px; font-family: 'Cairo'; font-weight: 700; cursor: pointer;">إلغاء</button></div>
 
-    <!-- الصفحة الرئيسية -->
     <div class="page active" id="homePage">
         <div class="home-container">
             <div class="home-header-section">
-                <h1 class="home-logo">قائمة التسوق الذكية</h1>
-                <p class="home-subtitle">أضف عناصرك بسرعة وشارك القائمة</p>
+                <h1 class="home-logo" id="appTitle">قائمة التسوق الذكية</h1>
+                <p class="home-subtitle" id="appSubtitle">إضافة سريعة · مشاركة احترافية</p>
             </div>
-            
             <div class="quick-add-input-section">
                 <div class="quick-input-wrapper">
-                    <input type="text" id="homeQuickItem" class="quick-input" placeholder="اكتب عنصراً... مثال: أكواب ورقية، خبز، شامبو" onkeypress="handleHomeQuickAdd(event)">
-                    <button class="quick-add-btn" onclick="addHomeQuickItem()"><i class="fas fa-plus"></i> أضف</button>
-                    <button class="voice-icon-btn" onclick="toggleVoiceInputHome()"><i class="fas fa-microphone"></i></button>
+                    <input type="text" id="homeQuickItem" class="quick-input" placeholder="اكتب عنصراً..." onkeypress="handleHomeQuickAdd(event)">
+                    <button class="quick-add-btn" onclick="addHomeQuickItem()" id="addBtnText"><i class="fas fa-plus-circle"></i> أضف</button>
+                    <button class="voice-icon-btn" onclick="toggleVoiceInputHome()"><i class="fas fa-microphone-alt"></i></button>
                 </div>
             </div>
-            
             <div class="home-list-section">
                 <div class="home-list-header">
-                    <div class="home-list-title"><i class="fas fa-shopping-basket" style="color: var(--primary);"></i> العناصر النشطة</div>
+                    <div class="home-list-title"><i class="fas fa-clipboard-list" style="color: var(--primary);"></i> <span id="activeListTitle">العناصر النشطة</span></div>
                     <span class="home-list-count" id="homeActiveCount">0</span>
                 </div>
                 <div id="homeActiveList"></div>
-                <button class="view-all-btn" onclick="navigateToList()">إدارة القائمة الكاملة <i class="fas fa-arrow-left"></i></button>
-                <button class="share-whatsapp-btn" onclick="shareListToWhatsApp()">
+                <button class="view-all-btn" onclick="navigateToList()" id="viewAllBtn">عرض وإدارة القائمة <i class="fas fa-arrow-left"></i></button>
+                <button class="share-whatsapp-btn" onclick="shareListToWhatsApp()" id="shareBtn">
                     <i class="fab fa-whatsapp"></i> مشاركة القائمة عبر واتساب
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- صفحة الإضافات بالفئات -->
     <div class="page" id="quickPage">
         <div class="quick-container">
             <div class="quick-header">
-                <h2><i class="fas fa-bolt" style="color: var(--accent);"></i> إضافة بالفئات</h2>
-                <p style="color: var(--text-muted);">اختر من القوائم أدناه</p>
+                <h2 id="quickTitle"><i class="fas fa-layer-group" style="color: var(--accent);"></i> إضافة بالفئات</h2>
+                <p style="color: var(--text-muted); font-weight: 500;" id="quickSubtitle">اختر من القوائم المصممة</p>
             </div>
             <div class="categories-section">
-                <div class="category-card">
-                    <div class="category-header" onclick="toggleCategory('veg')">
-                        <div class="category-icon veg">🥬</div>
-                        <div class="category-info"><div class="category-name">الخضروات والفواكه</div><div class="category-count">22 عنصر</div></div>
-                        <i class="fas fa-chevron-down category-arrow" id="arrow-veg"></i>
-                    </div>
-                    <div class="category-items" id="items-veg"><div class="item-grid" id="vegGrid"></div></div>
-                </div>
-                <div class="category-card">
-                    <div class="category-header" onclick="toggleCategory('food')">
-                        <div class="category-icon food">🍔</div>
-                        <div class="category-info"><div class="category-name">الطعام والمشروبات</div><div class="category-count">22 عنصر</div></div>
-                        <i class="fas fa-chevron-down category-arrow" id="arrow-food"></i>
-                    </div>
-                    <div class="category-items" id="items-food"><div class="item-grid" id="foodGrid"></div></div>
-                </div>
-                <div class="category-card">
-                    <div class="category-header" onclick="toggleCategory('health')">
-                        <div class="category-icon health">💊</div>
-                        <div class="category-info"><div class="category-name">الصحة والجمال</div><div class="category-count">16 عنصر</div></div>
-                        <i class="fas fa-chevron-down category-arrow" id="arrow-health"></i>
-                    </div>
-                    <div class="category-items" id="items-health"><div class="item-grid" id="healthGrid"></div></div>
-                </div>
-                <div class="category-card">
-                    <div class="category-header" onclick="toggleCategory('home')">
-                        <div class="category-icon home">🏠</div>
-                        <div class="category-info"><div class="category-name">المنزل والمستلزمات</div><div class="category-count">24 عنصر</div></div>
-                        <i class="fas fa-chevron-down category-arrow" id="arrow-home"></i>
-                    </div>
-                    <div class="category-items" id="items-home"><div class="item-grid" id="homeGrid"></div></div>
-                </div>
+                <div class="category-card"><div class="category-header" onclick="toggleCategory('veg')"><div class="category-icon">🥬</div><div class="category-info"><div class="category-name" id="catVeg">الخضروات والفواكه</div><div class="category-count">22</div></div><i class="fas fa-chevron-down category-arrow" id="arrow-veg"></i></div><div class="category-items" id="items-veg"><div class="item-grid" id="vegGrid"></div></div></div>
+                <div class="category-card"><div class="category-header" onclick="toggleCategory('food')"><div class="category-icon">🍔</div><div class="category-info"><div class="category-name" id="catFood">الطعام والمشروبات</div><div class="category-count">22</div></div><i class="fas fa-chevron-down category-arrow" id="arrow-food"></i></div><div class="category-items" id="items-food"><div class="item-grid" id="foodGrid"></div></div></div>
+                <div class="category-card"><div class="category-header" onclick="toggleCategory('health')"><div class="category-icon">💊</div><div class="category-info"><div class="category-name" id="catHealth">الصحة والجمال</div><div class="category-count">16</div></div><i class="fas fa-chevron-down category-arrow" id="arrow-health"></i></div><div class="category-items" id="items-health"><div class="item-grid" id="healthGrid"></div></div></div>
+                <div class="category-card"><div class="category-header" onclick="toggleCategory('home')"><div class="category-icon">🏠</div><div class="category-info"><div class="category-name" id="catHome">المنزل والمستلزمات</div><div class="category-count">24</div></div><i class="fas fa-chevron-down category-arrow" id="arrow-home"></i></div><div class="category-items" id="items-home"><div class="item-grid" id="homeGrid"></div></div></div>
             </div>
         </div>
     </div>
 
-    <!-- صفحة جميع العناصر -->
     <div class="page" id="listPage">
-        <div class="page-header"><h2 class="page-title">جميع العناصر</h2><div class="progress-container"><div class="progress-header"><span>تقدم التسوق</span><span id="progressText">0%</span></div><div class="progress-bar"><div class="progress-fill" id="progressBar" style="width: 0%"></div></div></div></div>
+        <div class="page-header"><h2 class="page-title" id="allItemsTitle">جميع العناصر</h2><div class="progress-container"><div class="progress-header"><span id="progressLabel">تقدم التسوق</span><span id="progressText">0%</span></div><div class="progress-bar"><div class="progress-fill" id="progressBar" style="width: 0%"></div></div></div></div>
         <div class="items-container" id="itemsList"></div>
     </div>
 
     <nav class="nav-bar">
-        <a class="nav-item active" onclick="showPage('home')"><i class="fas fa-home"></i><span>الرئيسية</span></a>
-        <a class="nav-item" onclick="showPage('quick')"><i class="fas fa-plus-circle"></i><span>الفئات</span></a>
-        <a class="nav-item" onclick="showPage('list')"><i class="fas fa-list-check"></i><span>جميع العناصر</span></a>
+        <a class="nav-item active" onclick="showPage('home')"><i class="fas fa-home"></i><span id="navHome">الرئيسية</span></a>
+        <a class="nav-item" onclick="showPage('quick')"><i class="fas fa-grid-2"></i><span id="navQuick">الفئات</span></a>
+        <a class="nav-item" onclick="showPage('list')"><i class="fas fa-list-ul"></i><span id="navList">جميع العناصر</span></a>
     </nav>
 
     <script>
         let items = JSON.parse(localStorage.getItem('smartlist_items')) || [];
         let recognition = null;
         let currentVoiceTarget = null;
+        let currentLang = 'ar';
         
-        function getIconForItem(name) {
-            const lowerName = name.toLowerCase();
-            if(lowerName.includes('خبز')) return '🍞';
-            if(lowerName.includes('حليب')) return '🥛';
-            if(lowerName.includes('بيض')) return '🥚';
-            if(lowerName.includes('جبن')) return '🧀';
-            if(lowerName.includes('دجاج')) return '🍗';
-            if(lowerName.includes('لحم')) return '🥩';
-            if(lowerName.includes('عسل')) return '🍯';
-            if(lowerName.includes('قهوة')) return '☕';
-            if(lowerName.includes('عصير')) return '🧃';
-            if(lowerName.includes('ماء')) return '💧';
-            if(lowerName.includes('موز') || lowerName.includes('تفاح') || lowerName.includes('برتقال')) return '🍎';
-            if(lowerName.includes('طماطم') || lowerName.includes('خيار')) return '🥕';
-            if(lowerName.includes('كزبرة') || lowerName.includes('بقدونس')) return '🌿';
-            if(lowerName.includes('شامبو')) return '🧴';
-            if(lowerName.includes('معجون')) return '🦷';
-            if(lowerName.includes('فيتامين')) return '💊';
-            if(lowerName.includes('صابون')) return '🧼';
-            if(lowerName.includes('مناديل')) return '🧻';
-            if(lowerName.includes('أكواب')) return '🥤';
-            if(lowerName.includes('أكياس زبالة')) return '🗑️';
-            if(lowerName.includes('لمبة')) return '💡';
-            return '📌';
-        }
-        
-        const itemsData = {
+        // قاعدة بيانات العناصر ثنائية اللغة (معرف فريد لكل عنصر)
+        const bilingualItemsDB = {
             veg: [
-                { name: 'كزبرة', icon: '🌿' }, { name: 'بقدونس', icon: '🌿' }, { name: 'خس', icon: '🥬' }, { name: 'سبانخ', icon: '🥬' },
-                { name: 'طماطم', icon: '🍅' }, { name: 'خيار', icon: '🥒' }, { name: 'جزر', icon: '🥕' }, { name: 'بصل', icon: '🧅' },
-                { name: 'ثوم', icon: '🧄' }, { name: 'بطاطس', icon: '🥔' }, { name: 'فلفل أخضر', icon: '🫑' }, { name: 'باذنجان', icon: '🍆' },
-                { name: 'كوسة', icon: '🥒' }, { name: 'قرنبيط', icon: '🥦' }, { name: 'بروكلي', icon: '🥦' }, { name: 'ليمون', icon: '🍋' },
-                { name: 'تفاح', icon: '🍎' }, { name: 'موز', icon: '🍌' }, { name: 'برتقال', icon: '🍊' }, { name: 'فراولة', icon: '🍓' },
-                { name: 'عنب', icon: '🍇' }, { name: 'بطيخ', icon: '🍉' }
+                { ar: 'كزبرة', en: 'Cilantro', icon: '🌿' }, { ar: 'بقدونس', en: 'Parsley', icon: '🌿' },
+                { ar: 'خس', en: 'Lettuce', icon: '🥬' }, { ar: 'سبانخ', en: 'Spinach', icon: '🥬' },
+                { ar: 'طماطم', en: 'Tomato', icon: '🍅' }, { ar: 'خيار', en: 'Cucumber', icon: '🥒' },
+                { ar: 'جزر', en: 'Carrot', icon: '🥕' }, { ar: 'بصل', en: 'Onion', icon: '🧅' },
+                { ar: 'ثوم', en: 'Garlic', icon: '🧄' }, { ar: 'بطاطس', en: 'Potato', icon: '🥔' },
+                { ar: 'فلفل أخضر', en: 'Green Pepper', icon: '🫑' }, { ar: 'باذنجان', en: 'Eggplant', icon: '🍆' },
+                { ar: 'كوسة', en: 'Zucchini', icon: '🥒' }, { ar: 'قرنبيط', en: 'Cauliflower', icon: '🥦' },
+                { ar: 'بروكلي', en: 'Broccoli', icon: '🥦' }, { ar: 'ليمون', en: 'Lemon', icon: '🍋' },
+                { ar: 'تفاح', en: 'Apple', icon: '🍎' }, { ar: 'موز', en: 'Banana', icon: '🍌' },
+                { ar: 'برتقال', en: 'Orange', icon: '🍊' }, { ar: 'فراولة', en: 'Strawberry', icon: '🍓' },
+                { ar: 'عنب', en: 'Grapes', icon: '🍇' }, { ar: 'بطيخ', en: 'Watermelon', icon: '🍉' }
             ],
             food: [
-                { name: 'زبادي', icon: '🥛' }, { name: 'زيت طبخ', icon: '🫒' }, { name: 'حليب', icon: '🥛' }, { name: 'خبز أسمر', icon: '🍞' },
-                { name: 'بيض', icon: '🥚' }, { name: 'جبنة بيضاء', icon: '🧀' }, { name: 'دجاج', icon: '🍗' }, { name: 'لحم مفروم', icon: '🥩' },
-                { name: 'أرز', icon: '🍚' }, { name: 'مكرونة', icon: '🍝' }, { name: 'عدس', icon: '🥣' }, { name: 'قهوة', icon: '☕' },
-                { name: 'شاي', icon: '🍵' }, { name: 'عسل', icon: '🍯' }, { name: 'صلصة', icon: '🥫' }, { name: 'زعتر', icon: '🌿' },
-                { name: 'طحينة', icon: '🥣' }, { name: 'عصير', icon: '🧃' }, { name: 'ماء', icon: '💧' }, { name: 'زبدة', icon: '🧈' }
+                { ar: 'زبادي', en: 'Yogurt', icon: '🥛' }, { ar: 'زيت طبخ', en: 'Cooking Oil', icon: '🫒' },
+                { ar: 'حليب', en: 'Milk', icon: '🥛' }, { ar: 'خبز أسمر', en: 'Brown Bread', icon: '🍞' },
+                { ar: 'بيض', en: 'Eggs', icon: '🥚' }, { ar: 'جبنة بيضاء', en: 'White Cheese', icon: '🧀' },
+                { ar: 'دجاج', en: 'Chicken', icon: '🍗' }, { ar: 'لحم مفروم', en: 'Ground Meat', icon: '🥩' },
+                { ar: 'أرز', en: 'Rice', icon: '🍚' }, { ar: 'مكرونة', en: 'Pasta', icon: '🍝' },
+                { ar: 'عدس', en: 'Lentils', icon: '🥣' }, { ar: 'قهوة', en: 'Coffee', icon: '☕' },
+                { ar: 'شاي', en: 'Tea', icon: '🍵' }, { ar: 'عسل', en: 'Honey', icon: '🍯' },
+                { ar: 'صلصة', en: 'Sauce', icon: '🥫' }, { ar: 'زعتر', en: 'Thyme', icon: '🌿' },
+                { ar: 'طحينة', en: 'Tahini', icon: '🥣' }, { ar: 'عصير', en: 'Juice', icon: '🧃' },
+                { ar: 'ماء', en: 'Water', icon: '💧' }, { ar: 'زبدة', en: 'Butter', icon: '🧈' }
             ],
             health: [
-                { name: 'شامبو', icon: '🧴' }, { name: 'معجون أسنان', icon: '🦷' }, { name: 'فرشاة أسنان', icon: '🪥' }, { name: 'فيتامينات', icon: '💊' },
-                { name: 'كريم ترطيب', icon: '🧴' }, { name: 'مطهر', icon: '🧼' }, { name: 'مسكن', icon: '💊' }, { name: 'واقي شمس', icon: '☀️' },
-                { name: 'زيت شعر', icon: '💧' }, { name: 'لوشن', icon: '🧴' }, { name: 'مكمل غذائي', icon: '💪' }, { name: 'صابون', icon: '🧼' }
+                { ar: 'شامبو', en: 'Shampoo', icon: '🧴' }, { ar: 'معجون أسنان', en: 'Toothpaste', icon: '🦷' },
+                { ar: 'فرشاة أسنان', en: 'Toothbrush', icon: '🪥' }, { ar: 'فيتامينات', en: 'Vitamins', icon: '💊' },
+                { ar: 'كريم ترطيب', en: 'Moisturizer', icon: '🧴' }, { ar: 'مطهر', en: 'Sanitizer', icon: '🧼' },
+                { ar: 'مسكن', en: 'Painkiller', icon: '💊' }, { ar: 'واقي شمس', en: 'Sunscreen', icon: '☀️' },
+                { ar: 'زيت شعر', en: 'Hair Oil', icon: '💧' }, { ar: 'لوشن', en: 'Lotion', icon: '🧴' },
+                { ar: 'مكمل غذائي', en: 'Supplement', icon: '💪' }, { ar: 'صابون', en: 'Soap', icon: '🧼' }
             ],
             home: [
-                { name: 'صابون سائل', icon: '🧼' }, { name: 'مناديل ورقية', icon: '🧻' }, { name: 'مسحوق غسيل', icon: '🧴' }, { name: 'معطر جو', icon: '🌸' },
-                { name: 'لمبات', icon: '💡' }, { name: 'بطاريات', icon: '🔋' }, { name: 'سلة مهملات', icon: '🗑️' }, { name: 'منظف زجاج', icon: '🪟' },
-                { name: 'إسفنج', icon: '🧽' }, { name: 'قفازات', icon: '🧤' }, { name: 'ممسحة', icon: '🧹' }, { name: 'أكواب ورقية', icon: '🥤' },
-                { name: 'أكياس زبالة', icon: '🗑️' }, { name: 'أطباق بلاستيك', icon: '🍽️' }, { name: 'قصدير', icon: '🥫' }, { name: 'مناديل مبللة', icon: '🧻' }
+                { ar: 'صابون سائل', en: 'Liquid Soap', icon: '🧼' }, { ar: 'مناديل ورقية', en: 'Tissues', icon: '🧻' },
+                { ar: 'مسحوق غسيل', en: 'Laundry Powder', icon: '🧴' }, { ar: 'معطر جو', en: 'Air Freshener', icon: '🌸' },
+                { ar: 'لمبات', en: 'Light Bulbs', icon: '💡' }, { ar: 'بطاريات', en: 'Batteries', icon: '🔋' },
+                { ar: 'سلة مهملات', en: 'Trash Can', icon: '🗑️' }, { ar: 'منظف زجاج', en: 'Glass Cleaner', icon: '🪟' },
+                { ar: 'إسفنج', en: 'Sponge', icon: '🧽' }, { ar: 'قفازات', en: 'Gloves', icon: '🧤' },
+                { ar: 'ممسحة', en: 'Mop', icon: '🧹' }, { ar: 'أكواب ورقية', en: 'Paper Cups', icon: '🥤' },
+                { ar: 'أكياس زبالة', en: 'Trash Bags', icon: '🗑️' }, { ar: 'أطباق بلاستيك', en: 'Plastic Plates', icon: '🍽️' },
+                { ar: 'قصدير', en: 'Foil', icon: '🥫' }, { ar: 'مناديل مبللة', en: 'Wet Wipes', icon: '🧻' }
             ]
         };
-
-        function buildCategoryGrids() {
-            for(let cat in itemsData) {
+        
+        // ترجمة النصوص العامة
+        const translations = {
+            ar: {
+                appTitle: 'قائمة التسوق الذكية', appSubtitle: 'إضافة سريعة · مشاركة احترافية',
+                addBtn: 'أضف', activeListTitle: 'العناصر النشطة', viewAll: 'عرض وإدارة القائمة', shareBtn: 'مشاركة القائمة عبر واتساب',
+                quickTitle: 'إضافة بالفئات', quickSubtitle: 'اختر من القوائم المصممة',
+                catVeg: 'الخضروات والفواكه', catFood: 'الطعام والمشروبات', catHealth: 'الصحة والجمال', catHome: 'المنزل والمستلزمات',
+                allItemsTitle: 'جميع العناصر', progressLabel: 'تقدم التسوق', navHome: 'الرئيسية', navQuick: 'الفئات', navList: 'جميع العناصر',
+                emptyActive: 'لا توجد عناصر نشطة', emptyHint: 'أضف عنصراً أعلاه', emptyList: 'القائمة فارغة',
+                toastAdded: '✅ تم إضافة', toastCompleted: '🎉 تم إكمال', toastDeleted: '🗑️ تم الحذف', toastEmpty: '⚠️ لا توجد عناصر للمشاركة',
+                voiceListening: 'جاري الاستماع...', placeholder: 'اكتب عنصراً... مثال: أكواب ورقية، خبز'
+            },
+            en: {
+                appTitle: 'Smart Shopping List', appSubtitle: 'Quick add · Professional sharing',
+                addBtn: 'Add', activeListTitle: 'Active Items', viewAll: 'View & Manage List', shareBtn: 'Share List via WhatsApp',
+                quickTitle: 'Add by Category', quickSubtitle: 'Choose from designed lists',
+                catVeg: 'Vegetables & Fruits', catFood: 'Food & Drinks', catHealth: 'Health & Beauty', catHome: 'Home & Supplies',
+                allItemsTitle: 'All Items', progressLabel: 'Shopping Progress', navHome: 'Home', navQuick: 'Categories', navList: 'All Items',
+                emptyActive: 'No active items', emptyHint: 'Add an item above', emptyList: 'List is empty',
+                toastAdded: '✅ Added', toastCompleted: '🎉 Completed', toastDeleted: '🗑️ Deleted', toastEmpty: '⚠️ No items to share',
+                voiceListening: 'Listening...', placeholder: 'Write item... e.g., Paper cups, Bread'
+            }
+        };
+        
+        // تحويل العناصر المخزنة إلى النص المطلوب حسب اللغة
+        function getLocalizedItemName(item) {
+            if (item.nameAr && item.nameEn) {
+                return currentLang === 'ar' ? item.nameAr : item.nameEn;
+            }
+            return item.name; // fallback
+        }
+        
+        // إعادة بناء قوائم الفئات حسب اللغة الحالية
+        function rebuildCategoryGrids() {
+            const categoryKeys = ['veg', 'food', 'health', 'home'];
+            for (let cat of categoryKeys) {
                 const grid = document.getElementById(cat + 'Grid');
-                if(grid) {
-                    grid.innerHTML = itemsData[cat].map(item => `<button class="item-btn" onclick="addFromCategory('${item.name}', '${cat}', '${item.icon}')"><span style="font-size:1.1rem">${item.icon}</span> ${item.name}</button>`).join('');
+                if (grid) {
+                    const itemsList = bilingualItemsDB[cat];
+                    grid.innerHTML = itemsList.map(item => {
+                        const displayName = currentLang === 'ar' ? item.ar : item.en;
+                        const originalAr = item.ar;
+                        const originalEn = item.en;
+                        return `<button class="item-btn" onclick="addFromCategory('${displayName}', '${cat}', '${item.icon}', '${originalAr}', '${originalEn}')">
+                                    <span style="font-size:1.1rem">${item.icon}</span> ${displayName}
+                                </button>`;
+                    }).join('');
                 }
             }
         }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            buildCategoryGrids();
-            initVoiceRecognition();
+        
+        // تحديث واجهة المستخدم بالكامل (نصوص عامة + قوائم الفئات + العناصر الحالية)
+        function applyLanguage() {
+            const t = translations[currentLang];
+            document.getElementById('appTitle').innerText = t.appTitle;
+            document.getElementById('appSubtitle').innerText = t.appSubtitle;
+            document.getElementById('addBtnText').innerHTML = `<i class="fas fa-plus-circle"></i> ${t.addBtn}`;
+            document.getElementById('activeListTitle').innerText = t.activeListTitle;
+            document.getElementById('viewAllBtn').innerHTML = `${t.viewAll} <i class="fas fa-arrow-left"></i>`;
+            document.getElementById('shareBtn').innerHTML = `<i class="fab fa-whatsapp"></i> ${t.shareBtn}`;
+            document.getElementById('quickTitle').innerHTML = `<i class="fas fa-layer-group" style="color: var(--accent);"></i> ${t.quickTitle}`;
+            document.getElementById('quickSubtitle').innerText = t.quickSubtitle;
+            document.getElementById('catVeg').innerText = t.catVeg;
+            document.getElementById('catFood').innerText = t.catFood;
+            document.getElementById('catHealth').innerText = t.catHealth;
+            document.getElementById('catHome').innerText = t.catHome;
+            document.getElementById('allItemsTitle').innerText = t.allItemsTitle;
+            document.getElementById('progressLabel').innerText = t.progressLabel;
+            document.getElementById('navHome').innerText = t.navHome;
+            document.getElementById('navQuick').innerText = t.navQuick;
+            document.getElementById('navList').innerText = t.navList;
+            document.getElementById('homeQuickItem').placeholder = t.placeholder;
+            document.getElementById('voiceListeningText').innerText = t.voiceListening;
+            
+            // إعادة بناء أزرار الفئات باللغة الجديدة
+            rebuildCategoryGrids();
+            
+            // تحديث عرض القائمة النشطة وجميع العناصر لعكس اللغة الجديدة
             renderHomeActiveList();
             renderItems();
-        });
-
-        function showPage(page) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.getElementById(page + 'Page').classList.add('active');
-            if(event && event.currentTarget) event.currentTarget.classList.add('active');
-            else {
-                const idx = { home:0, quick:1, list:2 }[page];
-                if(idx!==undefined) document.querySelectorAll('.nav-item')[idx].classList.add('active');
-            }
-            if(page === 'home') renderHomeActiveList();
-            else if(page === 'list') renderItems();
         }
-
-        function navigateToList() { showPage('list'); }
-        function toggleCategory(category) {
-            const div = document.getElementById('items-' + category);
-            const arrow = document.getElementById('arrow-' + category);
-            if(div && arrow) { div.classList.toggle('show'); arrow.classList.toggle('expanded'); }
+        
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.getElementById('langAr').classList.toggle('active', lang === 'ar');
+            document.getElementById('langEn').classList.toggle('active', lang === 'en');
+            document.body.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            applyLanguage();
         }
-
-        function addFromCategory(name, category, icon) {
-            const item = { id: Date.now(), name, category, completed: false, addedAt: new Date().toISOString(), icon: icon || getIconForItem(name) };
+        
+        function getIconForItem(name) {
+            const lowerName = name.toLowerCase();
+            if(lowerName.includes('خبز')||lowerName.includes('bread')) return '🍞';
+            if(lowerName.includes('حليب')||lowerName.includes('milk')) return '🥛';
+            if(lowerName.includes('بيض')||lowerName.includes('egg')) return '🥚';
+            if(lowerName.includes('دجاج')||lowerName.includes('chicken')) return '🍗';
+            if(lowerName.includes('موز')||lowerName.includes('banana')) return '🍌';
+            if(lowerName.includes('تفاح')||lowerName.includes('apple')) return '🍎';
+            if(lowerName.includes('قهوة')||lowerName.includes('coffee')) return '☕';
+            if(lowerName.includes('ماء')||lowerName.includes('water')) return '💧';
+            if(lowerName.includes('صابون')||lowerName.includes('soap')) return '🧼';
+            if(lowerName.includes('مناديل')||lowerName.includes('tissue')) return '🧻';
+            if(lowerName.includes('أكواب')||lowerName.includes('cups')) return '🥤';
+            if(lowerName.includes('أكياس')||lowerName.includes('bags')) return '🗑️';
+            return '✨';
+        }
+        
+        // إضافة عنصر مع حفظ الاسم باللغتين
+        function addFromCategory(displayName, category, icon, originalAr, originalEn) {
+            const item = { 
+                id: Date.now(), 
+                name: displayName,
+                nameAr: originalAr,
+                nameEn: originalEn,
+                category, 
+                completed: false, 
+                addedAt: new Date().toISOString(), 
+                icon: icon || '✨'
+            };
             items.unshift(item);
             saveItems();
             renderHomeActiveList();
             renderItems();
-            showToast(`✅ تم إضافة ${name}`);
+            showToast(`${translations[currentLang].toastAdded} ${displayName}`);
+        }
+        
+        function addCustomItem(text) {
+            const icon = getIconForItem(text);
+            const item = {
+                id: Date.now(),
+                name: text,
+                nameAr: text,
+                nameEn: text,
+                category: 'other',
+                completed: false,
+                addedAt: new Date().toISOString(),
+                icon: icon
+            };
+            items.unshift(item);
+            saveItems();
+            renderHomeActiveList();
+            renderItems();
+            showToast(`${translations[currentLang].toastAdded} ${text}`);
         }
         
         function addHomeQuickItem() {
             const input = document.getElementById('homeQuickItem');
             const text = input.value.trim();
             if(text === "") { showToast("✏️ الرجاء كتابة اسم العنصر"); return; }
-            addFromCategory(text, 'other', getIconForItem(text));
+            addCustomItem(text);
             input.value = "";
         }
         
-        function handleHomeQuickAdd(e) { if(e.key === 'Enter') addHomeQuickItem(); }
-
         function renderHomeActiveList() {
             const container = document.getElementById('homeActiveList');
             const activeItems = items.filter(i => !i.completed).slice(0, 6);
             document.getElementById('homeActiveCount').textContent = items.filter(i => !i.completed).length;
             if(activeItems.length === 0) {
-                container.innerHTML = '<div class="empty-state"><i class="fas fa-shopping-basket" style="font-size: 2rem; opacity: 0.3;"></i><p>لا توجد عناصر نشطة</p></div>';
+                container.innerHTML = `<div class="empty-state"><i class="fas fa-basket-shopping" style="font-size: 2rem; opacity: 0.3; margin-bottom: 0.5rem;"></i><p>${translations[currentLang].emptyActive}</p><p style="font-size:0.85rem">${translations[currentLang].emptyHint}</p></div>`;
                 return;
             }
-            container.innerHTML = activeItems.map(item => `
-                <div class="home-list-item" onclick="navigateToList()">
-                    <div class="home-item-checkbox ${item.completed ? 'checked' : ''}" onclick="event.stopPropagation(); toggleComplete(${item.id})">
-                        <i class="fas fa-check"></i>
-                    </div>
-                    <div class="home-item-info">
-                        <span class="item-icon">${item.icon || getIconForItem(item.name)}</span>
-                        <div class="home-item-name ${item.completed ? 'completed' : ''}">${item.name}</div>
-                    </div>
-                </div>
-            `).join('');
+            container.innerHTML = activeItems.map(item => {
+                const displayName = (currentLang === 'ar' && item.nameAr) ? item.nameAr : 
+                                   (currentLang === 'en' && item.nameEn) ? item.nameEn : item.name;
+                return `<div class="home-list-item" onclick="navigateToList()">
+                            <div class="home-item-checkbox ${item.completed ? 'checked' : ''}" onclick="event.stopPropagation(); toggleComplete(${item.id})">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="home-item-info">
+                                <span class="item-icon">${item.icon || '✨'}</span>
+                                <div class="home-item-name ${item.completed ? 'completed' : ''}">${displayName}</div>
+                            </div>
+                        </div>`;
+            }).join('');
         }
-
-        function toggleComplete(id) {
-            const item = items.find(i => i.id === id);
-            if(item) { item.completed = !item.completed; saveItems(); renderHomeActiveList(); renderItems(); if(item.completed) showToast(`🎉 تم إكمال ${item.name}!`); }
-        }
-
+        
         function renderItems() {
             const container = document.getElementById('itemsList');
-            if(items.length === 0) { container.innerHTML = '<div class="empty-state"><i class="fas fa-clipboard-list" style="font-size: 3rem; opacity: 0.3;"></i><p>القائمة فارغة</p></div>'; updateProgress(); return; }
-            container.innerHTML = items.map(item => `
-                <div class="item-card">
-                    <div class="item-checkbox ${item.completed ? 'checked' : ''}" onclick="toggleComplete(${item.id})"><i class="fas fa-check"></i></div>
-                    <div class="item-content">
-                        <span class="item-icon-large">${item.icon || getIconForItem(item.name)}</span>
-                        <div class="item-name ${item.completed ? 'completed' : ''}">${item.name}</div>
-                    </div>
-                    <button class="action-icon-btn" onclick="deleteItem(${item.id})"><i class="fas fa-trash"></i></button>
-                </div>
-            `).join('');
+            if(items.length === 0) { 
+                container.innerHTML = `<div class="empty-state"><i class="fas fa-clipboard-list" style="font-size: 3rem; opacity: 0.3;"></i><p>${translations[currentLang].emptyList}</p></div>`; 
+                updateProgress(); 
+                return; 
+            }
+            container.innerHTML = items.map(item => {
+                const displayName = (currentLang === 'ar' && item.nameAr) ? item.nameAr : 
+                                   (currentLang === 'en' && item.nameEn) ? item.nameEn : item.name;
+                return `<div class="item-card">
+                            <div class="item-checkbox ${item.completed ? 'checked' : ''}" onclick="toggleComplete(${item.id})"><i class="fas fa-check"></i></div>
+                            <div class="item-content">
+                                <span class="item-icon-large">${item.icon || '✨'}</span>
+                                <div class="item-name ${item.completed ? 'completed' : ''}">${displayName}</div>
+                            </div>
+                            <button class="action-icon-btn" onclick="deleteItem(${item.id})"><i class="fas fa-trash-alt"></i></button>
+                        </div>`;
+            }).join('');
             updateProgress();
         }
-
-        function deleteItem(id) { items = items.filter(i => i.id !== id); saveItems(); renderItems(); renderHomeActiveList(); showToast('🗑️ تم الحذف'); }
-
+        
+        function toggleComplete(id) {
+            const item = items.find(i => i.id === id);
+            if(item) { 
+                item.completed = !item.completed; 
+                saveItems(); 
+                renderHomeActiveList(); 
+                renderItems(); 
+                if(item.completed) showToast(`${translations[currentLang].toastCompleted} ${(currentLang === 'ar' && item.nameAr) ? item.nameAr : item.name}!`); 
+            }
+        }
+        
+        function deleteItem(id) { 
+            items = items.filter(i => i.id !== id); 
+            saveItems(); 
+            renderItems(); 
+            renderHomeActiveList(); 
+            showToast(translations[currentLang].toastDeleted); 
+        }
+        
         function updateProgress() { 
             const total = items.length, completed = items.filter(i => i.completed).length, percent = total === 0 ? 0 : Math.round((completed/total)*100); 
-            const bar = document.getElementById('progressBar'); const txt = document.getElementById('progressText');
-            if(bar) bar.style.width = percent+'%'; if(txt) txt.textContent = percent+'%';
+            const bar = document.getElementById('progressBar'); 
+            const txt = document.getElementById('progressText'); 
+            if(bar) bar.style.width = percent+'%'; 
+            if(txt) txt.textContent = percent+'%'; 
         }
-
-        // مشاركة القائمة عبر واتساب - رسالة واضحة باستخدام إيموجي ✅ و ⬜
+        
         function shareListToWhatsApp() {
-            if(items.length === 0) {
-                showToast("⚠️ لا توجد عناصر للمشاركة");
-                return;
-            }
-            let message = "";
-            items.forEach((item) => {
-                const icon = item.icon || getIconForItem(item.name);
-                const statusEmoji = item.completed ? "✅" : "⬜";
-                message += `${statusEmoji} ${icon} ${item.name}\n`;
+            if(items.length === 0) { showToast(translations[currentLang].toastEmpty); return; }
+            let message = ""; 
+            items.forEach((item) => { 
+                const icon = item.icon || '✨';
+                const displayName = (currentLang === 'ar' && item.nameAr) ? item.nameAr : 
+                                   (currentLang === 'en' && item.nameEn) ? item.nameEn : item.name;
+                const statusEmoji = item.completed ? "✅" : "⬜"; 
+                message += `${statusEmoji} ${icon} ${displayName}\n`; 
             });
-            const encodedMessage = encodeURIComponent(message.trim());
-            const whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
-            window.open(whatsappUrl, '_blank');
+            window.open(`https://wa.me/?text=${encodeURIComponent(message.trim())}`, '_blank');
         }
-
+        
+        function handleHomeQuickAdd(e) { if(e.key === 'Enter') addHomeQuickItem(); }
+        function navigateToList() { showPage('list'); }
+        
+        function showPage(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(page + 'Page').classList.add('active');
+            const idx = { home:0, quick:1, list:2 }[page];
+            if(idx!==undefined) document.querySelectorAll('.nav-item')[idx].classList.add('active');
+            if(page === 'home') renderHomeActiveList();
+            else if(page === 'list') renderItems();
+        }
+        
+        function toggleCategory(category) {
+            const div = document.getElementById('items-' + category);
+            const arrow = document.getElementById('arrow-' + category);
+            if(div && arrow) { div.classList.toggle('show'); arrow.classList.toggle('expanded'); }
+        }
+        
         function initVoiceRecognition() { 
             if('webkitSpeechRecognition' in window) { 
                 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition; 
                 recognition = new SpeechRecognition(); 
-                recognition.continuous = false; recognition.interimResults = false; recognition.lang = 'ar-SA'; 
+                recognition.continuous = false; recognition.interimResults = false; 
+                recognition.lang = currentLang === 'ar' ? 'ar-SA' : 'en-US'; 
                 recognition.onresult = (e) => { 
                     const transcript = e.results[0][0].transcript; 
                     if(currentVoiceTarget === 'home') {
@@ -683,14 +837,40 @@
                     stopVoiceInput(); 
                 }; 
                 recognition.onend = () => document.getElementById('voiceModal').classList.remove('show'); 
-                recognition.onerror = () => { stopVoiceInput(); showToast('لم يتم التعرف على الصوت'); }; 
+                recognition.onerror = () => { stopVoiceInput(); showToast('Voice not recognized'); }; 
             } 
         }
-        function toggleVoiceInputHome() { if(!recognition) { showToast('غير مدعوم'); return; } currentVoiceTarget = 'home'; const modal = document.getElementById('voiceModal'); if(modal.classList.contains('show')) stopVoiceInput(); else { modal.classList.add('show'); recognition.start(); } }
-        function stopVoiceInput() { if(recognition) recognition.abort(); document.getElementById('voiceModal').classList.remove('show'); currentVoiceTarget = null; }
         
+        function toggleVoiceInputHome() { 
+            if(!recognition) { showToast('Not supported'); return; } 
+            currentVoiceTarget = 'home'; 
+            const modal = document.getElementById('voiceModal'); 
+            if(modal.classList.contains('show')) stopVoiceInput(); 
+            else { 
+                recognition.lang = currentLang === 'ar' ? 'ar-SA' : 'en-US';
+                modal.classList.add('show'); 
+                recognition.start(); 
+            } 
+        }
+        
+        function stopVoiceInput() { if(recognition) recognition.abort(); document.getElementById('voiceModal').classList.remove('show'); currentVoiceTarget = null; }
         function saveItems() { localStorage.setItem('smartlist_items', JSON.stringify(items)); }
         function showToast(msg) { const toast = document.getElementById('toast'); document.getElementById('toastMessage').textContent = msg; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 2000); }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            initVoiceRecognition();
+            // تحويل العناصر القديمة إلى تنسيق ثنائي اللغة إن أمكن
+            items = items.map(item => {
+                if (!item.nameAr && !item.nameEn) {
+                    return { ...item, nameAr: item.name, nameEn: item.name };
+                }
+                return item;
+            });
+            rebuildCategoryGrids();
+            setLanguage('ar');
+            renderHomeActiveList();
+            renderItems();
+        });
     </script>
 </body>
 </html>
