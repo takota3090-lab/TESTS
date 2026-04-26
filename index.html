@@ -2,62 +2,69 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#ffffff">
-    <title>قائمة التسوق الذكية | أنيقة وعملية</title>
+    <title>قائمة التسوق الذكية | فئات متكاملة</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
         :root {
             --primary: #2563eb;
             --primary-light: #3b82f6;
-            --primary-dark: #1d4ed8;
-            --accent: #f59e0b;
             --success: #10b981;
             --danger: #ef4444;
             --whatsapp: #25D366;
             --bg-primary: #ffffff;
             --bg-secondary: #f8fafc;
             --bg-tertiary: #f1f5f9;
-            --bg-card: #ffffff;
             --text-primary: #0f172a;
             --text-secondary: #475569;
             --text-muted: #94a3b8;
             --border: #e2e8f0;
             --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
             --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
             --gradient-primary: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
             --radius: 12px;
             --radius-lg: 16px;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
         body {
             font-family: 'Inter', 'Cairo', sans-serif;
             background: var(--bg-secondary);
-            min-height: 100vh;
             color: var(--text-primary);
             line-height: 1.4;
             font-weight: 500;
             font-size: 14px;
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100vw;
         }
+
         body[dir="ltr"] { text-align: left; }
         body[dir="rtl"] { text-align: right; }
-        
-        /* Fixed Language Switcher - Top Left */
+
+        /* Fixed Language Switcher */
         .lang-switch {
             position: fixed;
             top: 12px;
             left: 12px;
             z-index: 1100;
             background: var(--bg-card);
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(8px);
             border: 1px solid var(--border);
             border-radius: 40px;
             padding: 0.25rem 0.2rem;
             display: flex;
             gap: 0.2rem;
             box-shadow: var(--shadow-sm);
-            backdrop-filter: blur(8px);
         }
         .lang-btn {
             padding: 0.3rem 0.8rem;
@@ -74,12 +81,14 @@
         .lang-btn.active {
             background: var(--gradient-primary);
             color: white;
-            box-shadow: var(--shadow-xs);
         }
-        
+
+        /* Bottom Navigation */
         .nav-bar {
             position: fixed;
-            bottom: 0; left: 0; right: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
             background: rgba(255, 255, 255, 0.96);
             backdrop-filter: blur(12px);
             border-top: 1px solid var(--border);
@@ -103,11 +112,25 @@
         }
         .nav-item i { font-size: 1.1rem; }
         .nav-item.active { color: var(--primary); background: rgba(37, 99, 235, 0.08); }
-        .page { display: none; min-height: 100vh; padding-bottom: 80px; }
+
+        /* Pages */
+        .page {
+            display: none;
+            min-height: 100vh;
+            padding-bottom: 80px;
+            width: 100%;
+            overflow-x: hidden;
+        }
         .page.active { display: block; animation: fadeIn 0.25s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .home-container, .quick-container { padding: 1rem; max-width: 560px; margin: 0 auto; }
+
+        /* Containers - full width with safe padding */
+        .home-container, .quick-container {
+            padding: 1rem;
+            width: 100%;
+            max-width: 560px;
+            margin: 0 auto;
+        }
         .home-header-section { text-align: center; padding: 0.5rem 0 1rem; }
         .home-logo {
             font-size: 1.6rem;
@@ -116,11 +139,10 @@
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
-            letter-spacing: -0.3px;
         }
-        .home-subtitle { color: var(--text-secondary); font-size: 0.75rem; font-weight: 500; margin-top: 0.2rem; }
-        
-        /* Compact Input Section */
+        .home-subtitle { color: var(--text-secondary); font-size: 0.75rem; margin-top: 0.2rem; }
+
+        /* Input Section */
         .quick-add-input-section {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -128,16 +150,16 @@
             padding: 0.6rem 0.8rem;
             margin-bottom: 1.2rem;
             box-shadow: var(--shadow-xs);
-            transition: box-shadow 0.2s;
         }
-        .quick-add-input-section:focus-within { box-shadow: var(--shadow); border-color: var(--primary-light); }
         .quick-input-wrapper {
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            flex-wrap: nowrap;
         }
         .quick-input {
             flex: 1;
+            min-width: 0;
             background: var(--bg-tertiary);
             border: none;
             border-radius: 40px;
@@ -171,56 +193,67 @@
             cursor: pointer;
             color: var(--primary);
             font-size: 1rem;
-            transition: all 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-shrink: 0;
         }
-        .voice-icon-btn:hover { background: var(--border); }
-        
-        /* Scrollable Active List */
+
+        /* Active List - Categorized Scrollable */
         .home-list-section {
             background: var(--bg-card);
             border-radius: var(--radius-lg);
             border: 1px solid var(--border);
             overflow: hidden;
-            box-shadow: var(--shadow-xs);
         }
         .home-list-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
             padding: 0.8rem 1rem;
-            background: linear-gradient(135deg, rgba(37, 99, 235, 0.02) 0%, rgba(79, 70, 229, 0.02) 100%);
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.02), rgba(79, 70, 229, 0.02));
             border-bottom: 1px solid var(--border);
         }
         .home-list-title { font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; gap: 0.4rem; }
-        .home-list-count {
-            background: var(--gradient-primary);
-            color: white;
-            font-size: 0.7rem;
-            padding: 0.2rem 0.6rem;
-            border-radius: 100px;
-            font-weight: 700;
-        }
-        .active-items-scroll {
-            max-height: 280px;
+        .categorized-scroll {
+            max-height: 380px;
             overflow-y: auto;
+            overflow-x: hidden;
             scrollbar-width: thin;
         }
-        .active-items-scroll::-webkit-scrollbar { width: 4px; }
-        .active-items-scroll::-webkit-scrollbar-track { background: var(--bg-tertiary); border-radius: 4px; }
-        .active-items-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+        .categorized-scroll::-webkit-scrollbar { width: 3px; }
+        .categorized-scroll::-webkit-scrollbar-track { background: var(--bg-tertiary); }
+        .categorized-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
         
+        .category-group {
+            margin-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .category-group:last-child { border-bottom: none; }
+        .category-group-header {
+            padding: 0.7rem 1rem 0.3rem;
+            font-weight: 800;
+            font-size: 0.75rem;
+            color: var(--primary);
+            background: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            position: sticky;
+            top: 0;
+            background: var(--bg-card);
+            z-index: 2;
+        }
+        .category-group-items {
+            padding: 0 0 0.25rem;
+        }
         .home-list-item {
             display: flex;
             align-items: center;
             gap: 0.8rem;
-            padding: 0.75rem 1rem;
-            border-bottom: 1px solid var(--border);
+            padding: 0.65rem 1rem;
             cursor: pointer;
             transition: background 0.1s;
+            border-bottom: 1px solid var(--border);
         }
+        .home-list-item:last-child { border-bottom: none; }
         .home-list-item:hover { background: var(--bg-tertiary); }
         .home-item-checkbox {
             width: 20px; height: 20px;
@@ -230,17 +263,17 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.2s;
+            flex-shrink: 0;
         }
         .home-item-checkbox.checked { background: var(--success); border-color: var(--success); }
-        .home-item-checkbox i { color: white; font-size: 0.6rem; opacity: 0; transition: opacity 0.1s; }
+        .home-item-checkbox i { color: white; font-size: 0.6rem; opacity: 0; }
         .home-item-checkbox.checked i { opacity: 1; }
-        .home-item-info { flex: 1; display: flex; align-items: center; gap: 0.6rem; }
-        .item-icon { font-size: 1.1rem; width: 24px; text-align: center; }
-        .home-item-name { font-weight: 600; font-size: 0.85rem; }
+        .home-item-info { flex: 1; display: flex; align-items: center; gap: 0.6rem; min-width: 0; }
+        .item-icon { font-size: 1rem; width: 24px; text-align: center; flex-shrink: 0; }
+        .home-item-name { font-weight: 600; font-size: 0.85rem; word-break: break-word; overflow-wrap: break-word; }
         .home-item-name.completed { text-decoration: line-through; color: var(--text-muted); }
-        
-        .share-whatsapp-btn, .view-all-btn {
+
+        .view-all-btn, .share-whatsapp-btn {
             width: 100%;
             padding: 0.7rem;
             text-align: center;
@@ -250,25 +283,20 @@
             font-weight: 700;
             font-size: 0.8rem;
             cursor: pointer;
-            font-family: inherit;
-            transition: background 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 0.5rem;
         }
         .share-whatsapp-btn { background: var(--whatsapp); color: white; margin-top: 0.5rem; border-radius: var(--radius); }
-        .view-all-btn:hover { background: var(--border); }
-        .share-whatsapp-btn:active { transform: scale(0.98); }
-        
-        /* Categories Section - Compact */
+
+        /* Categories Page */
         .category-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
             margin-bottom: 0.6rem;
             overflow: hidden;
-            box-shadow: var(--shadow-xs);
         }
         .category-header {
             display: flex;
@@ -276,7 +304,6 @@
             gap: 0.8rem;
             padding: 0.7rem 1rem;
             cursor: pointer;
-            transition: background 0.2s ease;
         }
         .category-header:hover { background: var(--bg-tertiary); }
         .category-icon {
@@ -287,16 +314,13 @@
             justify-content: center;
             font-size: 1.2rem;
             background: var(--bg-tertiary);
+            flex-shrink: 0;
         }
         .category-name { font-weight: 700; font-size: 0.85rem; }
-        .category-count { font-size: 0.65rem; color: var(--text-muted); font-weight: 600; }
-        .category-arrow { color: var(--text-muted); font-size: 0.75rem; transition: transform 0.3s ease; }
+        .category-count { font-size: 0.65rem; color: var(--text-muted); }
+        .category-arrow { color: var(--text-muted); font-size: 0.75rem; transition: transform 0.3s; margin-right: auto; }
         .category-arrow.expanded { transform: rotate(180deg); }
-        .category-items {
-            display: none;
-            padding: 0 1rem 0.8rem;
-            border-top: 1px solid var(--border);
-        }
+        .category-items { display: none; padding: 0 1rem 0.8rem; border-top: 1px solid var(--border); }
         .category-items.show { display: block; }
         .item-grid {
             display: grid;
@@ -313,21 +337,23 @@
             font-size: 0.75rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s ease;
             display: flex;
             align-items: center;
             gap: 0.4rem;
-            justify-content: flex-start;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
-        .item-btn:hover { background: var(--primary); color: white; border-color: var(--primary); transform: translateY(-1px); }
-        
+        .item-btn span { flex-shrink: 0; }
+        .item-btn:hover { background: var(--primary); color: white; }
+
+        /* All Items Page */
         .page-header { padding: 1rem; background: var(--bg-primary); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
         .page-title { font-size: 1.25rem; font-weight: 800; }
         .progress-container { margin-top: 0.6rem; }
-        .progress-header { display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--text-secondary); font-weight: 600; margin-bottom: 0.3rem; }
+        .progress-header { display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--text-secondary); margin-bottom: 0.3rem; }
         .progress-bar { height: 4px; background: var(--bg-tertiary); border-radius: 100px; overflow: hidden; }
-        .progress-fill { height: 100%; background: var(--gradient-primary); border-radius: 100px; transition: width 0.4s ease; }
-        
+        .progress-fill { height: 100%; background: var(--gradient-primary); border-radius: 100px; transition: width 0.4s; }
         .items-container { padding: 0 1rem; display: flex; flex-direction: column; gap: 0.6rem; padding-bottom: 2rem; }
         .item-card {
             background: var(--bg-card);
@@ -346,13 +372,14 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
+            flex-shrink: 0;
         }
         .item-checkbox.checked { background: var(--success); border-color: var(--success); }
         .item-checkbox i { color: white; font-size: 0.7rem; opacity: 0; }
         .item-checkbox.checked i { opacity: 1; }
-        .item-content { flex: 1; display: flex; align-items: center; gap: 0.6rem; }
-        .item-icon-large { font-size: 1.2rem; width: 28px; text-align: center; }
-        .item-name { font-weight: 700; font-size: 0.85rem; }
+        .item-content { flex: 1; display: flex; align-items: center; gap: 0.6rem; min-width: 0; }
+        .item-icon-large { font-size: 1.1rem; width: 28px; text-align: center; flex-shrink: 0; }
+        .item-name { font-weight: 700; font-size: 0.85rem; word-break: break-word; }
         .item-name.completed { text-decoration: line-through; color: var(--text-muted); }
         .action-icon-btn {
             width: 32px; height: 32px;
@@ -361,11 +388,8 @@
             background: var(--bg-tertiary);
             color: var(--text-muted);
             cursor: pointer;
-            transition: all 0.2s;
-            font-size: 0.8rem;
+            flex-shrink: 0;
         }
-        .action-icon-btn:hover { background: var(--danger); color: white; }
-        
         .toast {
             position: fixed;
             top: 60px; right: 50%;
@@ -379,10 +403,10 @@
             gap: 0.6rem;
             z-index: 3000;
             opacity: 0;
-            transition: all 0.25s ease;
-            box-shadow: var(--shadow);
-            font-weight: 600;
+            transition: all 0.25s;
+            box-shadow: var(--shadow-sm);
             font-size: 0.8rem;
+            white-space: nowrap;
         }
         .toast.show { transform: translateX(50%) translateY(0); opacity: 1; }
         .voice-modal {
@@ -407,15 +431,11 @@
             justify-content: center;
             font-size: 2.2rem;
             color: white;
-            animation: voicePulse 1.5s infinite;
-            box-shadow: var(--shadow);
+            animation: pulse 1.5s infinite;
         }
-        @keyframes voicePulse {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.3); }
-            50% { transform: scale(1.05); box-shadow: 0 0 0 20px rgba(37, 99, 235, 0); }
-        }
-        .empty-state { text-align: center; padding: 1.5rem; color: var(--text-muted); font-weight: 500; font-size: 0.8rem; }
-        .section-title { font-size: 0.9rem; font-weight: 800; margin: 0.8rem 0 0.5rem; display: flex; align-items: center; gap: 0.4rem; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.9; } }
+        .empty-state { text-align: center; padding: 1.5rem; color: var(--text-muted); font-size: 0.8rem; }
+        .section-title { font-size: 0.9rem; font-weight: 800; margin: 0.8rem 0 0.5rem; }
     </style>
 </head>
 <body dir="rtl">
@@ -423,14 +443,15 @@
         <button class="lang-btn active" id="langAr" onclick="setLanguage('ar')">العربية</button>
         <button class="lang-btn" id="langEn" onclick="setLanguage('en')">English</button>
     </div>
-    <div class="toast" id="toast"><div style="width: 22px; height: 22px; border-radius: 20px; background: var(--success); display: flex; align-items: center; justify-content: center; color: white;"><i class="fas fa-check" style="font-size: 0.7rem;"></i></div><span id="toastMessage">تم الإضافة</span></div>
-    <div class="voice-modal" id="voiceModal"><div class="voice-circle"><i class="fas fa-microphone-alt"></i></div><div style="font-size: 0.9rem; font-weight: 700; color: var(--text-secondary);" id="voiceListeningText">جاري الاستماع...</div><button onclick="stopVoiceInput()" style="padding: 0.5rem 1.2rem; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 40px; font-family: inherit; font-weight: 600; font-size: 0.8rem; cursor: pointer;">إلغاء</button></div>
+    <div class="toast" id="toast"><div style="width: 20px; height: 20px; border-radius: 20px; background: var(--success); display: flex; align-items: center; justify-content: center; color: white;"><i class="fas fa-check" style="font-size: 0.6rem;"></i></div><span id="toastMessage">تم الإضافة</span></div>
+    <div class="voice-modal" id="voiceModal"><div class="voice-circle"><i class="fas fa-microphone-alt"></i></div><div style="font-size: 0.9rem; font-weight: 700;" id="voiceListeningText">جاري الاستماع...</div><button onclick="stopVoiceInput()" style="padding: 0.5rem 1.2rem; background: var(--bg-tertiary); border: none; border-radius: 40px; font-family: inherit; font-weight: 600; font-size: 0.8rem; cursor: pointer;">إلغاء</button></div>
 
+    <!-- Home Page -->
     <div class="page active" id="homePage">
         <div class="home-container">
             <div class="home-header-section">
                 <h1 class="home-logo" id="appTitle">قائمة التسوق الذكية</h1>
-                <p class="home-subtitle" id="appSubtitle">إضافة سريعة · تصميم أنيق</p>
+                <p class="home-subtitle" id="appSubtitle">إضافة سريعة · فئات منظمة</p>
             </div>
             <div class="quick-add-input-section">
                 <div class="quick-input-wrapper">
@@ -441,26 +462,19 @@
             </div>
             <div class="home-list-section">
                 <div class="home-list-header">
-                    <div class="home-list-title"><i class="fas fa-clipboard-list" style="color: var(--primary); font-size: 0.8rem;"></i> <span id="activeListTitle">العناصر النشطة</span></div>
-                    <span class="home-list-count" id="homeActiveCount">0</span>
+                    <div class="home-list-title"><i class="fas fa-clipboard-list"></i> <span id="activeListTitle">العناصر النشطة حسب الفئة</span></div>
                 </div>
-                <div class="active-items-scroll" id="homeActiveListScroll">
-                    <div id="homeActiveList"></div>
-                </div>
+                <div class="categorized-scroll" id="categorizedActiveList"></div>
                 <button class="view-all-btn" onclick="navigateToList()" id="viewAllBtn">عرض وإدارة القائمة <i class="fas fa-arrow-left"></i></button>
-                <button class="share-whatsapp-btn" onclick="shareListToWhatsApp()" id="shareBtn">
-                    <i class="fab fa-whatsapp"></i> مشاركة القائمة عبر واتساب
-                </button>
+                <button class="share-whatsapp-btn" onclick="shareListToWhatsApp()" id="shareBtn"><i class="fab fa-whatsapp"></i> مشاركة القائمة</button>
             </div>
         </div>
     </div>
 
+    <!-- Categories Page -->
     <div class="page" id="quickPage">
         <div class="quick-container">
-            <div class="home-header-section" style="padding: 0.5rem 0 0.8rem;">
-                <h2 style="font-size: 1.2rem;" id="quickTitle"><i class="fas fa-layer-group" style="color: var(--accent);"></i> إضافة بالفئات</h2>
-                <p style="color: var(--text-muted); font-size: 0.7rem;" id="quickSubtitle">اختر من القوائم</p>
-            </div>
+            <div class="home-header-section"><h2 style="font-size: 1.2rem;" id="quickTitle"><i class="fas fa-layer-group"></i> إضافة بالفئات</h2><p style="font-size: 0.7rem; color: var(--text-muted);" id="quickSubtitle">اختر من القوائم</p></div>
             <div class="categories-section">
                 <div class="category-card"><div class="category-header" onclick="toggleCategory('veg')"><div class="category-icon">🥬</div><div class="category-info"><div class="category-name" id="catVeg">الخضروات والفواكه</div><div class="category-count">22</div></div><i class="fas fa-chevron-down category-arrow" id="arrow-veg"></i></div><div class="category-items" id="items-veg"><div class="item-grid" id="vegGrid"></div></div></div>
                 <div class="category-card"><div class="category-header" onclick="toggleCategory('food')"><div class="category-icon">🍔</div><div class="category-info"><div class="category-name" id="catFood">الطعام والمشروبات</div><div class="category-count">22</div></div><i class="fas fa-chevron-down category-arrow" id="arrow-food"></i></div><div class="category-items" id="items-food"><div class="item-grid" id="foodGrid"></div></div></div>
@@ -470,8 +484,9 @@
         </div>
     </div>
 
+    <!-- All Items Page -->
     <div class="page" id="listPage">
-        <div class="page-header"><h2 class="page-title" id="allItemsTitle">جميع العناصر</h2><div class="progress-container"><div class="progress-header"><span id="progressLabel">تقدم التسوق</span><span id="progressText">0%</span></div><div class="progress-bar"><div class="progress-fill" id="progressBar" style="width: 0%"></div></div></div></div>
+        <div class="page-header"><h2 class="page-title" id="allItemsTitle">جميع العناصر</h2><div class="progress-container"><div class="progress-header"><span id="progressLabel">تقدم التسوق</span><span id="progressText">0%</span></div><div class="progress-bar"><div class="progress-fill" id="progressBar"></div></div></div></div>
         <div class="items-container" id="itemsList"></div>
     </div>
 
@@ -486,48 +501,31 @@
         let recognition = null;
         let currentVoiceTarget = null;
         let currentLang = 'ar';
-        
-        const bilingualItemsDB = {
-            veg: [
-                { ar: 'كزبرة', en: 'Cilantro', icon: '🌿' }, { ar: 'بقدونس', en: 'Parsley', icon: '🌿' }, { ar: 'خس', en: 'Lettuce', icon: '🥬' }, { ar: 'سبانخ', en: 'Spinach', icon: '🥬' },
-                { ar: 'طماطم', en: 'Tomato', icon: '🍅' }, { ar: 'خيار', en: 'Cucumber', icon: '🥒' }, { ar: 'جزر', en: 'Carrot', icon: '🥕' }, { ar: 'بصل', en: 'Onion', icon: '🧅' },
-                { ar: 'ثوم', en: 'Garlic', icon: '🧄' }, { ar: 'بطاطس', en: 'Potato', icon: '🥔' }, { ar: 'فلفل أخضر', en: 'Green Pepper', icon: '🫑' }, { ar: 'باذنجان', en: 'Eggplant', icon: '🍆' },
-                { ar: 'كوسة', en: 'Zucchini', icon: '🥒' }, { ar: 'قرنبيط', en: 'Cauliflower', icon: '🥦' }, { ar: 'بروكلي', en: 'Broccoli', icon: '🥦' }, { ar: 'ليمون', en: 'Lemon', icon: '🍋' },
-                { ar: 'تفاح', en: 'Apple', icon: '🍎' }, { ar: 'موز', en: 'Banana', icon: '🍌' }, { ar: 'برتقال', en: 'Orange', icon: '🍊' }, { ar: 'فراولة', en: 'Strawberry', icon: '🍓' },
-                { ar: 'عنب', en: 'Grapes', icon: '🍇' }, { ar: 'بطيخ', en: 'Watermelon', icon: '🍉' }
-            ],
-            food: [
-                { ar: 'زبادي', en: 'Yogurt', icon: '🥛' }, { ar: 'زيت طبخ', en: 'Cooking Oil', icon: '🫒' }, { ar: 'حليب', en: 'Milk', icon: '🥛' }, { ar: 'خبز أسمر', en: 'Brown Bread', icon: '🍞' },
-                { ar: 'بيض', en: 'Eggs', icon: '🥚' }, { ar: 'جبنة بيضاء', en: 'White Cheese', icon: '🧀' }, { ar: 'دجاج', en: 'Chicken', icon: '🍗' }, { ar: 'لحم مفروم', en: 'Ground Meat', icon: '🥩' },
-                { ar: 'أرز', en: 'Rice', icon: '🍚' }, { ar: 'مكرونة', en: 'Pasta', icon: '🍝' }, { ar: 'عدس', en: 'Lentils', icon: '🥣' }, { ar: 'قهوة', en: 'Coffee', icon: '☕' },
-                { ar: 'شاي', en: 'Tea', icon: '🍵' }, { ar: 'عسل', en: 'Honey', icon: '🍯' }, { ar: 'صلصة', en: 'Sauce', icon: '🥫' }, { ar: 'زعتر', en: 'Thyme', icon: '🌿' },
-                { ar: 'طحينة', en: 'Tahini', icon: '🥣' }, { ar: 'عصير', en: 'Juice', icon: '🧃' }, { ar: 'ماء', en: 'Water', icon: '💧' }, { ar: 'زبدة', en: 'Butter', icon: '🧈' }
-            ],
-            health: [
-                { ar: 'شامبو', en: 'Shampoo', icon: '🧴' }, { ar: 'معجون أسنان', en: 'Toothpaste', icon: '🦷' }, { ar: 'فرشاة أسنان', en: 'Toothbrush', icon: '🪥' }, { ar: 'فيتامينات', en: 'Vitamins', icon: '💊' },
-                { ar: 'كريم ترطيب', en: 'Moisturizer', icon: '🧴' }, { ar: 'مطهر', en: 'Sanitizer', icon: '🧼' }, { ar: 'مسكن', en: 'Painkiller', icon: '💊' }, { ar: 'واقي شمس', en: 'Sunscreen', icon: '☀️' },
-                { ar: 'زيت شعر', en: 'Hair Oil', icon: '💧' }, { ar: 'لوشن', en: 'Lotion', icon: '🧴' }, { ar: 'مكمل غذائي', en: 'Supplement', icon: '💪' }, { ar: 'صابون', en: 'Soap', icon: '🧼' }
-            ],
-            home: [
-                { ar: 'صابون سائل', en: 'Liquid Soap', icon: '🧼' }, { ar: 'مناديل ورقية', en: 'Tissues', icon: '🧻' }, { ar: 'مسحوق غسيل', en: 'Laundry Powder', icon: '🧴' }, { ar: 'معطر جو', en: 'Air Freshener', icon: '🌸' },
-                { ar: 'لمبات', en: 'Light Bulbs', icon: '💡' }, { ar: 'بطاريات', en: 'Batteries', icon: '🔋' }, { ar: 'سلة مهملات', en: 'Trash Can', icon: '🗑️' }, { ar: 'منظف زجاج', en: 'Glass Cleaner', icon: '🪟' },
-                { ar: 'إسفنج', en: 'Sponge', icon: '🧽' }, { ar: 'قفازات', en: 'Gloves', icon: '🧤' }, { ar: 'ممسحة', en: 'Mop', icon: '🧹' }, { ar: 'أكواب ورقية', en: 'Paper Cups', icon: '🥤' },
-                { ar: 'أكياس زبالة', en: 'Trash Bags', icon: '🗑️' }, { ar: 'أطباق بلاستيك', en: 'Plastic Plates', icon: '🍽️' }, { ar: 'قصدير', en: 'Foil', icon: '🥫' }, { ar: 'مناديل مبللة', en: 'Wet Wipes', icon: '🧻' }
-            ]
+
+        const categoryNames = { veg: { ar: '🥬 خضروات وفواكه', en: '🥬 Vegetables & Fruits' }, food: { ar: '🍔 طعام ومشروبات', en: '🍔 Food & Drinks' }, health: { ar: '💊 صحة وجمال', en: '💊 Health & Beauty' }, home: { ar: '🏠 منزل ومستلزمات', en: '🏠 Home & Supplies' }, other: { ar: '📦 أخرى', en: '📦 Other' } };
+
+        const bilingualDB = {
+            veg: [{ ar:'كزبرة', en:'Cilantro', icon:'🌿'},{ar:'بقدونس', en:'Parsley', icon:'🌿'},{ar:'خس', en:'Lettuce', icon:'🥬'},{ar:'سبانخ', en:'Spinach', icon:'🥬'},{ar:'طماطم', en:'Tomato', icon:'🍅'},{ar:'خيار', en:'Cucumber', icon:'🥒'},{ar:'جزر', en:'Carrot', icon:'🥕'},{ar:'بصل', en:'Onion', icon:'🧅'},{ar:'ثوم', en:'Garlic', icon:'🧄'},{ar:'بطاطس', en:'Potato', icon:'🥔'},{ar:'فلفل', en:'Pepper', icon:'🫑'},{ar:'باذنجان', en:'Eggplant', icon:'🍆'},{ar:'كوسة', en:'Zucchini', icon:'🥒'},{ar:'قرنبيط', en:'Cauliflower', icon:'🥦'},{ar:'بروكلي', en:'Broccoli', icon:'🥦'},{ar:'ليمون', en:'Lemon', icon:'🍋'},{ar:'تفاح', en:'Apple', icon:'🍎'},{ar:'موز', en:'Banana', icon:'🍌'},{ar:'برتقال', en:'Orange', icon:'🍊'},{ar:'فراولة', en:'Strawberry', icon:'🍓'},{ar:'عنب', en:'Grapes', icon:'🍇'},{ar:'بطيخ', en:'Watermelon', icon:'🍉'}],
+            food: [{ar:'زبادي', en:'Yogurt', icon:'🥛'},{ar:'زيت طبخ', en:'Cooking Oil', icon:'🫒'},{ar:'حليب', en:'Milk', icon:'🥛'},{ar:'خبز', en:'Bread', icon:'🍞'},{ar:'بيض', en:'Eggs', icon:'🥚'},{ar:'جبنة', en:'Cheese', icon:'🧀'},{ar:'دجاج', en:'Chicken', icon:'🍗'},{ar:'لحم', en:'Meat', icon:'🥩'},{ar:'أرز', en:'Rice', icon:'🍚'},{ar:'مكرونة', en:'Pasta', icon:'🍝'},{ar:'عدس', en:'Lentils', icon:'🥣'},{ar:'قهوة', en:'Coffee', icon:'☕'},{ar:'شاي', en:'Tea', icon:'🍵'},{ar:'عسل', en:'Honey', icon:'🍯'},{ar:'صلصة', en:'Sauce', icon:'🥫'},{ar:'طحينة', en:'Tahini', icon:'🥣'},{ar:'عصير', en:'Juice', icon:'🧃'},{ar:'ماء', en:'Water', icon:'💧'}],
+            health: [{ar:'شامبو', en:'Shampoo', icon:'🧴'},{ar:'معجون أسنان', en:'Toothpaste', icon:'🦷'},{ar:'فرشاة أسنان', en:'Toothbrush', icon:'🪥'},{ar:'فيتامينات', en:'Vitamins', icon:'💊'},{ar:'كريم', en:'Cream', icon:'🧴'},{ar:'مطهر', en:'Sanitizer', icon:'🧼'},{ar:'مسكن', en:'Painkiller', icon:'💊'},{ar:'واقي شمس', en:'Sunscreen', icon:'☀️'},{ar:'زيت شعر', en:'Hair Oil', icon:'💧'},{ar:'لوشن', en:'Lotion', icon:'🧴'},{ar:'مكمل غذائي', en:'Supplement', icon:'💪'},{ar:'صابون', en:'Soap', icon:'🧼'}],
+            home: [{ar:'صابون سائل', en:'Liquid Soap', icon:'🧼'},{ar:'مناديل', en:'Tissues', icon:'🧻'},{ar:'مسحوق غسيل', en:'Detergent', icon:'🧴'},{ar:'معطر جو', en:'Air Freshener', icon:'🌸'},{ar:'لمبات', en:'Bulbs', icon:'💡'},{ar:'بطاريات', en:'Batteries', icon:'🔋'},{ar:'سلة مهملات', en:'Trash Can', icon:'🗑️'},{ar:'منظف زجاج', en:'Glass Cleaner', icon:'🪟'},{ar:'إسفنج', en:'Sponge', icon:'🧽'},{ar:'قفازات', en:'Gloves', icon:'🧤'},{ar:'ممسحة', en:'Mop', icon:'🧹'},{ar:'أكواب ورقية', en:'Paper Cups', icon:'🥤'},{ar:'أكياس زبالة', en:'Trash Bags', icon:'🗑️'},{ar:'أطباق', en:'Plates', icon:'🍽️'},{ar:'قصدير', en:'Foil', icon:'🥫'},{ar:'مناديل مبللة', en:'Wet Wipes', icon:'🧻'}]
         };
-        
+
         const translations = {
-            ar: { appTitle: 'قائمة التسوق الذكية', appSubtitle: 'إضافة سريعة · تصميم أنيق', addBtn: 'أضف', activeListTitle: 'العناصر النشطة', viewAll: 'عرض وإدارة القائمة', shareBtn: 'مشاركة القائمة عبر واتساب', quickTitle: 'إضافة بالفئات', quickSubtitle: 'اختر من القوائم', catVeg: 'الخضروات والفواكه', catFood: 'الطعام والمشروبات', catHealth: 'الصحة والجمال', catHome: 'المنزل والمستلزمات', allItemsTitle: 'جميع العناصر', progressLabel: 'تقدم التسوق', navHome: 'الرئيسية', navQuick: 'الفئات', navList: 'جميع العناصر', emptyActive: 'لا توجد عناصر نشطة', emptyHint: 'أضف عنصراً أعلاه', emptyList: 'القائمة فارغة', toastAdded: '✅ تم إضافة', toastCompleted: '🎉 تم إكمال', toastDeleted: '🗑️ تم الحذف', toastEmpty: '⚠️ لا توجد عناصر للمشاركة', voiceListening: 'جاري الاستماع...', placeholder: 'اكتب عنصراً... مثال: أكواب ورقية' },
-            en: { appTitle: 'Smart Shopping List', appSubtitle: 'Quick add · Elegant design', addBtn: 'Add', activeListTitle: 'Active Items', viewAll: 'View & Manage List', shareBtn: 'Share List via WhatsApp', quickTitle: 'Add by Category', quickSubtitle: 'Choose from lists', catVeg: 'Vegetables & Fruits', catFood: 'Food & Drinks', catHealth: 'Health & Beauty', catHome: 'Home & Supplies', allItemsTitle: 'All Items', progressLabel: 'Shopping Progress', navHome: 'Home', navQuick: 'Categories', navList: 'All Items', emptyActive: 'No active items', emptyHint: 'Add an item above', emptyList: 'List is empty', toastAdded: '✅ Added', toastCompleted: '🎉 Completed', toastDeleted: '🗑️ Deleted', toastEmpty: '⚠️ No items to share', voiceListening: 'Listening...', placeholder: 'Write item... e.g., Paper cups' }
+            ar: { appTitle:'قائمة التسوق الذكية', appSubtitle:'إضافة سريعة · فئات منظمة', addBtn:'أضف', activeListTitle:'العناصر النشطة حسب الفئة', viewAll:'عرض وإدارة القائمة', shareBtn:'مشاركة القائمة', quickTitle:'إضافة بالفئات', quickSubtitle:'اختر من القوائم', catVeg:'الخضروات والفواكه', catFood:'الطعام والمشروبات', catHealth:'الصحة والجمال', catHome:'المنزل والمستلزمات', allItemsTitle:'جميع العناصر', progressLabel:'تقدم التسوق', navHome:'الرئيسية', navQuick:'الفئات', navList:'جميع العناصر', emptyActive:'لا توجد عناصر نشطة', emptyHint:'أضف عنصراً أعلاه', emptyList:'القائمة فارغة', toastAdded:'✅ تم إضافة', toastCompleted:'🎉 تم إكمال', toastDeleted:'🗑️ تم الحذف', toastEmpty:'⚠️ لا توجد عناصر للمشاركة', voiceListening:'جاري الاستماع...', placeholder:'اكتب عنصراً...' },
+            en: { appTitle:'Smart Shopping List', appSubtitle:'Quick add · Organized categories', addBtn:'Add', activeListTitle:'Active Items by Category', viewAll:'View & Manage List', shareBtn:'Share List', quickTitle:'Add by Category', quickSubtitle:'Choose from lists', catVeg:'Vegetables & Fruits', catFood:'Food & Drinks', catHealth:'Health & Beauty', catHome:'Home & Supplies', allItemsTitle:'All Items', progressLabel:'Shopping Progress', navHome:'Home', navQuick:'Categories', navList:'All Items', emptyActive:'No active items', emptyHint:'Add an item above', emptyList:'List is empty', toastAdded:'✅ Added', toastCompleted:'🎉 Completed', toastDeleted:'🗑️ Deleted', toastEmpty:'⚠️ No items to share', voiceListening:'Listening...', placeholder:'Write item...' }
         };
-        
+
+        function getLocalizedItem(item) { return (currentLang === 'ar' && item.nameAr) ? item.nameAr : (currentLang === 'en' && item.nameEn) ? item.nameEn : item.name; }
+        function getCategoryLocalized(cat) { return categoryNames[cat]?.[currentLang] || cat; }
+
         function rebuildCategoryGrids() {
             for(let cat of ['veg','food','health','home']) {
                 const grid = document.getElementById(cat+'Grid');
-                if(grid) grid.innerHTML = bilingualItemsDB[cat].map(item => `<button class="item-btn" onclick="addFromCategory('${currentLang === 'ar' ? item.ar : item.en}', '${cat}', '${item.icon}', '${item.ar}', '${item.en}')"><span>${item.icon}</span> ${currentLang === 'ar' ? item.ar : item.en}</button>`).join('');
+                if(grid) grid.innerHTML = bilingualDB[cat].map(i => `<button class="item-btn" onclick="addFromCategory('${currentLang === 'ar' ? i.ar : i.en}', '${cat}', '${i.icon}', '${i.ar}', '${i.en}')"><span>${i.icon}</span> ${currentLang === 'ar' ? i.ar : i.en}</button>`).join('');
             }
         }
-        
+
         function applyLanguage() {
             const t = translations[currentLang];
             document.getElementById('appTitle').innerText = t.appTitle; document.getElementById('appSubtitle').innerText = t.appSubtitle;
@@ -535,44 +533,65 @@
             document.getElementById('activeListTitle').innerText = t.activeListTitle;
             document.getElementById('viewAllBtn').innerHTML = `${t.viewAll} <i class="fas fa-arrow-left"></i>`;
             document.getElementById('shareBtn').innerHTML = `<i class="fab fa-whatsapp"></i> ${t.shareBtn}`;
-            document.getElementById('quickTitle').innerHTML = `<i class="fas fa-layer-group" style="color: var(--accent);"></i> ${t.quickTitle}`;
+            document.getElementById('quickTitle').innerHTML = `<i class="fas fa-layer-group"></i> ${t.quickTitle}`;
             document.getElementById('quickSubtitle').innerText = t.quickSubtitle;
             document.getElementById('catVeg').innerText = t.catVeg; document.getElementById('catFood').innerText = t.catFood;
             document.getElementById('catHealth').innerText = t.catHealth; document.getElementById('catHome').innerText = t.catHome;
             document.getElementById('allItemsTitle').innerText = t.allItemsTitle; document.getElementById('progressLabel').innerText = t.progressLabel;
             document.getElementById('navHome').innerText = t.navHome; document.getElementById('navQuick').innerText = t.navQuick; document.getElementById('navList').innerText = t.navList;
             document.getElementById('homeQuickItem').placeholder = t.placeholder; document.getElementById('voiceListeningText').innerText = t.voiceListening;
-            rebuildCategoryGrids(); renderHomeActiveList(); renderItems();
+            rebuildCategoryGrids(); renderCategorizedActiveList(); renderItems();
         }
-        
+
         function setLanguage(lang) { currentLang = lang; document.getElementById('langAr').classList.toggle('active', lang === 'ar'); document.getElementById('langEn').classList.toggle('active', lang === 'en'); document.body.dir = lang === 'ar' ? 'rtl' : 'ltr'; applyLanguage(); }
-        function getLocalizedName(item) { return (currentLang === 'ar' && item.nameAr) ? item.nameAr : (currentLang === 'en' && item.nameEn) ? item.nameEn : item.name; }
-        function addFromCategory(displayName, category, icon, nameAr, nameEn) { items.unshift({ id: Date.now(), name: displayName, nameAr, nameEn, category, completed: false, addedAt: new Date().toISOString(), icon }); saveItems(); renderHomeActiveList(); renderItems(); showToast(`${translations[currentLang].toastAdded} ${displayName}`); }
-        function addCustomItem(text) { items.unshift({ id: Date.now(), name: text, nameAr: text, nameEn: text, category: 'other', completed: false, addedAt: new Date().toISOString(), icon: getIconForItem(text) }); saveItems(); renderHomeActiveList(); renderItems(); showToast(`${translations[currentLang].toastAdded} ${text}`); }
-        function getIconForItem(name) { const l = name.toLowerCase(); if(l.includes('خبز')||l.includes('bread')) return '🍞'; if(l.includes('حليب')||l.includes('milk')) return '🥛'; if(l.includes('قهوة')) return '☕'; if(l.includes('أكواب')||l.includes('cups')) return '🥤'; return '✨'; }
-        function addHomeQuickItem() { const input = document.getElementById('homeQuickItem'), text = input.value.trim(); if(!text) { showToast("✏️ الرجاء كتابة اسم العنصر"); return; } addCustomItem(text); input.value = ''; }
+
+        function addFromCategory(displayName, category, icon, nameAr, nameEn) { items.unshift({ id: Date.now(), name: displayName, nameAr, nameEn, category, completed: false, addedAt: new Date().toISOString(), icon }); saveAndRender(); showToast(`${translations[currentLang].toastAdded} ${displayName}`); }
+        function addCustomItem(text) { items.unshift({ id: Date.now(), name: text, nameAr: text, nameEn: text, category: 'other', completed: false, addedAt: new Date().toISOString(), icon: '✨' }); saveAndRender(); showToast(`${translations[currentLang].toastAdded} ${text}`); }
+        function addHomeQuickItem() { const input = document.getElementById('homeQuickItem'), text = input.value.trim(); if(!text) return; addCustomItem(text); input.value = ''; }
         function handleHomeQuickAdd(e) { if(e.key === 'Enter') addHomeQuickItem(); }
-        function renderHomeActiveList() {
-            const container = document.getElementById('homeActiveList');
+
+        function renderCategorizedActiveList() {
+            const container = document.getElementById('categorizedActiveList');
             const activeItems = items.filter(i => !i.completed);
-            document.getElementById('homeActiveCount').textContent = activeItems.length;
             if(activeItems.length === 0) { container.innerHTML = `<div class="empty-state"><i class="fas fa-basket-shopping"></i><p>${translations[currentLang].emptyActive}</p><p style="font-size:0.7rem">${translations[currentLang].emptyHint}</p></div>`; return; }
-            container.innerHTML = activeItems.map(item => `<div class="home-list-item" onclick="navigateToList()"><div class="home-item-checkbox ${item.completed ? 'checked' : ''}" onclick="event.stopPropagation(); toggleComplete(${item.id})"><i class="fas fa-check"></i></div><div class="home-item-info"><span class="item-icon">${item.icon || '✨'}</span><div class="home-item-name ${item.completed ? 'completed' : ''}">${getLocalizedName(item)}</div></div></div>`).join('');
+            const grouped = { veg: [], food: [], health: [], home: [], other: [] };
+            activeItems.forEach(item => { if(grouped[item.category]) grouped[item.category].push(item); else grouped.other.push(item); });
+            let html = '';
+            for(let cat of ['veg','food','health','home','other']) {
+                if(grouped[cat].length) {
+                    html += `<div class="category-group"><div class="category-group-header"><span>${getCategoryLocalized(cat)}</span><span style="font-size:0.65rem;"> (${grouped[cat].length})</span></div><div class="category-group-items">`;
+                    grouped[cat].forEach(item => { html += `<div class="home-list-item" onclick="navigateToList()"><div class="home-item-checkbox ${item.completed ? 'checked' : ''}" onclick="event.stopPropagation(); toggleComplete(${item.id})"><i class="fas fa-check"></i></div><div class="home-item-info"><span class="item-icon">${item.icon || '✨'}</span><div class="home-item-name">${getLocalizedItem(item)}</div></div></div>`; });
+                    html += `</div></div>`;
+                }
+            }
+            container.innerHTML = html;
         }
-        function renderItems() { const container = document.getElementById('itemsList'); if(items.length === 0) { container.innerHTML = `<div class="empty-state"><i class="fas fa-clipboard-list"></i><p>${translations[currentLang].emptyList}</p></div>`; updateProgress(); return; } container.innerHTML = items.map(item => `<div class="item-card"><div class="item-checkbox ${item.completed ? 'checked' : ''}" onclick="toggleComplete(${item.id})"><i class="fas fa-check"></i></div><div class="item-content"><span class="item-icon-large">${item.icon || '✨'}</span><div class="item-name ${item.completed ? 'completed' : ''}">${getLocalizedName(item)}</div></div><button class="action-icon-btn" onclick="deleteItem(${item.id})"><i class="fas fa-trash-alt"></i></button></div>`).join(''); updateProgress(); }
-        function toggleComplete(id) { const item = items.find(i => i.id === id); if(item) { item.completed = !item.completed; saveItems(); renderHomeActiveList(); renderItems(); if(item.completed) showToast(`${translations[currentLang].toastCompleted} ${getLocalizedName(item)}!`); } }
-        function deleteItem(id) { items = items.filter(i => i.id !== id); saveItems(); renderItems(); renderHomeActiveList(); showToast(translations[currentLang].toastDeleted); }
+
+        function renderItems() {
+            const container = document.getElementById('itemsList');
+            if(items.length === 0) { container.innerHTML = `<div class="empty-state"><i class="fas fa-clipboard-list"></i><p>${translations[currentLang].emptyList}</p></div>`; updateProgress(); return; }
+            container.innerHTML = items.map(item => `<div class="item-card"><div class="item-checkbox ${item.completed ? 'checked' : ''}" onclick="toggleComplete(${item.id})"><i class="fas fa-check"></i></div><div class="item-content"><span class="item-icon-large">${item.icon || '✨'}</span><div class="item-name ${item.completed ? 'completed' : ''}">${getLocalizedItem(item)}</div></div><button class="action-icon-btn" onclick="deleteItem(${item.id})"><i class="fas fa-trash-alt"></i></button></div>`).join('');
+            updateProgress();
+        }
+
+        function toggleComplete(id) { const item = items.find(i => i.id === id); if(item) { item.completed = !item.completed; saveAndRender(); if(item.completed) showToast(`${translations[currentLang].toastCompleted} ${getLocalizedItem(item)}!`); } }
+        function deleteItem(id) { items = items.filter(i => i.id !== id); saveAndRender(); showToast(translations[currentLang].toastDeleted); }
         function updateProgress() { const total = items.length, completed = items.filter(i => i.completed).length, percent = total === 0 ? 0 : Math.round((completed/total)*100); document.getElementById('progressBar').style.width = percent+'%'; document.getElementById('progressText').textContent = percent+'%'; }
-        function shareListToWhatsApp() { if(items.length === 0) { showToast(translations[currentLang].toastEmpty); return; } let msg = ''; items.forEach(item => { const icon = item.icon || '✨'; const status = item.completed ? '✅' : '⬜'; msg += `${status} ${icon} ${getLocalizedName(item)}\n`; }); window.open(`https://wa.me/?text=${encodeURIComponent(msg.trim())}`, '_blank'); }
-        function showPage(page) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); document.getElementById(page + 'Page').classList.add('active'); const idx = { home:0, quick:1, list:2 }[page]; if(idx!==undefined) document.querySelectorAll('.nav-item')[idx].classList.add('active'); if(page === 'home') renderHomeActiveList(); else if(page === 'list') renderItems(); }
+        function shareListToWhatsApp() { if(items.length === 0) { showToast(translations[currentLang].toastEmpty); return; } let msg = ''; items.forEach(item => { const status = item.completed ? '✅' : '⬜'; msg += `${status} ${item.icon || '✨'} ${getLocalizedItem(item)}\n`; }); window.open(`https://wa.me/?text=${encodeURIComponent(msg.trim())}`, '_blank'); }
+        function saveAndRender() { localStorage.setItem('smartlist_items', JSON.stringify(items)); renderCategorizedActiveList(); renderItems(); }
+        function showPage(page) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); document.getElementById(page + 'Page').classList.add('active'); const idx = { home:0, quick:1, list:2 }[page]; if(idx!==undefined) document.querySelectorAll('.nav-item')[idx].classList.add('active'); if(page === 'home') renderCategorizedActiveList(); else if(page === 'list') renderItems(); }
         function navigateToList() { showPage('list'); }
         function toggleCategory(cat) { const div = document.getElementById('items-'+cat); const arr = document.getElementById('arrow-'+cat); if(div && arr) { div.classList.toggle('show'); arr.classList.toggle('expanded'); } }
-        function initVoiceRecognition() { if('webkitSpeechRecognition' in window) { const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition; recognition = new SpeechRecognition(); recognition.continuous = false; recognition.interimResults = false; recognition.lang = currentLang === 'ar' ? 'ar-SA' : 'en-US'; recognition.onresult = (e) => { const transcript = e.results[0][0].transcript; if(currentVoiceTarget === 'home') { document.getElementById('homeQuickItem').value = transcript; addHomeQuickItem(); } stopVoiceInput(); }; recognition.onend = () => document.getElementById('voiceModal').classList.remove('show'); recognition.onerror = () => { stopVoiceInput(); showToast('Voice not recognized'); }; } }
-        function toggleVoiceInputHome() { if(!recognition) { showToast('Not supported'); return; } currentVoiceTarget = 'home'; const modal = document.getElementById('voiceModal'); if(modal.classList.contains('show')) stopVoiceInput(); else { recognition.lang = currentLang === 'ar' ? 'ar-SA' : 'en-US'; modal.classList.add('show'); recognition.start(); } }
+
+        function initVoiceRecognition() { if('webkitSpeechRecognition' in window) { const SR = window.SpeechRecognition || window.webkitSpeechRecognition; recognition = new SR(); recognition.continuous = false; recognition.interimResults = false; recognition.lang = currentLang === 'ar' ? 'ar-SA' : 'en-US'; recognition.onresult = (e) => { const transcript = e.results[0][0].transcript; if(currentVoiceTarget === 'home') { document.getElementById('homeQuickItem').value = transcript; addHomeQuickItem(); } stopVoiceInput(); }; recognition.onend = () => document.getElementById('voiceModal').classList.remove('show'); recognition.onerror = () => { stopVoiceInput(); }; } }
+        function toggleVoiceInputHome() { if(!recognition) return; currentVoiceTarget = 'home'; const modal = document.getElementById('voiceModal'); if(modal.classList.contains('show')) stopVoiceInput(); else { recognition.lang = currentLang === 'ar' ? 'ar-SA' : 'en-US'; modal.classList.add('show'); recognition.start(); } }
         function stopVoiceInput() { if(recognition) recognition.abort(); document.getElementById('voiceModal').classList.remove('show'); currentVoiceTarget = null; }
-        function saveItems() { localStorage.setItem('smartlist_items', JSON.stringify(items)); }
         function showToast(msg) { const toast = document.getElementById('toast'); document.getElementById('toastMessage').textContent = msg; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 2000); }
-        document.addEventListener('DOMContentLoaded', () => { items = items.map(i => ({ ...i, nameAr: i.nameAr || i.name, nameEn: i.nameEn || i.name })); initVoiceRecognition(); rebuildCategoryGrids(); setLanguage('ar'); renderHomeActiveList(); renderItems(); });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            items = items.map(i => ({ ...i, nameAr: i.nameAr || i.name, nameEn: i.nameEn || i.name }));
+            initVoiceRecognition(); rebuildCategoryGrids(); setLanguage('ar'); renderCategorizedActiveList(); renderItems();
+        });
     </script>
 </body>
 </html>
