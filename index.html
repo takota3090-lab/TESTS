@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#ffffff">
-    <title>قائمة التسوق الذكية | فئات متكاملة</title>
+    <title>قائمة التسوق الذكية | خيارات مشاركة متعددة</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -21,6 +21,9 @@
             --success: #10b981;
             --danger: #ef4444;
             --whatsapp: #25D366;
+            --telegram: #26A5E4;
+            --email: #3b82f6;
+            --copy: #6b7280;
             --bg-primary: #ffffff;
             --bg-secondary: #f8fafc;
             --bg-tertiary: #f1f5f9;
@@ -124,7 +127,7 @@
         .page.active { display: block; animation: fadeIn 0.25s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Containers - full width with safe padding */
+        /* Containers */
         .home-container, .quick-container {
             padding: 1rem;
             width: 100%;
@@ -241,9 +244,7 @@
             background: var(--bg-card);
             z-index: 2;
         }
-        .category-group-items {
-            padding: 0 0 0.25rem;
-        }
+        .category-group-items { padding: 0 0 0.25rem; }
         .home-list-item {
             display: flex;
             align-items: center;
@@ -273,7 +274,7 @@
         .home-item-name { font-weight: 600; font-size: 0.85rem; word-break: break-word; overflow-wrap: break-word; }
         .home-item-name.completed { text-decoration: line-through; color: var(--text-muted); }
 
-        .view-all-btn, .share-whatsapp-btn {
+        .view-all-btn {
             width: 100%;
             padding: 0.7rem;
             text-align: center;
@@ -288,7 +289,36 @@
             justify-content: center;
             gap: 0.5rem;
         }
-        .share-whatsapp-btn { background: var(--whatsapp); color: white; margin-top: 0.5rem; border-radius: var(--radius); }
+        
+        /* Share Options Grid */
+        .share-options {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            padding: 0 0 0.5rem;
+        }
+        .share-option {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.3rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+        .share-option i { font-size: 1.1rem; }
+        .share-option.whatsapp i { color: var(--whatsapp); }
+        .share-option.telegram i { color: var(--telegram); }
+        .share-option.email i { color: var(--email); }
+        .share-option.copy i { color: var(--copy); }
+        .share-option:hover { background: var(--border); transform: translateY(-1px); }
 
         /* Categories Page */
         .category-card {
@@ -344,7 +374,6 @@
             text-overflow: ellipsis;
             white-space: nowrap;
         }
-        .item-btn span { flex-shrink: 0; }
         .item-btn:hover { background: var(--primary); color: white; }
 
         /* All Items Page */
@@ -435,7 +464,6 @@
         }
         @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.9; } }
         .empty-state { text-align: center; padding: 1.5rem; color: var(--text-muted); font-size: 0.8rem; }
-        .section-title { font-size: 0.9rem; font-weight: 800; margin: 0.8rem 0 0.5rem; }
     </style>
 </head>
 <body dir="rtl">
@@ -466,7 +494,26 @@
                 </div>
                 <div class="categorized-scroll" id="categorizedActiveList"></div>
                 <button class="view-all-btn" onclick="navigateToList()" id="viewAllBtn">عرض وإدارة القائمة <i class="fas fa-arrow-left"></i></button>
-                <button class="share-whatsapp-btn" onclick="shareListToWhatsApp()" id="shareBtn"><i class="fab fa-whatsapp"></i> مشاركة القائمة</button>
+                
+                <!-- Multiple Share Options -->
+                <div class="share-options">
+                    <div class="share-option whatsapp" onclick="shareToWhatsApp()">
+                        <i class="fab fa-whatsapp"></i>
+                        <span>WhatsApp</span>
+                    </div>
+                    <div class="share-option telegram" onclick="shareToTelegram()">
+                        <i class="fab fa-telegram"></i>
+                        <span>Telegram</span>
+                    </div>
+                    <div class="share-option email" onclick="shareToEmail()">
+                        <i class="fas fa-envelope"></i>
+                        <span>بريد</span>
+                    </div>
+                    <div class="share-option copy" onclick="copyListToClipboard()">
+                        <i class="fas fa-copy"></i>
+                        <span>نسخ</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -512,12 +559,73 @@
         };
 
         const translations = {
-            ar: { appTitle:'قائمة التسوق الذكية', appSubtitle:'إضافة سريعة · فئات منظمة', addBtn:'أضف', activeListTitle:'العناصر النشطة حسب الفئة', viewAll:'عرض وإدارة القائمة', shareBtn:'مشاركة القائمة', quickTitle:'إضافة بالفئات', quickSubtitle:'اختر من القوائم', catVeg:'الخضروات والفواكه', catFood:'الطعام والمشروبات', catHealth:'الصحة والجمال', catHome:'المنزل والمستلزمات', allItemsTitle:'جميع العناصر', progressLabel:'تقدم التسوق', navHome:'الرئيسية', navQuick:'الفئات', navList:'جميع العناصر', emptyActive:'لا توجد عناصر نشطة', emptyHint:'أضف عنصراً أعلاه', emptyList:'القائمة فارغة', toastAdded:'✅ تم إضافة', toastCompleted:'🎉 تم إكمال', toastDeleted:'🗑️ تم الحذف', toastEmpty:'⚠️ لا توجد عناصر للمشاركة', voiceListening:'جاري الاستماع...', placeholder:'اكتب عنصراً...' },
-            en: { appTitle:'Smart Shopping List', appSubtitle:'Quick add · Organized categories', addBtn:'Add', activeListTitle:'Active Items by Category', viewAll:'View & Manage List', shareBtn:'Share List', quickTitle:'Add by Category', quickSubtitle:'Choose from lists', catVeg:'Vegetables & Fruits', catFood:'Food & Drinks', catHealth:'Health & Beauty', catHome:'Home & Supplies', allItemsTitle:'All Items', progressLabel:'Shopping Progress', navHome:'Home', navQuick:'Categories', navList:'All Items', emptyActive:'No active items', emptyHint:'Add an item above', emptyList:'List is empty', toastAdded:'✅ Added', toastCompleted:'🎉 Completed', toastDeleted:'🗑️ Deleted', toastEmpty:'⚠️ No items to share', voiceListening:'Listening...', placeholder:'Write item...' }
+            ar: { appTitle:'قائمة التسوق الذكية', appSubtitle:'إضافة سريعة · فئات منظمة', addBtn:'أضف', activeListTitle:'العناصر النشطة حسب الفئة', viewAll:'عرض وإدارة القائمة', quickTitle:'إضافة بالفئات', quickSubtitle:'اختر من القوائم', catVeg:'الخضروات والفواكه', catFood:'الطعام والمشروبات', catHealth:'الصحة والجمال', catHome:'المنزل والمستلزمات', allItemsTitle:'جميع العناصر', progressLabel:'تقدم التسوق', navHome:'الرئيسية', navQuick:'الفئات', navList:'جميع العناصر', emptyActive:'لا توجد عناصر نشطة', emptyHint:'أضف عنصراً أعلاه', emptyList:'القائمة فارغة', toastAdded:'✅ تم إضافة', toastCompleted:'🎉 تم إكمال', toastDeleted:'🗑️ تم الحذف', toastEmpty:'⚠️ لا توجد عناصر للمشاركة', toastCopied:'📋 تم نسخ القائمة', voiceListening:'جاري الاستماع...', placeholder:'اكتب عنصراً...' },
+            en: { appTitle:'Smart Shopping List', appSubtitle:'Quick add · Organized categories', addBtn:'Add', activeListTitle:'Active Items by Category', viewAll:'View & Manage List', quickTitle:'Add by Category', quickSubtitle:'Choose from lists', catVeg:'Vegetables & Fruits', catFood:'Food & Drinks', catHealth:'Health & Beauty', catHome:'Home & Supplies', allItemsTitle:'All Items', progressLabel:'Shopping Progress', navHome:'Home', navQuick:'Categories', navList:'All Items', emptyActive:'No active items', emptyHint:'Add an item above', emptyList:'List is empty', toastAdded:'✅ Added', toastCompleted:'🎉 Completed', toastDeleted:'🗑️ Deleted', toastEmpty:'⚠️ No items to share', toastCopied:'📋 List copied', voiceListening:'Listening...', placeholder:'Write item...' }
         };
 
         function getLocalizedItem(item) { return (currentLang === 'ar' && item.nameAr) ? item.nameAr : (currentLang === 'en' && item.nameEn) ? item.nameEn : item.name; }
         function getCategoryLocalized(cat) { return categoryNames[cat]?.[currentLang] || cat; }
+
+        // Generate share text - only active items, organized by category
+        function getShareText() {
+            const activeItems = items.filter(i => !i.completed);
+            if(activeItems.length === 0) return null;
+            
+            const grouped = { veg: [], food: [], health: [], home: [], other: [] };
+            activeItems.forEach(item => { if(grouped[item.category]) grouped[item.category].push(item); else grouped.other.push(item); });
+            
+            let text = currentLang === 'ar' ? '🛒 قائمة التسوق\n' : '🛒 Shopping List\n';
+            text += currentLang === 'ar' ? '═══════════════\n' : '═══════════════\n';
+            
+            for(let cat of ['veg','food','health','home','other']) {
+                if(grouped[cat].length) {
+                    text += `\n${getCategoryLocalized(cat)} (${grouped[cat].length})\n`;
+                    text += currentLang === 'ar' ? '───────────\n' : '───────────\n';
+                    grouped[cat].forEach(item => {
+                        text += `  ${item.icon || '•'} ${getLocalizedItem(item)}\n`;
+                    });
+                }
+            }
+            return text;
+        }
+
+        // Share Functions
+        function shareToWhatsApp() {
+            const text = getShareText();
+            if(!text) { showToast(translations[currentLang].toastEmpty); return; }
+            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+        }
+        
+        function shareToTelegram() {
+            const text = getShareText();
+            if(!text) { showToast(translations[currentLang].toastEmpty); return; }
+            window.open(`https://t.me/share/url?url=&text=${encodeURIComponent(text)}`, '_blank');
+        }
+        
+        function shareToEmail() {
+            const text = getShareText();
+            if(!text) { showToast(translations[currentLang].toastEmpty); return; }
+            const subject = currentLang === 'ar' ? 'قائمة التسوق' : 'Shopping List';
+            window.open(`mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(text)}`, '_blank');
+        }
+        
+        async function copyListToClipboard() {
+            const text = getShareText();
+            if(!text) { showToast(translations[currentLang].toastEmpty); return; }
+            try {
+                await navigator.clipboard.writeText(text);
+                showToast(translations[currentLang].toastCopied);
+            } catch(err) {
+                // fallback
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showToast(translations[currentLang].toastCopied);
+            }
+        }
 
         function rebuildCategoryGrids() {
             for(let cat of ['veg','food','health','home']) {
@@ -532,7 +640,6 @@
             document.getElementById('addBtnText').innerHTML = `<i class="fas fa-plus-circle"></i> ${t.addBtn}`;
             document.getElementById('activeListTitle').innerText = t.activeListTitle;
             document.getElementById('viewAllBtn').innerHTML = `${t.viewAll} <i class="fas fa-arrow-left"></i>`;
-            document.getElementById('shareBtn').innerHTML = `<i class="fab fa-whatsapp"></i> ${t.shareBtn}`;
             document.getElementById('quickTitle').innerHTML = `<i class="fas fa-layer-group"></i> ${t.quickTitle}`;
             document.getElementById('quickSubtitle').innerText = t.quickSubtitle;
             document.getElementById('catVeg').innerText = t.catVeg; document.getElementById('catFood').innerText = t.catFood;
@@ -577,7 +684,6 @@
         function toggleComplete(id) { const item = items.find(i => i.id === id); if(item) { item.completed = !item.completed; saveAndRender(); if(item.completed) showToast(`${translations[currentLang].toastCompleted} ${getLocalizedItem(item)}!`); } }
         function deleteItem(id) { items = items.filter(i => i.id !== id); saveAndRender(); showToast(translations[currentLang].toastDeleted); }
         function updateProgress() { const total = items.length, completed = items.filter(i => i.completed).length, percent = total === 0 ? 0 : Math.round((completed/total)*100); document.getElementById('progressBar').style.width = percent+'%'; document.getElementById('progressText').textContent = percent+'%'; }
-        function shareListToWhatsApp() { if(items.length === 0) { showToast(translations[currentLang].toastEmpty); return; } let msg = ''; items.forEach(item => { const status = item.completed ? '✅' : '⬜'; msg += `${status} ${item.icon || '✨'} ${getLocalizedItem(item)}\n`; }); window.open(`https://wa.me/?text=${encodeURIComponent(msg.trim())}`, '_blank'); }
         function saveAndRender() { localStorage.setItem('smartlist_items', JSON.stringify(items)); renderCategorizedActiveList(); renderItems(); }
         function showPage(page) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); document.getElementById(page + 'Page').classList.add('active'); const idx = { home:0, quick:1, list:2 }[page]; if(idx!==undefined) document.querySelectorAll('.nav-item')[idx].classList.add('active'); if(page === 'home') renderCategorizedActiveList(); else if(page === 'list') renderItems(); }
         function navigateToList() { showPage('list'); }
