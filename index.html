@@ -38,15 +38,18 @@
             overflow-x: hidden;
             width: 100%;
             max-width: 100vw;
+            padding-top: 60px; /* Space for fixed language switcher */
         }
 
         body[dir="ltr"] { text-align: left; }
         body[dir="rtl"] { text-align: right; }
 
+        /* Fixed Language Switcher - stays on top, doesn't scroll */
         .lang-switch {
             position: fixed;
             top: 12px;
             left: 12px;
+            right: auto;
             z-index: 1100;
             background: rgba(255, 255, 255, 0.96);
             backdrop-filter: blur(8px);
@@ -474,7 +477,7 @@
             <div class="quick-add-input-section">
                 <div class="quick-input-wrapper">
                     <input type="text" id="homeQuickItem" class="quick-input" placeholder="اكتب عنصراً..." onkeypress="handleHomeQuickAdd(event)">
-                    <button class="quick-add-btn" id="addBtnText"><i class="fas fa-plus-circle"></i> أضف</button>
+                    <button class="quick-add-btn" id="addBtnText" onclick="addHomeQuickItem()"><i class="fas fa-plus-circle"></i> أضف</button>
                     <button class="voice-icon-btn" id="voiceBtn"><i class="fas fa-microphone-alt"></i></button>
                 </div>
             </div>
@@ -628,6 +631,13 @@
 
         function addCustomItem(text) { addItem(text, 'other', '✨', text, text); }
 
+        function addHomeQuickItem() {
+            const input = document.getElementById('homeQuickItem');
+            const text = input.value.trim();
+            if(text) { addCustomItem(text); input.value = ''; }
+            else { showToast(currentLang === 'ar' ? 'الرجاء كتابة اسم العنصر' : 'Please enter an item name'); }
+        }
+
         function toggleComplete(id) {
             const item = items.find(i => i.id === id);
             if(item) { item.completed = !item.completed; saveUserData(); renderAll(); if(item.completed) showToast(`${translations[currentLang].toastCompleted} ${getLocalizedItem(item)}`); }
@@ -780,12 +790,6 @@
             isListening = false;
         }
 
-        function addHomeQuickItem() {
-            const input = document.getElementById('homeQuickItem');
-            const text = input.value.trim();
-            if(text) { addCustomItem(text); input.value = ''; }
-        }
-
         function handleHomeQuickAdd(e) { if(e.key === 'Enter') addHomeQuickItem(); }
 
         function showPage(page) {
@@ -819,6 +823,7 @@
         document.getElementById('authSwitchText').onclick = switchAuthMode;
         document.getElementById('voiceBtn').onclick = toggleVoiceInput;
         document.getElementById('shareBtn').onclick = shareList;
+        document.getElementById('viewAllBtn').onclick = () => showPage('list');
 
         // Initialize
         initVoiceRecognition();
