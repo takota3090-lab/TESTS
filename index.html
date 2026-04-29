@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#ffffff">
     <title>قائمة التسوق الذكية | حساب شخصي</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -17,9 +16,7 @@
 
         :root {
             --primary: #2563eb;
-            --primary-light: #3b82f6;
             --success: #10b981;
-            --danger: #ef4444;
             --whatsapp: #25D366;
             --bg-primary: #ffffff;
             --bg-secondary: #f8fafc;
@@ -28,8 +25,6 @@
             --text-secondary: #475569;
             --text-muted: #94a3b8;
             --border: #e2e8f0;
-            --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
-            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
             --gradient-primary: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
             --radius: 12px;
             --radius-lg: 16px;
@@ -39,8 +34,6 @@
             font-family: 'Inter', 'Cairo', sans-serif;
             background: var(--bg-secondary);
             color: var(--text-primary);
-            line-height: 1.4;
-            font-weight: 500;
             font-size: 14px;
             overflow-x: hidden;
             width: 100%;
@@ -50,7 +43,6 @@
         body[dir="ltr"] { text-align: left; }
         body[dir="rtl"] { text-align: right; }
 
-        /* Fixed Language Switcher */
         .lang-switch {
             position: fixed;
             top: 12px;
@@ -60,21 +52,19 @@
             backdrop-filter: blur(8px);
             border: 1px solid var(--border);
             border-radius: 40px;
-            padding: 0.25rem 0.2rem;
+            padding: 0.25rem;
             display: flex;
             gap: 0.2rem;
-            box-shadow: var(--shadow-sm);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
         .lang-btn {
             padding: 0.3rem 0.8rem;
             border-radius: 32px;
             border: none;
             background: transparent;
-            font-family: inherit;
             font-weight: 600;
             font-size: 0.7rem;
             cursor: pointer;
-            transition: all 0.2s;
             color: var(--text-secondary);
         }
         .lang-btn.active {
@@ -82,7 +72,6 @@
             color: white;
         }
 
-        /* Bottom Navigation */
         .nav-bar {
             position: fixed;
             bottom: 0;
@@ -107,24 +96,19 @@
             padding: 0.4rem 0.8rem;
             border-radius: var(--radius);
             cursor: pointer;
-            transition: all 0.2s;
         }
         .nav-item i { font-size: 1.1rem; }
         .nav-item.active { color: var(--primary); background: rgba(37, 99, 235, 0.08); }
 
-        /* Pages */
         .page {
             display: none;
             min-height: 100vh;
             padding-bottom: 80px;
             width: 100%;
-            overflow-x: hidden;
         }
-        .page.active { display: block; animation: fadeIn 0.25s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+        .page.active { display: block; }
 
-        /* Containers */
-        .home-container, .quick-container, .profile-container {
+        .home-container, .quick-container {
             padding: 1rem;
             width: 100%;
             max-width: 560px;
@@ -139,21 +123,19 @@
             background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        .home-subtitle { color: var(--text-secondary); font-size: 0.75rem; margin-top: 0.2rem; }
 
-        /* User Profile Card */
         .user-card {
             background: var(--gradient-primary);
             border-radius: var(--radius-lg);
-            padding: 1rem;
+            padding: 0.8rem 1rem;
             margin-bottom: 1rem;
             color: white;
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
-        .user-info h3 { font-size: 1rem; font-weight: 800; }
-        .user-info p { font-size: 0.7rem; opacity: 0.9; }
+        .user-info h3 { font-size: 0.95rem; font-weight: 800; }
+        .user-info p { font-size: 0.65rem; opacity: 0.9; }
         .logout-btn {
             background: rgba(255,255,255,0.2);
             border: none;
@@ -164,8 +146,7 @@
             cursor: pointer;
             font-weight: 600;
         }
-        
-        /* Auth Modal */
+
         .auth-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -186,7 +167,7 @@
             padding: 1.5rem;
             text-align: center;
         }
-        .auth-modal h3 { margin-bottom: 1rem; font-size: 1.2rem; }
+        .auth-modal h3 { margin-bottom: 1rem; }
         .auth-input {
             width: 100%;
             padding: 0.7rem;
@@ -213,33 +194,28 @@
             font-size: 0.8rem;
         }
 
-        /* Input Section */
         .quick-add-input-section {
-            background: var(--bg-card);
+            background: var(--bg-primary);
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
             padding: 0.6rem 0.8rem;
             margin-bottom: 1.2rem;
-            box-shadow: var(--shadow-xs);
         }
         .quick-input-wrapper {
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            flex-wrap: nowrap;
         }
         .quick-input {
             flex: 1;
-            min-width: 0;
             background: var(--bg-tertiary);
             border: none;
             border-radius: 40px;
             padding: 0.65rem 1rem;
             font-size: 0.85rem;
             font-family: inherit;
-            font-weight: 500;
         }
-        .quick-input:focus { outline: none; background: var(--bg-primary); box-shadow: 0 0 0 2px var(--primary-light); }
+        .quick-input:focus { outline: none; background: var(--bg-primary); box-shadow: 0 0 0 2px var(--primary); }
         .quick-add-btn {
             background: var(--gradient-primary);
             border: none;
@@ -248,7 +224,6 @@
             border-radius: 40px;
             font-weight: 700;
             font-size: 0.8rem;
-            font-family: inherit;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -267,42 +242,33 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-shrink: 0;
         }
 
-        /* Active List - Categorized Scrollable */
         .home-list-section {
-            background: var(--bg-card);
+            background: var(--bg-primary);
             border-radius: var(--radius-lg);
             border: 1px solid var(--border);
             overflow: hidden;
         }
         .home-list-header {
             padding: 0.8rem 1rem;
-            background: linear-gradient(135deg, rgba(37, 99, 235, 0.02), rgba(79, 70, 229, 0.02));
+            background: linear-gradient(135deg, rgba(37,99,235,0.02), rgba(79,70,229,0.02));
             border-bottom: 1px solid var(--border);
         }
-        .home-list-title { font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; gap: 0.4rem; }
+        .home-list-title { font-weight: 700; font-size: 0.85rem; }
         .categorized-scroll {
-            max-height: 380px;
+            max-height: 360px;
             overflow-y: auto;
-            overflow-x: hidden;
-            scrollbar-width: thin;
         }
-        .categorized-scroll::-webkit-scrollbar { width: 3px; }
         .category-group {
-            margin-bottom: 0.5rem;
             border-bottom: 1px solid var(--border);
         }
         .category-group-header {
-            padding: 0.7rem 1rem 0.3rem;
+            padding: 0.6rem 1rem 0.3rem;
             font-weight: 800;
             font-size: 0.75rem;
             color: var(--primary);
-            background: var(--bg-card);
-            position: sticky;
-            top: 0;
-            z-index: 2;
+            background: var(--bg-secondary);
         }
         .home-list-item {
             display: flex;
@@ -320,14 +286,13 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            flex-shrink: 0;
         }
         .home-item-checkbox.checked { background: var(--success); border-color: var(--success); }
         .home-item-checkbox i { color: white; font-size: 0.6rem; opacity: 0; }
         .home-item-checkbox.checked i { opacity: 1; }
-        .home-item-info { flex: 1; display: flex; align-items: center; gap: 0.6rem; min-width: 0; }
-        .item-icon { font-size: 1rem; width: 24px; text-align: center; flex-shrink: 0; }
-        .home-item-name { font-weight: 600; font-size: 0.85rem; word-break: break-word; }
+        .home-item-info { flex: 1; display: flex; align-items: center; gap: 0.6rem; }
+        .item-icon { font-size: 1rem; width: 24px; text-align: center; }
+        .home-item-name { font-weight: 600; font-size: 0.85rem; }
 
         .view-all-btn, .share-main-btn {
             width: 100%;
@@ -345,9 +310,8 @@
         .view-all-btn { background: var(--bg-tertiary); color: var(--primary); }
         .share-main-btn { background: var(--whatsapp); color: white; margin-top: 0.5rem; border-radius: var(--radius); }
 
-        /* Categories Page */
         .category-card {
-            background: var(--bg-card);
+            background: var(--bg-primary);
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
             margin-bottom: 0.6rem;
@@ -369,10 +333,9 @@
             justify-content: center;
             font-size: 1.2rem;
             background: var(--bg-tertiary);
-            flex-shrink: 0;
         }
         .category-name { font-weight: 700; font-size: 0.85rem; }
-        .category-arrow { color: var(--text-muted); font-size: 0.75rem; transition: transform 0.3s; margin-right: auto; }
+        .category-arrow { color: var(--text-muted); transition: transform 0.3s; margin-right: auto; }
         .category-arrow.expanded { transform: rotate(180deg); }
         .category-items { display: none; padding: 0 1rem 0.8rem; border-top: 1px solid var(--border); }
         .category-items.show { display: block; }
@@ -397,16 +360,15 @@
         }
         .item-btn:hover { background: var(--primary); color: white; }
 
-        /* All Items Page */
-        .page-header { padding: 1rem; background: var(--bg-primary); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+        .page-header { padding: 1rem; background: var(--bg-primary); border-bottom: 1px solid var(--border); position: sticky; top: 0; }
         .page-title { font-size: 1.25rem; font-weight: 800; }
         .progress-container { margin-top: 0.6rem; }
-        .progress-header { display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--text-secondary); margin-bottom: 0.3rem; }
+        .progress-header { display: flex; justify-content: space-between; font-size: 0.7rem; margin-bottom: 0.3rem; }
         .progress-bar { height: 4px; background: var(--bg-tertiary); border-radius: 100px; overflow: hidden; }
-        .progress-fill { height: 100%; background: var(--gradient-primary); border-radius: 100px; transition: width 0.4s; }
+        .progress-fill { height: 100%; background: var(--gradient-primary); transition: width 0.3s; }
         .items-container { padding: 0 1rem; display: flex; flex-direction: column; gap: 0.6rem; padding-bottom: 2rem; }
         .item-card {
-            background: var(--bg-card);
+            background: var(--bg-primary);
             border: 1px solid var(--border);
             border-radius: var(--radius);
             padding: 0.7rem;
@@ -422,27 +384,24 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            flex-shrink: 0;
         }
         .item-checkbox.checked { background: var(--success); border-color: var(--success); }
         .item-checkbox i { color: white; font-size: 0.7rem; opacity: 0; }
         .item-checkbox.checked i { opacity: 1; }
-        .item-content { flex: 1; display: flex; align-items: center; gap: 0.6rem; min-width: 0; }
-        .item-icon-large { font-size: 1.1rem; width: 28px; text-align: center; flex-shrink: 0; }
-        .item-name { font-weight: 700; font-size: 0.85rem; word-break: break-word; }
+        .item-content { flex: 1; display: flex; align-items: center; gap: 0.6rem; }
+        .item-icon-large { font-size: 1.1rem; width: 28px; text-align: center; }
+        .item-name { font-weight: 700; font-size: 0.85rem; }
         .item-name.completed { text-decoration: line-through; color: var(--text-muted); }
         .action-icon-btn {
             width: 32px; height: 32px;
             border-radius: var(--radius);
             border: none;
             background: var(--bg-tertiary);
-            color: var(--text-muted);
             cursor: pointer;
-            flex-shrink: 0;
         }
         .toast {
             position: fixed;
-            top: 60px; right: 50%;
+            top: 70px; right: 50%;
             transform: translateX(50%) translateY(-100px);
             background: var(--bg-primary);
             border: 1px solid var(--border);
@@ -453,8 +412,7 @@
             gap: 0.6rem;
             z-index: 3000;
             opacity: 0;
-            transition: all 0.25s;
-            box-shadow: var(--shadow-sm);
+            transition: 0.25s;
             font-size: 0.8rem;
             white-space: nowrap;
         }
@@ -462,7 +420,7 @@
         .voice-modal {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(255, 255, 255, 0.97);
+            background: rgba(255,255,255,0.97);
             backdrop-filter: blur(8px);
             z-index: 2000;
             display: none;
@@ -489,57 +447,46 @@
 </head>
 <body dir="rtl">
     <div class="lang-switch">
-        <button class="lang-btn active" id="langAr" onclick="setLanguage('ar')">العربية</button>
-        <button class="lang-btn" id="langEn" onclick="setLanguage('en')">English</button>
+        <button class="lang-btn active" id="langAr">العربية</button>
+        <button class="lang-btn" id="langEn">English</button>
     </div>
     
-    <!-- Auth Modal -->
     <div class="auth-overlay" id="authOverlay">
         <div class="auth-modal">
             <h3 id="authTitle">إنشاء حساب</h3>
             <input type="text" id="authName" class="auth-input" placeholder="الاسم">
             <input type="password" id="authPassword" class="auth-input" placeholder="كلمة المرور">
-            <button class="auth-btn" id="authSubmitBtn">تسجيل دخول</button>
+            <button class="auth-btn" id="authSubmitBtn">تسجيل</button>
             <p id="authSwitchText" class="switch-auth">لديك حساب؟ تسجيل دخول</p>
         </div>
     </div>
 
     <div class="toast" id="toast"><div style="width: 20px; height: 20px; border-radius: 20px; background: var(--success); display: flex; align-items: center; justify-content: center; color: white;"><i class="fas fa-check" style="font-size: 0.6rem;"></i></div><span id="toastMessage">تم الإضافة</span></div>
-    <div class="voice-modal" id="voiceModal"><div class="voice-circle"><i class="fas fa-microphone-alt"></i></div><div style="font-size: 0.9rem; font-weight: 700;" id="voiceListeningText">جاري الاستماع...</div><button onclick="stopVoiceInput()" style="padding: 0.5rem 1.2rem; background: var(--bg-tertiary); border: none; border-radius: 40px; font-family: inherit; font-weight: 600; font-size: 0.8rem; cursor: pointer;">إلغاء</button></div>
+    <div class="voice-modal" id="voiceModal"><div class="voice-circle"><i class="fas fa-microphone-alt"></i></div><div id="voiceListeningText" style="font-weight: 700;">جاري الاستماع...</div><button onclick="stopVoiceInput()" style="padding: 0.5rem 1.2rem; background: var(--bg-tertiary); border: none; border-radius: 40px; font-family: inherit; font-weight: 600; cursor: pointer;">إلغاء</button></div>
 
-    <!-- Home Page -->
     <div class="page active" id="homePage">
         <div class="home-container">
             <div class="user-card" id="userCard">
-                <div class="user-info">
-                    <h3 id="userNameDisplay">زائر</h3>
-                    <p id="userStatusText">غير مسجل</p>
-                </div>
-                <button class="logout-btn" id="authBtn" onclick="showAuthModal()">تسجيل دخول</button>
+                <div class="user-info"><h3 id="userNameDisplay">زائر</h3><p id="userStatusText">غير مسجل</p></div>
+                <button class="logout-btn" id="authBtn">تسجيل دخول</button>
             </div>
-            <div class="home-header-section">
-                <h1 class="home-logo" id="appTitle">قائمة التسوق الذكية</h1>
-                <p class="home-subtitle" id="appSubtitle">إضافة سريعة · فئات منظمة</p>
-            </div>
+            <div class="home-header-section"><h1 class="home-logo" id="appTitle">قائمة التسوق الذكية</h1><p class="home-subtitle" id="appSubtitle">إضافة سريعة · فئات منظمة</p></div>
             <div class="quick-add-input-section">
                 <div class="quick-input-wrapper">
                     <input type="text" id="homeQuickItem" class="quick-input" placeholder="اكتب عنصراً..." onkeypress="handleHomeQuickAdd(event)">
-                    <button class="quick-add-btn" onclick="addHomeQuickItem()" id="addBtnText"><i class="fas fa-plus-circle"></i> أضف</button>
-                    <button class="voice-icon-btn" onclick="toggleVoiceInputHome()"><i class="fas fa-microphone-alt"></i></button>
+                    <button class="quick-add-btn" id="addBtnText"><i class="fas fa-plus-circle"></i> أضف</button>
+                    <button class="voice-icon-btn" id="voiceBtn"><i class="fas fa-microphone-alt"></i></button>
                 </div>
             </div>
             <div class="home-list-section">
-                <div class="home-list-header">
-                    <div class="home-list-title"><i class="fas fa-clipboard-list"></i> <span id="activeListTitle">العناصر النشطة حسب الفئة</span></div>
-                </div>
+                <div class="home-list-header"><div class="home-list-title"><i class="fas fa-clipboard-list"></i> <span id="activeListTitle">العناصر النشطة حسب الفئة</span></div></div>
                 <div class="categorized-scroll" id="categorizedActiveList"></div>
-                <button class="view-all-btn" onclick="navigateToList()" id="viewAllBtn">عرض وإدارة القائمة <i class="fas fa-arrow-left"></i></button>
-                <button class="share-main-btn" onclick="shareList()" id="shareBtn"><i class="fas fa-share-alt"></i> مشاركة القائمة</button>
+                <button class="view-all-btn" id="viewAllBtn">عرض وإدارة القائمة <i class="fas fa-arrow-left"></i></button>
+                <button class="share-main-btn" id="shareBtn"><i class="fas fa-share-alt"></i> مشاركة القائمة</button>
             </div>
         </div>
     </div>
 
-    <!-- Categories Page -->
     <div class="page" id="quickPage">
         <div class="quick-container">
             <div class="home-header-section"><h2 style="font-size: 1.2rem;" id="quickTitle"><i class="fas fa-layer-group"></i> إضافة بالفئات</h2><p style="font-size: 0.7rem; color: var(--text-muted);" id="quickSubtitle">اختر من القوائم</p></div>
@@ -552,7 +499,6 @@
         </div>
     </div>
 
-    <!-- All Items Page -->
     <div class="page" id="listPage">
         <div class="page-header"><h2 class="page-title" id="allItemsTitle">جميع العناصر</h2><div class="progress-container"><div class="progress-header"><span id="progressLabel">تقدم التسوق</span><span id="progressText">0%</span></div><div class="progress-bar"><div class="progress-fill" id="progressBar"></div></div></div></div>
         <div class="items-container" id="itemsList"></div>
@@ -565,20 +511,44 @@
     </nav>
 
     <script>
-        // User System
+        // ---------- USER SYSTEM ----------
         let currentUser = JSON.parse(localStorage.getItem('smartlist_current_user')) || null;
         let users = JSON.parse(localStorage.getItem('smartlist_users')) || [];
-        
         let items = [];
-        let recognition = null;
-        let currentVoiceTarget = null;
         let currentLang = 'ar';
-        let authMode = 'register'; // 'register' or 'login'
+        let authMode = 'register';
+        let recognition = null;
+        let isListening = false;
+
+        // Category data
+        const categoryNames = {
+            veg: { ar: '🥬 خضروات وفواكه', en: '🥬 Vegetables & Fruits' },
+            food: { ar: '🍔 طعام ومشروبات', en: '🍔 Food & Drinks' },
+            health: { ar: '💊 صحة وجمال', en: '💊 Health & Beauty' },
+            home: { ar: '🏠 منزل ومستلزمات', en: '🏠 Home & Supplies' },
+            other: { ar: '📦 أخرى', en: '📦 Other' }
+        };
+
+        const bilingualDB = {
+            veg: [{ ar:'كزبرة', en:'Cilantro', icon:'🌿'},{ar:'بقدونس', en:'Parsley', icon:'🌿'},{ar:'خس', en:'Lettuce', icon:'🥬'},{ar:'سبانخ', en:'Spinach', icon:'🥬'},{ar:'طماطم', en:'Tomato', icon:'🍅'},{ar:'خيار', en:'Cucumber', icon:'🥒'},{ar:'جزر', en:'Carrot', icon:'🥕'},{ar:'بصل', en:'Onion', icon:'🧅'},{ar:'ثوم', en:'Garlic', icon:'🧄'},{ar:'بطاطس', en:'Potato', icon:'🥔'},{ar:'فلفل', en:'Pepper', icon:'🫑'},{ar:'باذنجان', en:'Eggplant', icon:'🍆'},{ar:'كوسة', en:'Zucchini', icon:'🥒'},{ar:'قرنبيط', en:'Cauliflower', icon:'🥦'},{ar:'بروكلي', en:'Broccoli', icon:'🥦'},{ar:'ليمون', en:'Lemon', icon:'🍋'},{ar:'تفاح', en:'Apple', icon:'🍎'},{ar:'موز', en:'Banana', icon:'🍌'},{ar:'برتقال', en:'Orange', icon:'🍊'},{ar:'فراولة', en:'Strawberry', icon:'🍓'},{ar:'عنب', en:'Grapes', icon:'🍇'},{ar:'بطيخ', en:'Watermelon', icon:'🍉'}],
+            food: [{ar:'زبادي', en:'Yogurt', icon:'🥛'},{ar:'زيت طبخ', en:'Cooking Oil', icon:'🫒'},{ar:'حليب', en:'Milk', icon:'🥛'},{ar:'خبز', en:'Bread', icon:'🍞'},{ar:'بيض', en:'Eggs', icon:'🥚'},{ar:'جبنة', en:'Cheese', icon:'🧀'},{ar:'دجاج', en:'Chicken', icon:'🍗'},{ar:'لحم', en:'Meat', icon:'🥩'},{ar:'أرز', en:'Rice', icon:'🍚'},{ar:'مكرونة', en:'Pasta', icon:'🍝'},{ar:'عدس', en:'Lentils', icon:'🥣'},{ar:'قهوة', en:'Coffee', icon:'☕'},{ar:'شاي', en:'Tea', icon:'🍵'},{ar:'عسل', en:'Honey', icon:'🍯'},{ar:'صلصة', en:'Sauce', icon:'🥫'},{ar:'طحينة', en:'Tahini', icon:'🥣'},{ar:'عصير', en:'Juice', icon:'🧃'},{ar:'ماء', en:'Water', icon:'💧'}],
+            health: [{ar:'شامبو', en:'Shampoo', icon:'🧴'},{ar:'معجون أسنان', en:'Toothpaste', icon:'🦷'},{ar:'فرشاة أسنان', en:'Toothbrush', icon:'🪥'},{ar:'فيتامينات', en:'Vitamins', icon:'💊'},{ar:'كريم', en:'Cream', icon:'🧴'},{ar:'مطهر', en:'Sanitizer', icon:'🧼'},{ar:'مسكن', en:'Painkiller', icon:'💊'},{ar:'واقي شمس', en:'Sunscreen', icon:'☀️'},{ar:'زيت شعر', en:'Hair Oil', icon:'💧'},{ar:'لوشن', en:'Lotion', icon:'🧴'},{ar:'مكمل غذائي', en:'Supplement', icon:'💪'},{ar:'صابون', en:'Soap', icon:'🧼'}],
+            home: [{ar:'صابون سائل', en:'Liquid Soap', icon:'🧼'},{ar:'مناديل', en:'Tissues', icon:'🧻'},{ar:'مسحوق غسيل', en:'Detergent', icon:'🧴'},{ar:'معطر جو', en:'Air Freshener', icon:'🌸'},{ar:'لمبات', en:'Bulbs', icon:'💡'},{ar:'بطاريات', en:'Batteries', icon:'🔋'},{ar:'سلة مهملات', en:'Trash Can', icon:'🗑️'},{ar:'منظف زجاج', en:'Glass Cleaner', icon:'🪟'},{ar:'إسفنج', en:'Sponge', icon:'🧽'},{ar:'قفازات', en:'Gloves', icon:'🧤'},{ar:'ممسحة', en:'Mop', icon:'🧹'},{ar:'أكواب ورقية', en:'Paper Cups', icon:'🥤'},{ar:'أكياس زبالة', en:'Trash Bags', icon:'🗑️'},{ar:'أطباق', en:'Plates', icon:'🍽️'},{ar:'قصدير', en:'Foil', icon:'🥫'},{ar:'مناديل مبللة', en:'Wet Wipes', icon:'🧻'}]
+        };
+
+        const translations = {
+            ar: { appTitle:'قائمة التسوق الذكية', appSubtitle:'إضافة سريعة · فئات منظمة', addBtn:'أضف', activeListTitle:'العناصر النشطة حسب الفئة', viewAll:'عرض وإدارة القائمة', shareBtn:'مشاركة القائمة', quickTitle:'إضافة بالفئات', quickSubtitle:'اختر من القوائم', catVeg:'الخضروات والفواكه', catFood:'الطعام والمشروبات', catHealth:'الصحة والجمال', catHome:'المنزل والمستلزمات', allItemsTitle:'جميع العناصر', progressLabel:'تقدم التسوق', navHome:'الرئيسية', navQuick:'الفئات', navList:'جميع العناصر', emptyActive:'لا توجد عناصر نشطة', emptyHint:'أضف عنصراً أعلاه', emptyList:'القائمة فارغة', toastAdded:'✅ تم إضافة', toastCompleted:'🎉 تم إكمال', toastDeleted:'🗑️ تم الحذف', toastEmpty:'⚠️ لا توجد عناصر للمشاركة', toastCopied:'📋 تم نسخ القائمة', toastLoginFirst:'الرجاء تسجيل الدخول أولاً', voiceListening:'جاري الاستماع...', placeholder:'اكتب عنصراً...' },
+            en: { appTitle:'Smart Shopping List', appSubtitle:'Quick add · Organized categories', addBtn:'Add', activeListTitle:'Active Items by Category', viewAll:'View & Manage List', shareBtn:'Share List', quickTitle:'Add by Category', quickSubtitle:'Choose from lists', catVeg:'Vegetables & Fruits', catFood:'Food & Drinks', catHealth:'Health & Beauty', catHome:'Home & Supplies', allItemsTitle:'All Items', progressLabel:'Shopping Progress', navHome:'Home', navQuick:'Categories', navList:'All Items', emptyActive:'No active items', emptyHint:'Add an item above', emptyList:'List is empty', toastAdded:'✅ Added', toastCompleted:'🎉 Completed', toastDeleted:'🗑️ Deleted', toastEmpty:'⚠️ No items to share', toastCopied:'📋 List copied', toastLoginFirst:'Please login first', voiceListening:'Listening...', placeholder:'Write item...' }
+        };
+
+        function getLocalizedItem(item) { return (currentLang === 'ar' && item.nameAr) ? item.nameAr : (currentLang === 'en' && item.nameEn) ? item.nameEn : item.name; }
+        function getCategoryLocalized(cat) { return categoryNames[cat]?.[currentLang] || cat; }
 
         // Load user data
         function loadUserData() {
             if(currentUser) {
-                items = JSON.parse(localStorage.getItem(`smartlist_items_${currentUser.id}`)) || [];
+                const saved = localStorage.getItem(`smartlist_items_${currentUser.id}`);
+                items = saved ? JSON.parse(saved) : [];
                 document.getElementById('userNameDisplay').innerText = currentUser.name;
                 document.getElementById('userStatusText').innerText = currentLang === 'ar' ? 'مسجل الدخول' : 'Logged in';
                 document.getElementById('authBtn').innerHTML = '<i class="fas fa-sign-out-alt"></i> خروج';
@@ -590,7 +560,7 @@
                 document.getElementById('authBtn').innerHTML = '<i class="fas fa-user-plus"></i> تسجيل دخول';
                 document.getElementById('authBtn').onclick = showAuthModal;
             }
-            saveAndRender();
+            renderAll();
         }
 
         function saveUserData() {
@@ -603,10 +573,8 @@
 
         function register(name, password) {
             if(users.find(u => u.name === name)) return false;
-            const newUser = { id: Date.now(), name, password };
-            users.push(newUser);
-            currentUser = newUser;
-            items = [];
+            users.push({ id: Date.now(), name, password });
+            currentUser = users[users.length - 1];
             saveUserData();
             loadUserData();
             return true;
@@ -614,60 +582,29 @@
 
         function login(name, password) {
             const user = users.find(u => u.name === name && u.password === password);
-            if(user) {
-                currentUser = user;
-                saveUserData();
-                loadUserData();
-                return true;
-            }
+            if(user) { currentUser = user; saveUserData(); loadUserData(); return true; }
             return false;
         }
 
-        function logout() {
-            currentUser = null;
-            items = [];
-            saveUserData();
-            loadUserData();
-            document.getElementById('authOverlay').classList.remove('show');
-        }
+        function logout() { currentUser = null; saveUserData(); loadUserData(); document.getElementById('authOverlay').classList.remove('show'); }
 
-        function showAuthModal() {
-            authMode = 'register';
-            document.getElementById('authTitle').innerText = currentLang === 'ar' ? 'إنشاء حساب' : 'Create Account';
-            document.getElementById('authSubmitBtn').innerText = currentLang === 'ar' ? 'تسجيل' : 'Register';
-            document.getElementById('authSwitchText').innerText = currentLang === 'ar' ? 'لديك حساب؟ تسجيل دخول' : 'Have an account? Login';
-            document.getElementById('authOverlay').classList.add('show');
-        }
+        function showAuthModal() { authMode = 'register'; document.getElementById('authTitle').innerText = currentLang === 'ar' ? 'إنشاء حساب' : 'Create Account'; document.getElementById('authSubmitBtn').innerText = currentLang === 'ar' ? 'تسجيل' : 'Register'; document.getElementById('authSwitchText').innerText = currentLang === 'ar' ? 'لديك حساب؟ تسجيل دخول' : 'Have an account? Login'; document.getElementById('authOverlay').classList.add('show'); }
 
         function handleAuth() {
             const name = document.getElementById('authName').value.trim();
             const password = document.getElementById('authPassword').value;
             if(!name || !password) { showToast(currentLang === 'ar' ? 'يرجى ملء جميع الحقول' : 'Please fill all fields'); return; }
-            
             if(authMode === 'register') {
-                if(register(name, password)) {
-                    document.getElementById('authOverlay').classList.remove('show');
-                    showToast(currentLang === 'ar' ? 'تم إنشاء الحساب بنجاح' : 'Account created');
-                    document.getElementById('authName').value = '';
-                    document.getElementById('authPassword').value = '';
-                } else {
-                    showToast(currentLang === 'ar' ? 'الاسم موجود مسبقاً' : 'Username exists');
-                }
+                if(register(name, password)) { document.getElementById('authOverlay').classList.remove('show'); showToast(currentLang === 'ar' ? 'تم إنشاء الحساب' : 'Account created'); document.getElementById('authName').value = ''; document.getElementById('authPassword').value = ''; }
+                else showToast(currentLang === 'ar' ? 'الاسم موجود' : 'Username exists');
             } else {
-                if(login(name, password)) {
-                    document.getElementById('authOverlay').classList.remove('show');
-                    showToast(currentLang === 'ar' ? 'تم تسجيل الدخول' : 'Logged in');
-                    document.getElementById('authName').value = '';
-                    document.getElementById('authPassword').value = '';
-                } else {
-                    showToast(currentLang === 'ar' ? 'اسم المستخدم أو كلمة المرور غير صحيحة' : 'Invalid credentials');
-                }
+                if(login(name, password)) { document.getElementById('authOverlay').classList.remove('show'); showToast(currentLang === 'ar' ? 'تم تسجيل الدخول' : 'Logged in'); document.getElementById('authName').value = ''; document.getElementById('authPassword').value = ''; }
+                else showToast(currentLang === 'ar' ? 'بيانات غير صحيحة' : 'Invalid credentials');
             }
         }
 
         function switchAuthMode() {
             authMode = authMode === 'register' ? 'login' : 'register';
-            const t = currentLang === 'ar' : 'en';
             if(authMode === 'register') {
                 document.getElementById('authTitle').innerText = currentLang === 'ar' ? 'إنشاء حساب' : 'Create Account';
                 document.getElementById('authSubmitBtn').innerText = currentLang === 'ar' ? 'تسجيل' : 'Register';
@@ -679,34 +616,36 @@
             }
         }
 
-        const categoryNames = { veg: { ar: '🥬 خضروات وفواكه', en: '🥬 Vegetables & Fruits' }, food: { ar: '🍔 طعام ومشروبات', en: '🍔 Food & Drinks' }, health: { ar: '💊 صحة وجمال', en: '💊 Health & Beauty' }, home: { ar: '🏠 منزل ومستلزمات', en: '🏠 Home & Supplies' }, other: { ar: '📦 أخرى', en: '📦 Other' } };
+        // Item functions
+        function addItem(name, category, icon, nameAr, nameEn) {
+            if(!currentUser) { showToast(translations[currentLang].toastLoginFirst); return false; }
+            items.unshift({ id: Date.now(), name, nameAr, nameEn, category, completed: false, icon });
+            saveUserData();
+            renderAll();
+            showToast(`${translations[currentLang].toastAdded} ${name}`);
+            return true;
+        }
 
-        const bilingualDB = {
-            veg: [{ ar:'كزبرة', en:'Cilantro', icon:'🌿'},{ar:'بقدونس', en:'Parsley', icon:'🌿'},{ar:'خس', en:'Lettuce', icon:'🥬'},{ar:'سبانخ', en:'Spinach', icon:'🥬'},{ar:'طماطم', en:'Tomato', icon:'🍅'},{ar:'خيار', en:'Cucumber', icon:'🥒'},{ar:'جزر', en:'Carrot', icon:'🥕'},{ar:'بصل', en:'Onion', icon:'🧅'},{ar:'ثوم', en:'Garlic', icon:'🧄'},{ar:'بطاطس', en:'Potato', icon:'🥔'},{ar:'فلفل', en:'Pepper', icon:'🫑'},{ar:'باذنجان', en:'Eggplant', icon:'🍆'},{ar:'كوسة', en:'Zucchini', icon:'🥒'},{ar:'قرنبيط', en:'Cauliflower', icon:'🥦'},{ar:'بروكلي', en:'Broccoli', icon:'🥦'},{ar:'ليمون', en:'Lemon', icon:'🍋'},{ar:'تفاح', en:'Apple', icon:'🍎'},{ar:'موز', en:'Banana', icon:'🍌'},{ar:'برتقال', en:'Orange', icon:'🍊'},{ar:'فراولة', en:'Strawberry', icon:'🍓'},{ar:'عنب', en:'Grapes', icon:'🍇'},{ar:'بطيخ', en:'Watermelon', icon:'🍉'}],
-            food: [{ar:'زبادي', en:'Yogurt', icon:'🥛'},{ar:'زيت طبخ', en:'Cooking Oil', icon:'🫒'},{ar:'حليب', en:'Milk', icon:'🥛'},{ar:'خبز', en:'Bread', icon:'🍞'},{ar:'بيض', en:'Eggs', icon:'🥚'},{ar:'جبنة', en:'Cheese', icon:'🧀'},{ar:'دجاج', en:'Chicken', icon:'🍗'},{ar:'لحم', en:'Meat', icon:'🥩'},{ar:'أرز', en:'Rice', icon:'🍚'},{ar:'مكرونة', en:'Pasta', icon:'🍝'},{ar:'عدس', en:'Lentils', icon:'🥣'},{ar:'قهوة', en:'Coffee', icon:'☕'},{ar:'شاي', en:'Tea', icon:'🍵'},{ar:'عسل', en:'Honey', icon:'🍯'},{ar:'صلصة', en:'Sauce', icon:'🥫'},{ar:'طحينة', en:'Tahini', icon:'🥣'},{ar:'عصير', en:'Juice', icon:'🧃'},{ar:'ماء', en:'Water', icon:'💧'}],
-            health: [{ar:'شامبو', en:'Shampoo', icon:'🧴'},{ar:'معجون أسنان', en:'Toothpaste', icon:'🦷'},{ar:'فرشاة أسنان', en:'Toothbrush', icon:'🪥'},{ar:'فيتامينات', en:'Vitamins', icon:'💊'},{ar:'كريم', en:'Cream', icon:'🧴'},{ar:'مطهر', en:'Sanitizer', icon:'🧼'},{ar:'مسكن', en:'Painkiller', icon:'💊'},{ar:'واقي شمس', en:'Sunscreen', icon:'☀️'},{ar:'زيت شعر', en:'Hair Oil', icon:'💧'},{ar:'لوشن', en:'Lotion', icon:'🧴'},{ar:'مكمل غذائي', en:'Supplement', icon:'💪'},{ar:'صابون', en:'Soap', icon:'🧼'}],
-            home: [{ar:'صابون سائل', en:'Liquid Soap', icon:'🧼'},{ar:'مناديل', en:'Tissues', icon:'🧻'},{ar:'مسحوق غسيل', en:'Detergent', icon:'🧴'},{ar:'معطر جو', en:'Air Freshener', icon:'🌸'},{ar:'لمبات', en:'Bulbs', icon:'💡'},{ar:'بطاريات', en:'Batteries', icon:'🔋'},{ar:'سلة مهملات', en:'Trash Can', icon:'🗑️'},{ar:'منظف زجاج', en:'Glass Cleaner', icon:'🪟'},{ar:'إسفنج', en:'Sponge', icon:'🧽'},{ar:'قفازات', en:'Gloves', icon:'🧤'},{ar:'ممسحة', en:'Mop', icon:'🧹'},{ar:'أكواب ورقية', en:'Paper Cups', icon:'🥤'},{ar:'أكياس زبالة', en:'Trash Bags', icon:'🗑️'},{ar:'أطباق', en:'Plates', icon:'🍽️'},{ar:'قصدير', en:'Foil', icon:'🥫'},{ar:'مناديل مبللة', en:'Wet Wipes', icon:'🧻'}]
-        };
+        function addCustomItem(text) { addItem(text, 'other', '✨', text, text); }
 
-        const translations = {
-            ar: { appTitle:'قائمة التسوق الذكية', appSubtitle:'إضافة سريعة · فئات منظمة', addBtn:'أضف', activeListTitle:'العناصر النشطة حسب الفئة', viewAll:'عرض وإدارة القائمة', shareBtn:'مشاركة القائمة', quickTitle:'إضافة بالفئات', quickSubtitle:'اختر من القوائم', catVeg:'الخضروات والفواكه', catFood:'الطعام والمشروبات', catHealth:'الصحة والجمال', catHome:'المنزل والمستلزمات', allItemsTitle:'جميع العناصر', progressLabel:'تقدم التسوق', navHome:'الرئيسية', navQuick:'الفئات', navList:'جميع العناصر', emptyActive:'لا توجد عناصر نشطة', emptyHint:'أضف عنصراً أعلاه', emptyList:'القائمة فارغة', toastAdded:'✅ تم إضافة', toastCompleted:'🎉 تم إكمال', toastDeleted:'🗑️ تم الحذف', toastEmpty:'⚠️ لا توجد عناصر للمشاركة', toastCopied:'📋 تم نسخ القائمة', voiceListening:'جاري الاستماع...', placeholder:'اكتب عنصراً...' },
-            en: { appTitle:'Smart Shopping List', appSubtitle:'Quick add · Organized categories', addBtn:'Add', activeListTitle:'Active Items by Category', viewAll:'View & Manage List', shareBtn:'Share List', quickTitle:'Add by Category', quickSubtitle:'Choose from lists', catVeg:'Vegetables & Fruits', catFood:'Food & Drinks', catHealth:'Health & Beauty', catHome:'Home & Supplies', allItemsTitle:'All Items', progressLabel:'Shopping Progress', navHome:'Home', navQuick:'Categories', navList:'All Items', emptyActive:'No active items', emptyHint:'Add an item above', emptyList:'List is empty', toastAdded:'✅ Added', toastCompleted:'🎉 Completed', toastDeleted:'🗑️ Deleted', toastEmpty:'⚠️ No items to share', toastCopied:'📋 List copied', voiceListening:'Listening...', placeholder:'Write item...' }
-        };
+        function toggleComplete(id) {
+            const item = items.find(i => i.id === id);
+            if(item) { item.completed = !item.completed; saveUserData(); renderAll(); if(item.completed) showToast(`${translations[currentLang].toastCompleted} ${getLocalizedItem(item)}`); }
+        }
 
-        function getLocalizedItem(item) { return (currentLang === 'ar' && item.nameAr) ? item.nameAr : (currentLang === 'en' && item.nameEn) ? item.nameEn : item.name; }
-        function getCategoryLocalized(cat) { return categoryNames[cat]?.[currentLang] || cat; }
+        function deleteItem(id) { items = items.filter(i => i.id !== id); saveUserData(); renderAll(); showToast(translations[currentLang].toastDeleted); }
 
         function getShareText() {
-            const activeItems = items.filter(i => !i.completed);
-            if(activeItems.length === 0) return null;
-            const grouped = { veg: [], food: [], health: [], home: [], other: [] };
-            activeItems.forEach(item => { if(grouped[item.category]) grouped[item.category].push(item); else grouped.other.push(item); });
+            const active = items.filter(i => !i.completed);
+            if(active.length === 0) return null;
+            const grouped = { veg:[], food:[], health:[], home:[], other:[] };
+            active.forEach(i => { if(grouped[i.category]) grouped[i.category].push(i); else grouped.other.push(i); });
             let text = currentLang === 'ar' ? '🛒 قائمة التسوق\n' : '🛒 Shopping List\n';
             text += '═══════════════\n';
             for(let cat of ['veg','food','health','home','other']) {
                 if(grouped[cat].length) {
                     text += `\n${getCategoryLocalized(cat)} (${grouped[cat].length})\n───────────\n`;
-                    grouped[cat].forEach(item => { text += `  ${item.icon || '•'} ${getLocalizedItem(item)}\n`; });
+                    grouped[cat].forEach(i => { text += `  ${i.icon || '•'} ${getLocalizedItem(i)}\n`; });
                 }
             }
             return text;
@@ -715,88 +654,176 @@
         async function shareList() {
             const text = getShareText();
             if(!text) { showToast(translations[currentLang].toastEmpty); return; }
-            if(navigator.share) {
-                try { await navigator.share({ title: currentLang === 'ar' ? 'قائمة التسوق' : 'Shopping List', text }); } catch(e) {}
-            } else {
-                try { await navigator.clipboard.writeText(text); showToast(translations[currentLang].toastCopied); } catch(err) { showToast('Copy failed'); }
-            }
+            if(navigator.share) { try { await navigator.share({ title: currentLang === 'ar' ? 'قائمة التسوق' : 'Shopping List', text }); } catch(e) {} }
+            else { try { await navigator.clipboard.writeText(text); showToast(translations[currentLang].toastCopied); } catch(e) { showToast('Copy failed'); } }
         }
 
-        function rebuildCategoryGrids() {
-            for(let cat of ['veg','food','health','home']) {
-                const grid = document.getElementById(cat+'Grid');
-                if(grid) grid.innerHTML = bilingualDB[cat].map(i => `<button class="item-btn" onclick="addFromCategory('${currentLang === 'ar' ? i.ar : i.en}', '${cat}', '${i.icon}', '${i.ar}', '${i.en}')"><span>${i.icon}</span> ${currentLang === 'ar' ? i.ar : i.en}</button>`).join('');
-            }
-        }
-
-        function applyLanguage() {
-            const t = translations[currentLang];
-            document.getElementById('appTitle').innerText = t.appTitle; document.getElementById('appSubtitle').innerText = t.appSubtitle;
-            document.getElementById('addBtnText').innerHTML = `<i class="fas fa-plus-circle"></i> ${t.addBtn}`;
-            document.getElementById('activeListTitle').innerText = t.activeListTitle;
-            document.getElementById('viewAllBtn').innerHTML = `${t.viewAll} <i class="fas fa-arrow-left"></i>`;
-            document.getElementById('shareBtn').innerHTML = `<i class="fas fa-share-alt"></i> ${t.shareBtn}`;
-            document.getElementById('quickTitle').innerHTML = `<i class="fas fa-layer-group"></i> ${t.quickTitle}`;
-            document.getElementById('quickSubtitle').innerText = t.quickSubtitle;
-            document.getElementById('catVeg').innerText = t.catVeg; document.getElementById('catFood').innerText = t.catFood;
-            document.getElementById('catHealth').innerText = t.catHealth; document.getElementById('catHome').innerText = t.catHome;
-            document.getElementById('allItemsTitle').innerText = t.allItemsTitle; document.getElementById('progressLabel').innerText = t.progressLabel;
-            document.getElementById('navHome').innerText = t.navHome; document.getElementById('navQuick').innerText = t.navQuick; document.getElementById('navList').innerText = t.navList;
-            document.getElementById('homeQuickItem').placeholder = t.placeholder; document.getElementById('voiceListeningText').innerText = t.voiceListening;
-            rebuildCategoryGrids(); renderCategorizedActiveList(); renderItems();
-            loadUserData();
-        }
-
-        function setLanguage(lang) { currentLang = lang; document.getElementById('langAr').classList.toggle('active', lang === 'ar'); document.getElementById('langEn').classList.toggle('active', lang === 'en'); document.body.dir = lang === 'ar' ? 'rtl' : 'ltr'; applyLanguage(); }
-
-        function addFromCategory(displayName, category, icon, nameAr, nameEn) { if(!currentUser) { showToast(currentLang === 'ar' ? 'الرجاء تسجيل الدخول أولاً' : 'Please login first'); return; } items.unshift({ id: Date.now(), name: displayName, nameAr, nameEn, category, completed: false, addedAt: new Date().toISOString(), icon }); saveAndRender(); showToast(`${translations[currentLang].toastAdded} ${displayName}`); }
-        function addCustomItem(text) { if(!currentUser) { showToast(currentLang === 'ar' ? 'الرجاء تسجيل الدخول أولاً' : 'Please login first'); return; } items.unshift({ id: Date.now(), name: text, nameAr: text, nameEn: text, category: 'other', completed: false, addedAt: new Date().toISOString(), icon: '✨' }); saveAndRender(); showToast(`${translations[currentLang].toastAdded} ${text}`); }
-        function addHomeQuickItem() { const input = document.getElementById('homeQuickItem'), text = input.value.trim(); if(!text) return; addCustomItem(text); input.value = ''; }
-        function handleHomeQuickAdd(e) { if(e.key === 'Enter') addHomeQuickItem(); }
-
+        // Render functions
         function renderCategorizedActiveList() {
             const container = document.getElementById('categorizedActiveList');
-            const activeItems = items.filter(i => !i.completed);
-            if(activeItems.length === 0) { container.innerHTML = `<div class="empty-state"><i class="fas fa-basket-shopping"></i><p>${translations[currentLang].emptyActive}</p><p style="font-size:0.7rem">${translations[currentLang].emptyHint}</p></div>`; return; }
-            const grouped = { veg: [], food: [], health: [], home: [], other: [] };
-            activeItems.forEach(item => { if(grouped[item.category]) grouped[item.category].push(item); else grouped.other.push(item); });
+            const active = items.filter(i => !i.completed);
+            if(active.length === 0) { container.innerHTML = `<div class="empty-state"><i class="fas fa-basket-shopping"></i><p>${translations[currentLang].emptyActive}</p><p style="font-size:0.7rem">${translations[currentLang].emptyHint}</p></div>`; return; }
+            const grouped = { veg:[], food:[], health:[], home:[], other:[] };
+            active.forEach(i => { if(grouped[i.category]) grouped[i.category].push(i); else grouped.other.push(i); });
             let html = '';
             for(let cat of ['veg','food','health','home','other']) {
                 if(grouped[cat].length) {
                     html += `<div class="category-group"><div class="category-group-header">${getCategoryLocalized(cat)} (${grouped[cat].length})</div>`;
-                    grouped[cat].forEach(item => { html += `<div class="home-list-item" onclick="navigateToList()"><div class="home-item-checkbox ${item.completed ? 'checked' : ''}" onclick="event.stopPropagation(); toggleComplete(${item.id})"><i class="fas fa-check"></i></div><div class="home-item-info"><span class="item-icon">${item.icon || '✨'}</span><div class="home-item-name">${getLocalizedItem(item)}</div></div></div>`; });
+                    grouped[cat].forEach(item => {
+                        html += `<div class="home-list-item" onclick="navigateToList()">
+                            <div class="home-item-checkbox ${item.completed ? 'checked' : ''}" onclick="event.stopPropagation(); toggleComplete(${item.id})"><i class="fas fa-check"></i></div>
+                            <div class="home-item-info"><span class="item-icon">${item.icon || '✨'}</span><span class="home-item-name">${getLocalizedItem(item)}</span></div>
+                        </div>`;
+                    });
                     html += `</div>`;
                 }
             }
             container.innerHTML = html;
         }
 
-        function renderItems() {
+        function renderItemsList() {
             const container = document.getElementById('itemsList');
             if(items.length === 0) { container.innerHTML = `<div class="empty-state"><i class="fas fa-clipboard-list"></i><p>${translations[currentLang].emptyList}</p></div>`; updateProgress(); return; }
-            container.innerHTML = items.map(item => `<div class="item-card"><div class="item-checkbox ${item.completed ? 'checked' : ''}" onclick="toggleComplete(${item.id})"><i class="fas fa-check"></i></div><div class="item-content"><span class="item-icon-large">${item.icon || '✨'}</span><div class="item-name ${item.completed ? 'completed' : ''}">${getLocalizedItem(item)}</div></div><button class="action-icon-btn" onclick="deleteItem(${item.id})"><i class="fas fa-trash-alt"></i></button></div>`).join('');
+            container.innerHTML = items.map(item => `
+                <div class="item-card">
+                    <div class="item-checkbox ${item.completed ? 'checked' : ''}" onclick="toggleComplete(${item.id})"><i class="fas fa-check"></i></div>
+                    <div class="item-content"><span class="item-icon-large">${item.icon || '✨'}</span><span class="item-name ${item.completed ? 'completed' : ''}">${getLocalizedItem(item)}</span></div>
+                    <button class="action-icon-btn" onclick="deleteItem(${item.id})"><i class="fas fa-trash-alt"></i></button>
+                </div>
+            `).join('');
             updateProgress();
         }
 
-        function toggleComplete(id) { const item = items.find(i => i.id === id); if(item) { item.completed = !item.completed; saveAndRender(); if(item.completed) showToast(`${translations[currentLang].toastCompleted} ${getLocalizedItem(item)}!`); } }
-        function deleteItem(id) { items = items.filter(i => i.id !== id); saveAndRender(); showToast(translations[currentLang].toastDeleted); }
-        function updateProgress() { const total = items.length, completed = items.filter(i => i.completed).length, percent = total === 0 ? 0 : Math.round((completed/total)*100); document.getElementById('progressBar').style.width = percent+'%'; document.getElementById('progressText').textContent = percent+'%'; }
-        function saveAndRender() { saveUserData(); renderCategorizedActiveList(); renderItems(); }
-        function showPage(page) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); document.getElementById(page + 'Page').classList.add('active'); const idx = { home:0, quick:1, list:2 }[page]; if(idx!==undefined) document.querySelectorAll('.nav-item')[idx].classList.add('active'); if(page === 'home') renderCategorizedActiveList(); else if(page === 'list') renderItems(); }
-        function navigateToList() { showPage('list'); }
-        function toggleCategory(cat) { const div = document.getElementById('items-'+cat); const arr = document.getElementById('arrow-'+cat); if(div && arr) { div.classList.toggle('show'); arr.classList.toggle('expanded'); } }
+        function updateProgress() {
+            const total = items.length, completed = items.filter(i => i.completed).length, percent = total === 0 ? 0 : Math.round((completed/total)*100);
+            document.getElementById('progressBar').style.width = percent+'%';
+            document.getElementById('progressText').textContent = percent+'%';
+        }
 
-        function initVoiceRecognition() { if('webkitSpeechRecognition' in window) { const SR = window.SpeechRecognition || window.webkitSpeechRecognition; recognition = new SR(); recognition.continuous = false; recognition.interimResults = false; recognition.lang = currentLang === 'ar' ? 'ar-SA' : 'en-US'; recognition.onresult = (e) => { const transcript = e.results[0][0].transcript; if(currentVoiceTarget === 'home') { document.getElementById('homeQuickItem').value = transcript; addHomeQuickItem(); } stopVoiceInput(); }; recognition.onend = () => document.getElementById('voiceModal').classList.remove('show'); recognition.onerror = () => { stopVoiceInput(); }; } }
-        function toggleVoiceInputHome() { if(!recognition) return; if(!currentUser) { showToast(currentLang === 'ar' ? 'الرجاء تسجيل الدخول أولاً' : 'Please login first'); return; } currentVoiceTarget = 'home'; const modal = document.getElementById('voiceModal'); if(modal.classList.contains('show')) stopVoiceInput(); else { recognition.lang = currentLang === 'ar' ? 'ar-SA' : 'en-US'; modal.classList.add('show'); recognition.start(); } }
-        function stopVoiceInput() { if(recognition) recognition.abort(); document.getElementById('voiceModal').classList.remove('show'); currentVoiceTarget = null; }
-        function showToast(msg) { const toast = document.getElementById('toast'); document.getElementById('toastMessage').textContent = msg; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 2000); }
+        function rebuildCategoryGrids() {
+            for(let cat of ['veg','food','health','home']) {
+                const grid = document.getElementById(cat+'Grid');
+                if(grid) {
+                    grid.innerHTML = bilingualDB[cat].map(i => `<button class="item-btn" onclick="addItem('${currentLang === 'ar' ? i.ar : i.en}', '${cat}', '${i.icon}', '${i.ar}', '${i.en}')"><span>${i.icon}</span> ${currentLang === 'ar' ? i.ar : i.en}</button>`).join('');
+                }
+            }
+        }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            initVoiceRecognition(); rebuildCategoryGrids(); setLanguage('ar');
-            document.getElementById('authSubmitBtn').onclick = handleAuth;
-            document.getElementById('authSwitchText').onclick = switchAuthMode;
+        function renderAll() { renderCategorizedActiveList(); renderItemsList(); }
+
+        // UI and Language
+        function applyLanguage() {
+            const t = translations[currentLang];
+            document.getElementById('appTitle').innerText = t.appTitle;
+            document.getElementById('appSubtitle').innerText = t.appSubtitle;
+            document.getElementById('addBtnText').innerHTML = `<i class="fas fa-plus-circle"></i> ${t.addBtn}`;
+            document.getElementById('activeListTitle').innerText = t.activeListTitle;
+            document.getElementById('viewAllBtn').innerHTML = `${t.viewAll} <i class="fas fa-arrow-left"></i>`;
+            document.getElementById('shareBtn').innerHTML = `<i class="fas fa-share-alt"></i> ${t.shareBtn}`;
+            document.getElementById('quickTitle').innerHTML = `<i class="fas fa-layer-group"></i> ${t.quickTitle}`;
+            document.getElementById('quickSubtitle').innerText = t.quickSubtitle;
+            document.getElementById('catVeg').innerText = t.catVeg;
+            document.getElementById('catFood').innerText = t.catFood;
+            document.getElementById('catHealth').innerText = t.catHealth;
+            document.getElementById('catHome').innerText = t.catHome;
+            document.getElementById('allItemsTitle').innerText = t.allItemsTitle;
+            document.getElementById('progressLabel').innerText = t.progressLabel;
+            document.getElementById('navHome').innerText = t.navHome;
+            document.getElementById('navQuick').innerText = t.navQuick;
+            document.getElementById('navList').innerText = t.navList;
+            document.getElementById('homeQuickItem').placeholder = t.placeholder;
+            document.getElementById('voiceListeningText').innerText = t.voiceListening;
+            rebuildCategoryGrids();
+            renderAll();
             loadUserData();
-        });
+        }
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.getElementById('langAr').classList.toggle('active', lang === 'ar');
+            document.getElementById('langEn').classList.toggle('active', lang === 'en');
+            document.body.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            applyLanguage();
+        }
+
+        // Voice input
+        function initVoiceRecognition() {
+            if('webkitSpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                recognition.onresult = (e) => {
+                    const transcript = e.results[0][0].transcript;
+                    document.getElementById('homeQuickItem').value = transcript;
+                    addCustomItem(transcript);
+                    stopVoiceInput();
+                };
+                recognition.onend = () => { document.getElementById('voiceModal').classList.remove('show'); isListening = false; };
+                recognition.onerror = () => { stopVoiceInput(); };
+            }
+        }
+
+        function toggleVoiceInput() {
+            if(!recognition) { showToast('Voice not supported'); return; }
+            if(!currentUser) { showToast(translations[currentLang].toastLoginFirst); return; }
+            if(isListening) { stopVoiceInput(); return; }
+            isListening = true;
+            recognition.lang = currentLang === 'ar' ? 'ar-SA' : 'en-US';
+            document.getElementById('voiceModal').classList.add('show');
+            recognition.start();
+        }
+
+        function stopVoiceInput() {
+            if(recognition) recognition.abort();
+            document.getElementById('voiceModal').classList.remove('show');
+            isListening = false;
+        }
+
+        function addHomeQuickItem() {
+            const input = document.getElementById('homeQuickItem');
+            const text = input.value.trim();
+            if(text) { addCustomItem(text); input.value = ''; }
+        }
+
+        function handleHomeQuickAdd(e) { if(e.key === 'Enter') addHomeQuickItem(); }
+
+        function showPage(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(page + 'Page').classList.add('active');
+            const idx = { home:0, quick:1, list:2 }[page];
+            if(idx !== undefined) document.querySelectorAll('.nav-item')[idx].classList.add('active');
+            if(page === 'list') renderItemsList();
+            else if(page === 'home') renderCategorizedActiveList();
+        }
+
+        function navigateToList() { showPage('list'); }
+        function toggleCategory(cat) {
+            const div = document.getElementById('items-'+cat);
+            const arrow = document.getElementById('arrow-'+cat);
+            if(div && arrow) { div.classList.toggle('show'); arrow.classList.toggle('expanded'); }
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMessage').textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        // Event bindings
+        document.getElementById('langAr').onclick = () => setLanguage('ar');
+        document.getElementById('langEn').onclick = () => setLanguage('en');
+        document.getElementById('authSubmitBtn').onclick = handleAuth;
+        document.getElementById('authSwitchText').onclick = switchAuthMode;
+        document.getElementById('voiceBtn').onclick = toggleVoiceInput;
+        document.getElementById('shareBtn').onclick = shareList;
+
+        // Initialize
+        initVoiceRecognition();
+        setLanguage('ar');
+        loadUserData();
     </script>
 </body>
 </html>
