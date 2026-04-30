@@ -618,4 +618,402 @@
 <body dir="rtl">
     <div class="premium-header">
         <div class="logo-area">
-            <div class="logo-icon"><i class="fas fa-cart-shopping"
+            <div class="logo-icon"><i class="fas fa-cart-shopping"></i></div>
+            <div class="logo-text" id="logoText">سوقي</div>
+        </div>
+        <div class="lang-switch">
+            <button class="lang-btn active" id="langAr">عربى</button>
+            <button class="lang-btn" id="langEn">ENG</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="authModal">
+        <div class="modal-content">
+            <h3 id="authTitle">إنشاء حساب</h3>
+            <input type="text" id="authName" class="modal-input" placeholder="الاسم">
+            <input type="password" id="authPassword" class="modal-input" placeholder="كلمة المرور">
+            <button class="modal-btn" id="authSubmitBtn">تسجيل</button>
+            <p id="authSwitchText" class="modal-link">لديك حساب؟ تسجيل دخول</p>
+        </div>
+    </div>
+
+    <div class="voice-modal-premium" id="voiceModal">
+        <div class="voice-circle-premium"><i class="fas fa-microphone-alt"></i></div>
+        <div class="voice-text" id="voiceListeningText">جاري الاستماع...</div>
+        <button class="cancel-voice" onclick="stopVoiceInput()">إلغاء</button>
+    </div>
+
+    <div class="toast-premium" id="toast"><i class="fas fa-check-circle"></i><span id="toastMessage"></span></div>
+
+    <!-- Home Page -->
+    <div class="page active" id="homePage">
+        <div class="container">
+            <div class="user-card-premium" id="userCard">
+                <div class="user-avatar"><i class="fas fa-user-alt"></i></div>
+                <div class="user-info">
+                    <h3 id="userNameDisplay">زائر</h3>
+                    <p id="userStatusText">غير مسجل</p>
+                </div>
+                <button class="logout-btn" id="authBtn"><i class="fas fa-sign-in-alt"></i> <span id="authBtnText">دخول</span></button>
+            </div>
+
+            <div class="stats-row" id="statsRow">
+                <div class="stat-card"><div class="stat-number" id="totalItems">0</div><div class="stat-label" id="totalLabel">الكل</div></div>
+                <div class="stat-card"><div class="stat-number" id="activeItems">0</div><div class="stat-label" id="activeLabel">متبقي</div></div>
+                <div class="stat-card"><div class="stat-number" id="completedItems">0</div><div class="stat-label" id="completedLabel">مكتمل</div></div>
+            </div>
+
+            <div class="quick-add-premium">
+                <div class="input-group">
+                    <input type="text" id="homeQuickItem" class="premium-input" placeholder="اكتب عنصراً..." onkeypress="handleHomeQuickAdd(event)">
+                    <button class="premium-btn" id="addBtn" onclick="addHomeQuickItem()"><i class="fas fa-plus"></i> <span id="addBtnText">أضف</span></button>
+                    <button class="voice-btn" id="voiceBtn"><i class="fas fa-microphone-alt"></i></button>
+                </div>
+            </div>
+
+            <div class="items-list-premium">
+                <div class="section-header"><i class="fas fa-clipboard-list"></i> <span id="activeListTitle">العناصر النشطة</span></div>
+                <div class="categorized-scroll" id="categorizedActiveList"></div>
+                <button class="share-main-btn premium-btn" style="margin: 12px; width: calc(100% - 24px); background: var(--whatsapp);" id="shareBtn"><i class="fab fa-whatsapp"></i> <span id="shareBtnText">مشاركة القائمة</span></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Add Page -->
+    <div class="page" id="quickPage">
+        <div class="container">
+            <div class="section-header" style="margin-bottom: 16px;"><i class="fas fa-layer-group"></i> <span id="quickTitle">إضافة بالفئات</span></div>
+            <div class="category-grid" id="categoriesContainer"></div>
+        </div>
+    </div>
+
+    <!-- All Items Page -->
+    <div class="page" id="listPage">
+        <div class="container">
+            <div class="progress-premium">
+                <div class="progress-header"><span id="progressLabel">تقدم التسوق</span><span id="progressPercent">0%</span></div>
+                <div class="progress-bar-bg"><div class="progress-fill" id="progressFill"></div></div>
+            </div>
+            <div class="items-list-premium">
+                <div class="section-header"><i class="fas fa-list-ul"></i> <span id="allItemsTitle">جميع العناصر</span></div>
+                <div id="allItemsList"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <div class="nav-item active" onclick="showPage('home')"><i class="fas fa-home"></i><span id="navHome">الرئيسية</span></div>
+        <div class="nav-item" onclick="showPage('quick')"><i class="fas fa-th-large"></i><span id="navQuick">الفئات</span></div>
+        <div class="nav-item" onclick="showPage('list')"><i class="fas fa-list-check"></i><span id="navList">القائمة</span></div>
+    </div>
+
+    <script>
+        // ========== DATA LAYER ==========
+        let currentUser = JSON.parse(localStorage.getItem('soqi_current_user')) || null;
+        let users = JSON.parse(localStorage.getItem('soqi_users')) || [];
+        let items = [];
+        let currentLang = 'ar';
+        let authMode = 'register';
+        let recognition = null;
+        let isListening = false;
+
+        const categoryItemsDB = {
+            veg: [
+                { ar: 'طماطم', en: 'Tomato', icon: '🍅' }, { ar: 'خيار', en: 'Cucumber', icon: '🥒' },
+                { ar: 'جزر', en: 'Carrot', icon: '🥕' }, { ar: 'بصل', en: 'Onion', icon: '🧅' },
+                { ar: 'ثوم', en: 'Garlic', icon: '🧄' }, { ar: 'بطاطس', en: 'Potato', icon: '🥔' },
+                { ar: 'فلفل', en: 'Pepper', icon: '🫑' }, { ar: 'خس', en: 'Lettuce', icon: '🥬' },
+                { ar: 'سبانخ', en: 'Spinach', icon: '🥬' }, { ar: 'بروكلي', en: 'Broccoli', icon: '🥦' }
+            ],
+            food: [
+                { ar: 'خبز', en: 'Bread', icon: '🍞' }, { ar: 'بيض', en: 'Eggs', icon: '🥚' },
+                { ar: 'حليب', en: 'Milk', icon: '🥛' }, { ar: 'جبنة', en: 'Cheese', icon: '🧀' },
+                { ar: 'دجاج', en: 'Chicken', icon: '🍗' }, { ar: 'لحم', en: 'Meat', icon: '🥩' },
+                { ar: 'أرز', en: 'Rice', icon: '🍚' }, { ar: 'مكرونة', en: 'Pasta', icon: '🍝' },
+                { ar: 'زبادي', en: 'Yogurt', icon: '🥛' }, { ar: 'عسل', en: 'Honey', icon: '🍯' }
+            ],
+            health: [
+                { ar: 'شامبو', en: 'Shampoo', icon: '🧴' }, { ar: 'معجون أسنان', en: 'Toothpaste', icon: '🦷' },
+                { ar: 'فرشاة أسنان', en: 'Toothbrush', icon: '🪥' }, { ar: 'فيتامينات', en: 'Vitamins', icon: '💊' },
+                { ar: 'كريم', en: 'Cream', icon: '🧴' }, { ar: 'صابون', en: 'Soap', icon: '🧼' },
+                { ar: 'واقي شمس', en: 'Sunscreen', icon: '☀️' }
+            ],
+            home: [
+                { ar: 'مناديل', en: 'Tissues', icon: '🧻' }, { ar: 'مسحوق غسيل', en: 'Detergent', icon: '🧴' },
+                { ar: 'معطر جو', en: 'Air Freshener', icon: '🌸' }, { ar: 'لمبات', en: 'Bulbs', icon: '💡' },
+                { ar: 'بطاريات', en: 'Batteries', icon: '🔋' }, { ar: 'سلة مهملات', en: 'Trash Bag', icon: '🗑️' },
+                { ar: 'إسفنج', en: 'Sponge', icon: '🧽' }, { ar: 'منظف زجاج', en: 'Glass Cleaner', icon: '🪟' }
+            ]
+        };
+
+        const categoryMeta = {
+            veg: { icon: '🥬', ar: 'الخضروات والفواكه', en: 'Vegetables & Fruits' },
+            food: { icon: '🍔', ar: 'الطعام والمشروبات', en: 'Food & Drinks' },
+            health: { icon: '💊', ar: 'الصحة والجمال', en: 'Health & Beauty' },
+            home: { icon: '🏠', ar: 'المنزل والمستلزمات', en: 'Home & Supplies' }
+        };
+
+        const translations = {
+            ar: { logo:'سوقي', addBtn:'أضف', activeTitle:'العناصر النشطة', shareBtn:'مشاركة القائمة', quickTitle:'إضافة بالفئات', allTitle:'جميع العناصر', progressLabel:'تقدم التسوق', navHome:'الرئيسية', navQuick:'الفئات', navList:'القائمة', totalLabel:'الكل', activeLabel:'متبقي', completedLabel:'مكتمل', authLogin:'دخول', authRegister:'تسجيل', emptyActive:'لا توجد عناصر نشطة', emptyHint:'أضف عنصراً أعلاه', toastAdded:'تمت الإضافة', toastCompleted:'تم الإكمال', toastDeleted:'تم الحذف', toastLogin:'الرجاء تسجيل الدخول أولاً', toastShareEmpty:'لا توجد عناصر للمشاركة', toastCopied:'تم نسخ القائمة', placeholder:'اكتب عنصراً...' },
+            en: { logo:'Soqi', addBtn:'Add', activeTitle:'Active Items', shareBtn:'Share List', quickTitle:'Add by Category', allTitle:'All Items', progressLabel:'Progress', navHome:'Home', navQuick:'Categories', navList:'List', totalLabel:'Total', activeLabel:'Remaining', completedLabel:'Done', authLogin:'Login', authRegister:'Register', emptyActive:'No active items', emptyHint:'Add an item above', toastAdded:'Added', toastCompleted:'Completed', toastDeleted:'Deleted', toastLogin:'Please login first', toastShareEmpty:'No items to share', toastCopied:'List copied', placeholder:'Write item...' }
+        };
+
+        function getLocalizedName(item) { return currentLang === 'ar' ? item.ar : item.en; }
+        function getCategoryName(cat) { return categoryMeta[cat]?.[currentLang] || cat; }
+
+        function loadUserItems() {
+            if(currentUser) {
+                const saved = localStorage.getItem(`soqi_items_${currentUser.id}`);
+                items = saved ? JSON.parse(saved) : [];
+            } else items = [];
+            renderAll();
+            updateStats();
+        }
+
+        function saveUserData() {
+            if(currentUser) localStorage.setItem(`soqi_items_${currentUser.id}`, JSON.stringify(items));
+            localStorage.setItem('soqi_current_user', JSON.stringify(currentUser));
+            localStorage.setItem('soqi_users', JSON.stringify(users));
+        }
+
+        function register(name, pass) {
+            if(users.find(u => u.name === name)) return false;
+            users.push({ id: Date.now(), name, password: pass });
+            currentUser = users[users.length - 1];
+            saveUserData();
+            loadUserItems();
+            return true;
+        }
+
+        function login(name, pass) {
+            const user = users.find(u => u.name === name && u.password === pass);
+            if(user) { currentUser = user; saveUserData(); loadUserItems(); return true; }
+            return false;
+        }
+
+        function logout() { currentUser = null; saveUserData(); loadUserItems(); closeAuthModal(); }
+
+        function addItem(nameAr, nameEn, category, icon) {
+            if(!currentUser) { showToast(translations[currentLang].toastLogin); return false; }
+            items.unshift({ id: Date.now(), nameAr, nameEn, category, completed: false, icon });
+            saveUserData();
+            renderAll();
+            updateStats();
+            showToast(`${translations[currentLang].toastAdded}: ${currentLang === 'ar' ? nameAr : nameEn}`);
+            return true;
+        }
+
+        function addCustomItem(text) { addItem(text, text, 'other', '✨'); }
+
+        function addHomeQuickItem() {
+            const input = document.getElementById('homeQuickItem');
+            if(input.value.trim()) { addCustomItem(input.value.trim()); input.value = ''; }
+            else showToast(currentLang === 'ar' ? 'اكتب اسم العنصر' : 'Enter item name');
+        }
+
+        function toggleComplete(id) {
+            const item = items.find(i => i.id === id);
+            if(item) { item.completed = !item.completed; saveUserData(); renderAll(); updateStats(); }
+        }
+
+        function deleteItem(id) { items = items.filter(i => i.id !== id); saveUserData(); renderAll(); updateStats(); showToast(translations[currentLang].toastDeleted); }
+
+        function updateStats() {
+            document.getElementById('totalItems').innerText = items.length;
+            document.getElementById('activeItems').innerText = items.filter(i => !i.completed).length;
+            document.getElementById('completedItems').innerText = items.filter(i => i.completed).length;
+            const total = items.length, completed = items.filter(i => i.completed).length;
+            const percent = total === 0 ? 0 : Math.round((completed/total)*100);
+            document.getElementById('progressFill').style.width = percent+'%';
+            document.getElementById('progressPercent').innerText = percent+'%';
+        }
+
+        function getShareText() {
+            const active = items.filter(i => !i.completed);
+            if(active.length === 0) return null;
+            let text = currentLang === 'ar' ? '🛒 قائمة التسوق الخاصة بي\n' : '🛒 My Shopping List\n━━━━━━━━━━━━━━━\n';
+            active.forEach(i => { text += `${i.icon || '•'} ${currentLang === 'ar' ? i.nameAr : i.nameEn}\n`; });
+            return text;
+        }
+
+        async function shareList() {
+            const text = getShareText();
+            if(!text) { showToast(translations[currentLang].toastShareEmpty); return; }
+            if(navigator.share) await navigator.share({ title: 'قائمتي', text }).catch(()=>{});
+            else { await navigator.clipboard.writeText(text); showToast(translations[currentLang].toastCopied); }
+        }
+
+        function renderCategorizedList() {
+            const container = document.getElementById('categorizedActiveList');
+            const active = items.filter(i => !i.completed);
+            if(active.length === 0) { container.innerHTML = `<div class="empty-state-premium"><i class="fas fa-basket-shopping"></i><p>${translations[currentLang].emptyActive}</p><small>${translations[currentLang].emptyHint}</small></div>`; return; }
+            const grouped = { veg:[], food:[], health:[], home:[], other:[] };
+            active.forEach(i => { if(grouped[i.category]) grouped[i.category].push(i); else grouped.other.push(i); });
+            let html = '';
+            for(let cat of ['veg','food','health','home','other']) {
+                if(grouped[cat].length) {
+                    html += `<div class="category-group"><div class="category-header-premium">${getCategoryName(cat)} (${grouped[cat].length})</div>`;
+                    grouped[cat].forEach(item => {
+                        html += `<div class="list-item" onclick="showPage('list')">
+                            <div class="item-checkbox-premium ${item.completed ? 'checked' : ''}" onclick="event.stopPropagation(); toggleComplete(${item.id})"><i class="fas fa-check"></i></div>
+                            <div class="item-info"><span class="item-icon">${item.icon || '✨'}</span><span class="item-name">${currentLang === 'ar' ? item.nameAr : item.nameEn}</span></div>
+                        </div>`;
+                    });
+                    html += `</div>`;
+                }
+            }
+            container.innerHTML = html;
+        }
+
+        function renderAllItemsList() {
+            const container = document.getElementById('allItemsList');
+            if(items.length === 0) { container.innerHTML = `<div class="empty-state-premium"><i class="fas fa-clipboard-list"></i><p>القائمة فارغة</p></div>`; return; }
+            container.innerHTML = items.map(item => `
+                <div class="list-item">
+                    <div class="item-checkbox-premium ${item.completed ? 'checked' : ''}" onclick="toggleComplete(${item.id})"><i class="fas fa-check"></i></div>
+                    <div class="item-info"><span class="item-icon">${item.icon || '✨'}</span><span class="item-name ${item.completed ? 'completed' : ''}">${currentLang === 'ar' ? item.nameAr : item.nameEn}</span></div>
+                    <button class="delete-btn" onclick="deleteItem(${item.id})"><i class="fas fa-trash-alt"></i></button>
+                </div>
+            `).join('');
+        }
+
+        function buildCategoriesPage() {
+            const container = document.getElementById('categoriesContainer');
+            let html = '';
+            for(let [catKey, catData] of Object.entries(categoryItemsDB)) {
+                html += `<div class="category-card-premium">
+                    <div class="category-trigger" onclick="toggleCategoryPanel('${catKey}')">
+                        <div class="category-icon-bg">${categoryMeta[catKey].icon}</div>
+                        <div class="category-name">${getCategoryName(catKey)}</div>
+                        <i class="fas fa-chevron-down chevron" id="chevron-${catKey}"></i>
+                    </div>
+                    <div class="category-items-panel" id="panel-${catKey}">
+                        <div class="item-buttons-grid" id="grid-${catKey}"></div>
+                    </div>
+                </div>`;
+            }
+            container.innerHTML = html;
+            for(let [catKey, catData] of Object.entries(categoryItemsDB)) {
+                const grid = document.getElementById(`grid-${catKey}`);
+                grid.innerHTML = catData.map(item => `<button class="item-select-btn" onclick="addItem('${item.ar}', '${item.en}', '${catKey}', '${item.icon}')"><span>${item.icon}</span> ${currentLang === 'ar' ? item.ar : item.en}</button>`).join('');
+            }
+        }
+
+        function toggleCategoryPanel(catKey) {
+            const panel = document.getElementById(`panel-${catKey}`);
+            const chevron = document.getElementById(`chevron-${catKey}`);
+            if(panel) { panel.classList.toggle('show'); chevron.classList.toggle('expanded'); }
+        }
+
+        function renderAll() { renderCategorizedList(); renderAllItemsList(); updateStats(); }
+
+        function applyLanguage() {
+            const t = translations[currentLang];
+            document.getElementById('logoText').innerText = t.logo;
+            document.getElementById('addBtnText').innerText = t.addBtn;
+            document.getElementById('activeListTitle').innerHTML = `<i class="fas fa-clipboard-list"></i> ${t.activeTitle}`;
+            document.getElementById('shareBtnText').innerText = t.shareBtn;
+            document.getElementById('quickTitle').innerHTML = `<i class="fas fa-layer-group"></i> ${t.quickTitle}`;
+            document.getElementById('allItemsTitle').innerHTML = `<i class="fas fa-list-ul"></i> ${t.allTitle}`;
+            document.getElementById('progressLabel').innerText = t.progressLabel;
+            document.getElementById('navHome').innerText = t.navHome;
+            document.getElementById('navQuick').innerText = t.navQuick;
+            document.getElementById('navList').innerText = t.navList;
+            document.getElementById('totalLabel').innerText = t.totalLabel;
+            document.getElementById('activeLabel').innerText = t.activeLabel;
+            document.getElementById('completedLabel').innerText = t.completedLabel;
+            document.getElementById('homeQuickItem').placeholder = t.placeholder;
+            document.getElementById('voiceListeningText').innerText = currentLang === 'ar' ? 'جاري الاستماع...' : 'Listening...';
+            if(currentUser) document.getElementById('userNameDisplay').innerText = currentUser.name;
+            else document.getElementById('userNameDisplay').innerText = currentLang === 'ar' ? 'زائر' : 'Guest';
+            buildCategoriesPage();
+            renderAll();
+        }
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.getElementById('langAr').classList.toggle('active', lang === 'ar');
+            document.getElementById('langEn').classList.toggle('active', lang === 'en');
+            document.body.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            applyLanguage();
+        }
+
+        // Voice
+        function initVoice() {
+            if('webkitSpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                recognition.onresult = (e) => {
+                    const transcript = e.results[0][0].transcript;
+                    document.getElementById('homeQuickItem').value = transcript;
+                    addCustomItem(transcript);
+                    stopVoiceInput();
+                };
+                recognition.onend = () => { document.getElementById('voiceModal').classList.remove('show'); isListening = false; };
+                recognition.onerror = () => stopVoiceInput();
+            }
+        }
+        function toggleVoiceInput() {
+            if(!recognition) { showToast('Voice not supported'); return; }
+            if(!currentUser) { showToast(translations[currentLang].toastLogin); return; }
+            if(isListening) { stopVoiceInput(); return; }
+            isListening = true;
+            recognition.lang = currentLang === 'ar' ? 'ar-SA' : 'en-US';
+            document.getElementById('voiceModal').classList.add('show');
+            recognition.start();
+        }
+        function stopVoiceInput() { if(recognition) recognition.abort(); document.getElementById('voiceModal').classList.remove('show'); isListening = false; }
+
+        function handleHomeQuickAdd(e) { if(e.key === 'Enter') addHomeQuickItem(); }
+        function showPage(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(page + 'Page').classList.add('active');
+            if(page === 'home') document.querySelectorAll('.nav-item')[0].classList.add('active');
+            else if(page === 'quick') document.querySelectorAll('.nav-item')[1].classList.add('active');
+            else document.querySelectorAll('.nav-item')[2].classList.add('active');
+            if(page === 'list') renderAllItemsList();
+        }
+
+        function showAuthModal() { authMode = 'register'; document.getElementById('authTitle').innerText = currentLang === 'ar' ? 'إنشاء حساب' : 'Create Account'; document.getElementById('authSubmitBtn').innerText = currentLang === 'ar' ? 'تسجيل' : 'Register'; document.getElementById('authSwitchText').innerText = currentLang === 'ar' ? 'لديك حساب؟ تسجيل دخول' : 'Have an account? Login'; document.getElementById('authModal').classList.add('show'); }
+        function closeAuthModal() { document.getElementById('authModal').classList.remove('show'); }
+        function handleAuth() {
+            const name = document.getElementById('authName').value.trim();
+            const pass = document.getElementById('authPassword').value;
+            if(!name || !pass) { showToast('يرجى ملء جميع الحقول'); return; }
+            if(authMode === 'register') { if(register(name, pass)) { closeAuthModal(); showToast('تم إنشاء الحساب'); } else showToast('الاسم موجود'); }
+            else { if(login(name, pass)) { closeAuthModal(); showToast('تم تسجيل الدخول'); } else showToast('بيانات غير صحيحة'); }
+            document.getElementById('authName').value = '';
+            document.getElementById('authPassword').value = '';
+        }
+        function switchAuthMode() {
+            authMode = authMode === 'register' ? 'login' : 'register';
+            if(authMode === 'register') { document.getElementById('authTitle').innerText = currentLang === 'ar' ? 'إنشاء حساب' : 'Create Account'; document.getElementById('authSubmitBtn').innerText = currentLang === 'ar' ? 'تسجيل' : 'Register'; document.getElementById('authSwitchText').innerText = currentLang === 'ar' ? 'لديك حساب؟ تسجيل دخول' : 'Have an account? Login'; }
+            else { document.getElementById('authTitle').innerText = currentLang === 'ar' ? 'تسجيل دخول' : 'Login'; document.getElementById('authSubmitBtn').innerText = currentLang === 'ar' ? 'دخول' : 'Login'; document.getElementById('authSwitchText').innerText = currentLang === 'ar' ? 'ليس لديك حساب؟ إنشاء حساب' : 'No account? Register'; }
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMessage').innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        // Event bindings
+        document.getElementById('langAr').onclick = () => setLanguage('ar');
+        document.getElementById('langEn').onclick = () => setLanguage('en');
+        document.getElementById('authBtn').onclick = () => currentUser ? logout() : showAuthModal();
+        document.getElementById('authSubmitBtn').onclick = handleAuth;
+        document.getElementById('authSwitchText').onclick = switchAuthMode;
+        document.getElementById('voiceBtn').onclick = toggleVoiceInput;
+        document.getElementById('shareBtn').onclick = shareList;
+
+        initVoice();
+        setLanguage('ar');
+        loadUserItems();
+    </script>
+</body>
+</html>
+```
